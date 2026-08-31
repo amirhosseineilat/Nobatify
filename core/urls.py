@@ -19,9 +19,10 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
+    path("google/", include("allauth.socialaccount.providers.google.urls")),
     path("admin/", admin.site.urls),
     path("account/", include("accounts.urls")),
     path("appointments/", include("appointments.urls")),
     path("doctors/", include("doctors.urls")),
-    path("", name="home"),
+    # path("", name="home"),
 ]
