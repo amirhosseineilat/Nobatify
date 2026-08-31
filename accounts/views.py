@@ -9,7 +9,6 @@ from .forms import (
     LoginForm,
     LoginForm,
     ForgetForm,
-    ChangePasswordForm,
     ValidateOTPForm,
 )
 from django.urls import reverse_lazy

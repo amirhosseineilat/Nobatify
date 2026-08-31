@@ -169,11 +169,11 @@ STATIC_URL = "static/"
 
 MAILERS = {
     "default": {
-        "BACKEND": "django.core.mail.backends.console.EmailBackend",
+        "BACKEND": "django.core.mail.backends.smtp.EmailBackend",
+        "HOST": os.getenv("EMAIL_HOST", "smtp.gmail.com"),
+        "PORT": int(os.getenv("EMAIL_PORT", 587)),
+        "USERNAME": os.getenv("EMAIL_HOST_USER"),
+        "PASSWORD": os.getenv("EMAIL_APP_PASSWORD"),
+        "USE_TLS": True,
     },
 }
-EMAIL_USE_TLS = True
-EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.gmail.com")
-EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "sender@gmail.com")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_APP_PASSWORD", "password")
