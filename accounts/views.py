@@ -2,7 +2,13 @@ from django.shortcuts import render
 from django.contrib.auth import login
 from .models import Wallet
 from django.contrib.auth.models import User
-from .forms import RegistrationForm,LoginForm,LoginForm,ForgetForm,ChangePasswordForm
+from .forms import (
+    RegistrationForm,
+    LoginForm,
+    LoginForm,
+    ForgetForm,
+    ChangePasswordForm,
+)
 from django.urls import reverse_lazy
 from django.views.generic import (
     DetailView,
@@ -12,6 +18,7 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
 )
+from .service import AccountService, Sender, EmailNotification
 
 # Create your views here.
 
@@ -38,6 +45,19 @@ class RegisterView(FormView):
 
 class ChangePasswordView(FormView):
     pass
+
+
+class ForgetPasswordView(FormView):
+    template_name = "accounts/forget_password.html"
+    form_class = ForgetForm
+    success_url = reverse_lazy("login")
+
+    def form_valid(self, form):
+        email = form.cleaned_data.get("email")
+        if email:
+            sender = Sender(EmailNotification())
+            AccountService.request_password_reset(email, sender)
+        return super().form_valid(form)
 
 
 class Profile(DetailView):
