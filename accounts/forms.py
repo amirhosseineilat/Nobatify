@@ -1,5 +1,9 @@
-from django.forms import ModelForm
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.forms import ModelForm, CharField, Form
+from django.contrib.auth.forms import (
+    UserCreationForm,
+    AuthenticationForm,
+    SetPasswordForm,
+)
 from django.contrib.auth.models import User
 
 
@@ -28,7 +32,5 @@ class ForgetForm(ModelForm):
         fields = ["email"]
 
 
-class ChangePasswordForm:
-    class Meta:
-        model = User
-        fields = ["password"]
+class ValidateOTPForm(Form):
+    otp_code = CharField(required=True, max_length=15)
