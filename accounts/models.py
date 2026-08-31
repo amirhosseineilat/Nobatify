@@ -1,5 +1,5 @@
 from datetime import timedelta
-
+from django.utils.timezone import now
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -25,12 +25,13 @@ class Otp(models.Model):
         choices=[("login", "Login"), ("password_reset", "Password Reset")],
     )
 
-    def generate_otp(self, user):
+    def generate_otp(self, user, purpose):
         import random
 
         self.user = user
+        self.purpose = purpose
         self.code = str(random.randint(100000, 999999))
-        self.expire_time = self.created_at + timedelta(minutes=2)
+        self.expire_time = now() + timedelta(minutes=2)
         self.save()
         return self.code
 
