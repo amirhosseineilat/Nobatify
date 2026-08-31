@@ -20,8 +20,9 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
 )
-from .service import AccountService, Sender, EmailNotification
+from .service import AccountService
 from datetime import timedelta
+from utils.notifications import Sender, EmailNotification
 
 # Create your views here.
 
