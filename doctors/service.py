@@ -12,11 +12,12 @@ class DoctorService:
         doctors = Doctor.objects.filter(
             Q(first_name__icontains=q)
             | Q(last_name__icontains=q)
-            | Q(speciality__name__icontains=q)
+            | Q(specialities__name__icontains=q)
         ).distinct()
         return doctors
 
-    def send_reserved_nofication(
+    @staticmethod
+    def send_reserved_notification(
         user: User, provider_name: str, appointment: Appointment, sender: Sender
     ):
         message = f"""
