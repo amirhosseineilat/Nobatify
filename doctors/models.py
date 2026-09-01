@@ -20,7 +20,7 @@ class Doctor(models.Model):
     
     @property
     def comment_count(self):
-        return self.comment_count()
+        return self.comments.count()
     
 
 class Comment(models.Model):

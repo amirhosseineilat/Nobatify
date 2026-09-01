@@ -6,6 +6,7 @@ from .service import DoctorService
 from .forms import CommentForm
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
+from django.db.models import Avg, Count
 # Create your views here.
 
 
@@ -14,17 +15,25 @@ class DoctorDetailView(DetailView):
     template_name = "doctors/doctor_detail.html"
     context_object_name = "doctor"
     
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['comment_form'] = CommentForm()
-        return context
+    def get_queryset(self):
+        return (
+            Doctor.objects.prefetch_related("specialities")
+            .annotate(
+                avg_rating=Avg("comments__rating"),
+                total_comments=Count("comments")
+            ))
 
 
 class DoctorListView(ListView):
     model = Doctor
     template_name = "doctors/doctor_list.html"
     context_object_name = "doctors"
-
+    
+    def get_queryset(self):
+        return Doctor.objects.annotate(
+            average_rating=Avg('comments__rating'),
+            comment_count=Count('comments')
+        )
 
 class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
