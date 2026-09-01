@@ -31,8 +31,8 @@ class DoctorListView(ListView):
     
     def get_queryset(self):
         return Doctor.objects.annotate(
-            average_rating=Avg('comments__rating'),
-            comment_count=Count('comments')
+            avg_rating=Avg('comments__rating'),
+            total_comments=Count('comments')
         )
 
 class CommentCreateView(LoginRequiredMixin, CreateView):
