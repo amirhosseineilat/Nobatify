@@ -3,9 +3,10 @@ from .views import *
 
 urlpatterns = [
     path("appointment/", AppointmentListView.as_view(), name="appointment"),
-    path("appointment/book/", AppointmentBookView.as_view(), name="appointment_book"),
+    path("appointment/my", MyAppointmentListView.as_view(), name="my_appointment"),
+    path("appointment/<int:pk>/book/", AppointmentBookView.as_view(), name="appointment_book"),
     path(
-        "appointment/cancel/",
+        "appointment/<int:pk>/cancel/",
         AppointmentCancelView.as_view(),
         name="appointment_cancel",
     ),

@@ -6,7 +6,7 @@
         <a href="{% url 'doctors' %}" class="back-link reveal-up">→ بازگشت به پزشکان</a>
 
         <div class="mt-7 grid gap-5 lg:grid-cols-[.8fr_1.2fr]">
-            <aside class="doctor-profile-card reveal-left">
+            <aside class="doctor-profile-card reveal-left p-8">
                 <div class="doctor-avatar doctor-avatar-lg">{{ doctor.first_name|first }}{{ doctor.last_name|first }}</div>
                 <h1 class="mt-7 text-3xl font-black text-[#1D4533]">{{ doctor.first_name }} {{ doctor.last_name }}</h1>
                 <p class="mt-2 text-sm text-[#5E3122]/50">{{ doctor.email }}</p>
@@ -20,14 +20,14 @@
 
             <div class="grid gap-5">
                 <section class="surface-card reveal-up">
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-between p-8">
                         <div>
                             <span class="eyebrow">تجربه دیگران</span>
                             <h2 class="mt-2 text-2xl font-black text-[#1D4533]">نظرات کاربران</h2>
                         </div>
                         <span class="rounded-full bg-[#F9D2BA] px-4 py-2 text-sm font-black text-[#1D4533]">{{ doctor.comments.count }} نظر</span>
                     </div>
-                    <div class="mt-7 grid gap-4">
+                    <div class="mt-7 grid gap-4 p-8">
                         {% for comment in doctor.comments.all %}
                             <article class="comment-card">
                                 <div class="flex items-center justify-between gap-4">

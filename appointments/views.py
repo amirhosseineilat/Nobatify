@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.shortcuts import render, get_object_or_404,redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.views.generic import ListView, DetailView
 from .models import Appointment
@@ -14,43 +14,41 @@ class AppointmentListView(ListView):
     context_object_name = "appointments"
 
 
+class MyAppointmentListView(ListView):
+    model = Appointment
+    template_name = "appointments/my_appointment_list.html"
+    context_object_name = "appointments"
+
+    def get_queryset(self):
+        return Appointment.objects.filter(user=self.request.user).select_related(
+            "doctor"
+        )
+
+
 class AppointmentBookView(LoginRequiredMixin, View):
 
     def post(self, request, pk):
-        appointment = get_object_or_404(
-            Appointment,
-            pk=pk,
-            user__isnull=True
-        )
+        appointment = get_object_or_404(Appointment, pk=pk, user__isnull=True)
 
         appointment.user = request.user
         appointment.save()
 
         messages.success(request, "Appointment booked successfully.")
 
-        return redirect(
-            "appointment_detail",
-            pk=appointment.pk
-        )
+        return redirect("appointment_detail", pk=appointment.pk)
 
 
 class AppointmentCancelView(LoginRequiredMixin, View):
 
     def post(self, request, pk):
-        appointment = get_object_or_404(
-            Appointment,
-            pk=pk,
-            user=request.user
-        )
+        appointment = get_object_or_404(Appointment, pk=pk, user=request.user)
 
         appointment.user = None
         appointment.save()
 
         messages.success(request, "Appointment cancelled successfully.")
 
-        return redirect(
-            "appointment"
-        )
+        return redirect("appointment")
 
 
 class AppointmentDetail(DetailView):

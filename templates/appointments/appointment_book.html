@@ -19,15 +19,14 @@
                 </div>
 
                 {% if user.is_authenticated and not appointment.user %}
-                    <form method="post" action="{% url 'appointment_book' %}" class="mt-7">
+                    <form method="post" action="{% url 'appointment_book' appointment.pk %}" class="mt-7">
                         {% csrf_token %}
-                        <input type="hidden" name="pk" value="{{ appointment.pk }}">
                         <button class="btn btn-primary btn-lg w-full justify-center">رزرو این نوبت <span>✓</span></button>
                     </form>
                 {% elif appointment.user == user %}
-                    <form method="post" action="{% url 'appointment_cancel' %}" class="mt-7">
+                    <form method="post" action="{% url 'appointment_cancel' appointment.pk %}" class="mt-7">
                         {% csrf_token %}
-                        <input type="hidden" name="pk" value="{{ appointment.pk }}">
+                        
                         <button class="btn btn-danger btn-lg w-full justify-center">لغو نوبت <span>×</span></button>
                     </form>
                 {% elif not user.is_authenticated %}
