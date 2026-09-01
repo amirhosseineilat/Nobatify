@@ -34,8 +34,9 @@ class LogingView(LoginView):
     form_class = LoginForm
     success_url = reverse_lazy("home")
 
-class LogoutView(LogoutView):
-    next_page = reverse_lazy("login")
+class LogingoutView(LogoutView):
+    next_page = reverse_lazy("home")
+
 
 class RegisterView(FormView):
     template_name = "accounts/register.html"
