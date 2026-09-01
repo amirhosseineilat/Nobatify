@@ -6,8 +6,23 @@
         <div class="flex flex-col justify-between gap-5 md:flex-row md:items-end reveal-up">
             <div>
                 <span class="eyebrow">زمان‌بندی</span>
-                <h1 class="page-title">نوبت‌های در دسترس</h1>
-                <p class="mt-3 text-sm leading-7 text-[#5E3122]/55">زمان مناسب را پیدا کن و برای رزرو وارد جزئیات شو.</p>
+                <h1 class="page-title">
+                    {% if selected_doctor %}
+                        نوبت‌های دکتر
+                        {{ selected_doctor.first_name }}
+                        {{ selected_doctor.last_name }}
+                    {% else %}
+                        نوبت‌های در دسترس
+                    {% endif %}
+                </h1>
+
+                <p class="mt-3 text-sm leading-7 text-[#5E3122]/55">
+                    {% if selected_doctor %}
+                        زمان مناسب برای ویزیت این پزشک را انتخاب کن.
+                    {% else %}
+                        زمان مناسب را پیدا کن و برای رزرو وارد جزئیات شو.
+                    {% endif %}
+                </p>
             </div>
             <a href="{% url 'doctors' %}" class="btn btn-outline">پیدا کردن پزشک</a>
         </div>
