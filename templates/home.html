@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% block title %}Nobatify — نوبتت، همین‌جا{% endblock %}
+
+{% block content %}
+<section class="hero-section relative min-h-[100svh] overflow-hidden bg-[#F7EAE0]">
+    <div class="hero-orb orb-one"></div>
+    <div class="hero-orb orb-two"></div>
+    <div class="hero-grid"></div>
+
+    <div class="relative mx-auto grid min-h-[100svh] max-w-7xl items-center gap-14 px-5 pb-16 pt-36 md:px-8 lg:grid-cols-[1.05fr_.95fr]">
+        <div class="reveal-up">
+            <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-[#1D4533]/10 bg-white/50 px-4 py-2 text-xs font-bold text-[#1D4533] backdrop-blur">
+                <span class="pulse-dot"></span>
+                رزرو نوبت، ساده‌تر از همیشه
+            </div>
+
+            <h1 class="max-w-4xl text-5xl font-black leading-[1.12] tracking-[-.04em] text-[#1D4533] sm:text-6xl lg:text-7xl">
+                وقتت ارزشمنده.
+                <span class="relative inline-block">
+                    <span class="relative z-10">نوبتت رو هوشمند بگیر.</span>
+                    <span class="absolute inset-x-0 bottom-1 -z-0 h-4 -rotate-1 rounded-full bg-[#F9D2BA]"></span>
+                </span>
+            </h1>
+
+            <p class="mt-7 max-w-2xl text-base leading-8 text-[#5E3122]/70 sm:text-lg">
+                Nobatify کمک می‌کند پزشک مناسب را پیدا کنی، زمان آزاد را ببینی و نوبتت را بدون تماس تلفنی و دردسر رزرو کنی.
+            </p>
+
+            <div class="mt-9 flex flex-wrap gap-3">
+                <a href="/doctors/" class="btn btn-primary btn-lg magnetic">پیدا کردن پزشک <span class="text-lg">←</span></a>
+                {% if not user.is_authenticated %}
+                    <a href="/account/register/" class="btn btn-outline btn-lg">ساخت حساب رایگان</a>
+                {% endif %}
+            </div>
+
+            <div class="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 text-xs font-medium text-[#5E3122]/55">
+                <span>✓ سریع</span>
+                <span>✓ ساده</span>
+                <span>✓ بدون صف</span>
+            </div>
+        </div>
+
+        <div class="relative reveal-scale">
+            <div class="dashboard-card relative mx-auto max-w-xl rounded-[36px] border border-white/80 bg-white/65 p-4 shadow-[0_35px_100px_rgba(29,69,51,.15)] backdrop-blur-xl sm:p-6">
+                <div class="flex items-center justify-between border-b border-[#5E3122]/10 pb-5">
+                    <div>
+                        <p class="text-xs text-[#5E3122]/45">نوبت بعدی</p>
+                        <h2 class="mt-1 text-xl font-black text-[#1D4533]">دکتر سارا احمدی</h2>
+                    </div>
+                    <span class="grid h-12 w-12 place-items-center rounded-2xl bg-[#F9D2BA] text-xl">✦</span>
+                </div>
+
+                <div class="mt-6 rounded-[26px] bg-[#1D4533] p-5 text-[#F7EAE0]">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-xs text-[#F7EAE0]/50">تاریخ</p>
+                            <p class="mt-2 text-lg font-bold">شنبه، ۱۵ شهریور</p>
+                        </div>
+                        <div class="text-left">
+                            <p class="text-xs text-[#F7EAE0]/50">ساعت</p>
+                            <p class="mt-2 text-lg font-bold">۱۷:۳۰</p>
+                        </div>
+                    </div>
+                    <div class="mt-6 h-px bg-[#F7EAE0]/10"></div>
+                    <div class="mt-5 flex items-center justify-between">
+                        <span class="text-xs text-[#F7EAE0]/55">وضعیت رزرو</span>
+                        <span class="rounded-full bg-[#F9D2BA] px-3 py-1.5 text-xs font-bold text-[#1D4533]">تأیید شده</span>
+                    </div>
+                </div>
+
+                <div class="mt-4 grid grid-cols-2 gap-3">
+                    <div class="rounded-2xl bg-[#F7EAE0]/75 p-4">
+                        <span class="text-2xl">⏱</span>
+                        <p class="mt-3 text-xs text-[#5E3122]/50">رزرو سریع</p>
+                        <p class="mt-1 font-bold text-[#1D4533]">کمتر از ۲ دقیقه</p>
+                    </div>
+                    <div class="rounded-2xl bg-[#F9D2BA]/55 p-4">
+                        <span class="text-2xl">✓</span>
+                        <p class="mt-3 text-xs text-[#5E3122]/50">تأیید</p>
+                        <p class="mt-1 font-bold text-[#1D4533]">آنلاین و فوری</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="floating-card floating-one">
+                <span>نوبت جدید</span>
+                <strong>+ ۱</strong>
+            </div>
+            <div class="floating-card floating-two">
+                <span>رزرو شد</span>
+                <strong>✓</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="absolute bottom-7 left-1/2 -translate-x-1/2 text-center text-xs text-[#1D4533]/45">
+        <span>برای کشف بیشتر اسکرول کن</span>
+        <div class="mx-auto mt-2 h-9 w-px bg-[#1D4533]/20 animate-pulse"></div>
+    </div>
+</section>
+
+<section class="relative bg-[#fffaf7] px-5 py-28 md:px-8">
+    <div class="mx-auto max-w-7xl">
+        <div class="reveal-up max-w-2xl">
+            <span class="eyebrow">چرا Nobatify؟</span>
+            <h2 class="section-title">کمتر کلیک کن.<br><span class="text-[#5E3122]">بیشتر زندگی کن.</span></h2>
+            <p class="mt-5 leading-8 text-[#5E3122]/60">هر بخش برای حذف یک اصطکاک کوچک طراحی شده؛ از پیدا کردن پزشک تا دیدن نوبت‌های آزاد.</p>
+        </div>
+
+        <div class="mt-16 grid gap-5 md:grid-cols-3">
+            <article class="feature-card reveal-up">
+                <div class="icon-box">⌕</div>
+                <span class="feature-number">01</span>
+                <h3>پیدا کن</h3>
+                <p>پزشک مورد نظرت را با جست‌وجوی سریع پیدا کن و اطلاعاتش را یک‌جا ببین.</p>
+            </article>
+            <article class="feature-card reveal-up" data-delay="100">
+                <div class="icon-box">◷</div>
+                <span class="feature-number">02</span>
+                <h3>انتخاب کن</h3>
+                <p>زمان مناسب را انتخاب کن؛ بدون فرم‌های طولانی و مسیرهای گیج‌کننده.</p>
+            </article>
+            <article class="feature-card reveal-up" data-delay="200">
+                <div class="icon-box">✓</div>
+                <span class="feature-number">03</span>
+                <h3>رزرو کن</h3>
+                <p>نوبت را رزرو کن و جزئیاتش را در حساب خودت داشته باش.</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="story-section bg-[#1D4533] px-5 py-28 text-[#F7EAE0] md:px-8">
+    <div class="mx-auto grid max-w-7xl items-center gap-16 lg:grid-cols-2">
+        <div class="reveal-left">
+            <span class="eyebrow eyebrow-light">یک تجربه، نه یک فرم</span>
+            <h2 class="mt-5 text-4xl font-black leading-tight sm:text-5xl">طراحی شده برای اینکه مسیر رزرو را فراموش کنی.</h2>
+            <p class="mt-6 max-w-xl leading-8 text-[#F7EAE0]/60">
+                حرکت‌ها کوتاه و هدفمندند، دکمه‌ها بازخورد واضح دارند و اطلاعات مهم همیشه در نزدیک‌ترین نقطه به دست کاربر قرار می‌گیرد.
+            </p>
+        </div>
+
+        <div class="reveal-right relative">
+            <div class="story-window rounded-[34px] border border-white/10 bg-white/[.05] p-4 shadow-2xl backdrop-blur">
+                <div class="flex gap-2 border-b border-white/10 pb-4">
+                    <span class="h-2.5 w-2.5 rounded-full bg-[#F9D2BA]"></span>
+                    <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
+                    <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
+                </div>
+                <div class="grid gap-3 py-6">
+                    <div class="h-16 rounded-2xl bg-[#F7EAE0]/10"></div>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div class="h-28 rounded-2xl bg-[#F9D2BA]/20"></div>
+                        <div class="h-28 rounded-2xl bg-[#F7EAE0]/10"></div>
+                        <div class="h-28 rounded-2xl bg-[#F7EAE0]/10"></div>
+                    </div>
+                    <div class="h-12 rounded-2xl bg-[#F9D2BA]/80"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="bg-[#F7EAE0] px-5 py-28 md:px-8">
+    <div class="mx-auto max-w-7xl">
+        <div class="text-center reveal-up">
+            <span class="eyebrow">شروع ساده</span>
+            <h2 class="section-title mx-auto max-w-3xl">نوبت بعدی‌ات را همین الان پیدا کن.</h2>
+            <a href="/doctors/" class="btn btn-primary btn-lg mt-8 magnetic">مشاهده پزشکان <span>←</span></a>
+        </div>
+    </div>
+</section>
+{% endblock %}

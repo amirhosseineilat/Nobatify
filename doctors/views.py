@@ -9,7 +9,7 @@ from .service import DoctorService
 
 class DoctorDetailView(DetailView):
     model = Doctor
-    tmplate_name = "doctors/doctor_detail.html"
+    template_name = "doctors/doctor_detail.html"
     context_object_name = "doctor"
 
 

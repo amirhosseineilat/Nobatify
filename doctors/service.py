@@ -13,7 +13,7 @@ class DoctorService:
             Q(first_name__icontains=q)
             | Q(last_name__icontains=q)
             | Q(speciality__name__icontains=q)
-        )
+        ).distinct()
         return doctors
 
     def send_reserved_nofication(
