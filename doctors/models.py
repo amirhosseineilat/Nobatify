@@ -41,3 +41,30 @@ class Speciality(models.Model):
 
     def __str__(self):
         return self.name
+    
+    
+    
+    
+class TimeSlot(models.Model):
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name='time_slots')
+    date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    is_reserved = models.BooleanField(default=False) 
+    
+    # class Meta:
+    #     unique_together = ('doctor', 'date', 'start_time')
+    #     ordering = ['date', 'start_time']
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['doctor', 'date', 'start_time'],
+                name='unique_doctor_timeslot'
+            )
+        ]
+
+        ordering = ['date', 'start_time']
+        
+    def __str__(self):
+        return f"{self.doctor} - {self.date} ({self.start_time} - {self.end_time})"
