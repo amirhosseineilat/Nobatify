@@ -13,9 +13,8 @@ class DoctorService:
             Q(first_name__icontains=q)
             | Q(last_name__icontains=q)
             | Q(specialities__name__icontains=q)
-        )
+        ).distinct()
         return doctors
-
 
     @staticmethod
     def send_reserved_notification(

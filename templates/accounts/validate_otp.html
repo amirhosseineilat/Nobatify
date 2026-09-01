@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}تأیید کد | Nobatify{% endblock %}
+{% block content %}
+<section class="auth-page">
+    <div class="auth-card reveal-scale text-center">
+        <div class="mx-auto grid h-16 w-16 place-items-center rounded-3xl bg-[#F9D2BA] text-2xl text-[#1D4533]">✦</div>
+        <span class="eyebrow mt-6">مرحله دوم</span>
+        <h1 class="mt-3 text-3xl font-black text-[#1D4533]">کد تأیید را وارد کن</h1>
+        <p class="mt-3 text-sm leading-7 text-[#5E3122]/55">کد ارسال‌شده به ایمیلت را در کمتر از ۲ دقیقه وارد کن.</p>
+        <form method="post" class="mt-8 form-stack text-right">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="field-wrap">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% for error in field.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                </div>
+            {% endfor %}
+            <button class="btn btn-primary btn-lg w-full" type="submit">تأیید کد <span>→</span></button>
+        </form>
+    </div>
+</section>
+{% endblock %}

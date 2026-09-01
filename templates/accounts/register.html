@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}ثبت‌نام | Nobatify{% endblock %}
+{% block content %}
+<section class="auth-page">
+    <div class="auth-card auth-card-wide reveal-scale">
+        <div class="mb-8">
+            <span class="eyebrow">شروع کن</span>
+            <h1 class="mt-3 text-3xl font-black text-[#1D4533]">حساب Nobatify بساز</h1>
+            <p class="mt-2 text-sm leading-7 text-[#5E3122]/55">فقط اطلاعات ضروری را وارد کن؛ بقیه مسیر با ما.</p>
+        </div>
+        <form method="post" class="form-stack">
+            {% csrf_token %}
+            <div class="grid gap-4 sm:grid-cols-2">
+                {% for field in form %}
+                    <div class="field-wrap {% if field.name == 'email' %}sm:col-span-2{% endif %}">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        {% for error in field.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+                        {% if field.help_text %}<p class="field-help">{{ field.help_text|safe }}</p>{% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            <button class="btn btn-primary btn-lg w-full" type="submit">ساخت حساب <span>←</span></button>
+        </form>
+        <p class="mt-6 text-center text-sm text-[#5E3122]/55">قبلاً ثبت‌نام کردی؟ <a href="/account/login/" class="font-bold text-[#1D4533]">وارد شو</a></p>
+    </div>
+</section>
+{% endblock %}

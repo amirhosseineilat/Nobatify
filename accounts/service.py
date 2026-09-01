@@ -10,7 +10,8 @@ class AccountService:
     def request_password_reset(user_email, sender: Sender):
         try:
             user = User.objects.get(email=user_email)
-            otp_code = Otp.generate_otp(user=user, purpose="password_reset")
+            otp = Otp()
+            otp_code = otp.generate_otp(user=user, purpose="password_reset")
             message = f"Your OTP code is: {otp_code}"
             sender.send_notification(user, message)
             print("OTP sent successfully to", user.email)

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}کیف پول | Nobatify{% endblock %}
+{% block content %}
+<section class="page-shell">
+    <div class="mx-auto max-w-4xl">
+        <div class="mb-8 reveal-up">
+            <span class="eyebrow">مالی</span>
+            <h1 class="page-title">کیف پول</h1>
+        </div>
+        <div class="wallet-card reveal-scale">
+            <div>
+                <p class="text-sm text-[#F7EAE0]/55">موجودی فعلی</p>
+                <p class="mt-4 text-5xl font-black tracking-tight text-[#F7EAE0]">{{ wallet.balance|default:"0.00" }}</p>
+                <p class="mt-2 text-sm text-[#F7EAE0]/45">واحد پولی حساب</p>
+            </div>
+            <span class="wallet-glow"></span>
+        </div>
+        <a href="/account/profile/" class="btn btn-outline mt-6">بازگشت به پروفایل</a>
+    </div>
+</section>
+{% endblock %}
