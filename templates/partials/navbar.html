@@ -9,19 +9,19 @@
         </a>
 
         <div class="hidden items-center gap-8 md:flex">
-            <a href="/doctors/" class="nav-link">پزشکان</a>
-            <a href="/appointments/appointment/" class="nav-link">نوبت‌ها</a>
+            <a href="{% url 'doctors' %}" class="nav-link">پزشکان</a>
+            <a href="{% url 'appointment' %}" class="nav-link">نوبت‌ها</a>
             {% if user.is_authenticated %}
-                <a href="/account/profile/" class="nav-link">پروفایل</a>
+                <a href="{% url 'profile' %}" class="nav-link">پروفایل</a>
             {% endif %}
         </div>
 
         <div class="hidden items-center gap-2 sm:flex">
             {% if user.is_authenticated %}
-                <a href="/account/profile/" class="btn btn-primary">حساب من <span>↗</span></a>
+                <a href="{% url 'profile' %}" class="btn btn-primary">حساب من <span>↗</span></a>
             {% else %}
-                <a href="/account/login/" class="btn btn-ghost">ورود</a>
-                <a href="/account/register/" class="btn btn-primary">شروع کنید <span>↗</span></a>
+                <a href="{% url 'login' %}" class="btn btn-ghost">ورود</a>
+                <a href="{% url 'register' %}" class="btn btn-primary">شروع کنید <span>↗</span></a>
             {% endif %}
         </div>
 
@@ -36,13 +36,13 @@
 
     <div class="mobile-menu mx-auto mt-2 hidden max-w-7xl rounded-[22px] border border-white/70 bg-[#fffaf7]/95 p-4 shadow-soft backdrop-blur-xl md:hidden">
         <div class="grid gap-2">
-            <a href="/doctors/" class="mobile-link">پزشکان</a>
-            <a href="/appointments/appointment/" class="mobile-link">نوبت‌ها</a>
+            <a href="{% url 'doctors' %}" class="mobile-link">پزشکان</a>
+            <a href="{% url 'appointment' %}" class="mobile-link">نوبت‌ها</a>
             {% if user.is_authenticated %}
-                <a href="/account/profile/" class="mobile-link">پروفایل</a>
+                <a href="{% url 'profile' %}" class="mobile-link">پروفایل</a>
             {% else %}
-                <a href="/account/login/" class="mobile-link">ورود</a>
-                <a href="/account/register/" class="btn btn-primary mt-2 justify-center">ساخت حساب</a>
+                <a href="{% url 'login' %}" class="mobile-link">ورود</a>
+                <a href="{% url 'register' %}" class="btn btn-primary mt-2 justify-center">ساخت حساب</a>
             {% endif %}
         </div>
     </div>

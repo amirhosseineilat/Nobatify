@@ -31,7 +31,7 @@
                         <button class="btn btn-danger btn-lg w-full justify-center">لغو نوبت <span>×</span></button>
                     </form>
                 {% elif not user.is_authenticated %}
-                    <a href="/account/login/" class="btn btn-primary btn-lg mt-7 w-full justify-center">برای رزرو وارد شو <span>→</span></a>
+                    <a href="{% url 'login' %}" class="btn btn-primary btn-lg mt-7 w-full justify-center">برای رزرو وارد شو <span>→</span></a>
                 {% else %}
                     <div class="mt-7 rounded-2xl bg-[#F7EAE0] p-4 text-center text-sm font-bold text-[#5E3122]">این نوبت قبلاً رزرو شده است.</div>
                 {% endif %}
