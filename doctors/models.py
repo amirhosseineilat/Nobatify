@@ -12,12 +12,22 @@ class Doctor(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+    
+    @property
+    def average_rating(self):
+        result = self.comments.aggregate(avg=models.Avg('rating'))
+        return round(result['avg'] or 0 , 1)
+    
+    @property
+    def comment_count(self):
+        return self.comment_count()
+    
 
 class Comment(models.Model):
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
     content = models.TextField()
-    rating = models.PositiveBigIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
+    rating = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)],
         default=5
     )
     created_at = models.DateTimeField(auto_now_add=True)

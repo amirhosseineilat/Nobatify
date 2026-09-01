@@ -1,16 +1,23 @@
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Doctor
+from .models import Doctor, Comment
 from django.views.generic import DetailView, ListView, CreateView
 from .service import DoctorService
-
+from .forms import CommentForm
+from django.shortcuts import get_object_or_404
+from django.urls import reverse
 # Create your views here.
 
 
 class DoctorDetailView(DetailView):
     model = Doctor
-    tmplate_name = "doctors/doctor_detail.html"
+    template_name = "doctors/doctor_detail.html"
     context_object_name = "doctor"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comment_form'] = CommentForm()
+        return context
 
 
 class DoctorListView(ListView):
@@ -20,7 +27,17 @@ class DoctorListView(ListView):
 
 
 class CommentCreateView(LoginRequiredMixin, CreateView):
-    pass
+    model = Comment
+    form_class = CommentForm
+    http_method_names = ['post']
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        doctor_id = self.kwargs.get('doctor_id')
+        form.instance.doctor = get_object_or_404(Doctor, pk=doctor_id)
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('doctor_detail', kwargs={'pk': self.kwargs.get('doctor_id')})
 
 
 class SearchDoctorView(ListView):
@@ -28,6 +45,7 @@ class SearchDoctorView(ListView):
     context_object_name = "doctors"
 
     def get_queryset(self):
-        q = self.request.GET.get("q")
-        doctors = DoctorService.search(q)
-        return doctors
+        q = self.request.GET.get("q", "").strip()
+        if q:
+            return DoctorService.search(q)
+        return Doctor.objects.all()
