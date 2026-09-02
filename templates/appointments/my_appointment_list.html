@@ -62,12 +62,12 @@
 
                         <div class="mini-info">
                             <span>تاریخ</span>
-                            <strong>{{ appointment.date }}</strong>
+                            <strong>{{ appointment.time_slot.date }}</strong>
                         </div>
 
                         <div class="mini-info">
                             <span>ساعت</span>
-                            <strong>{{ appointment.time }}</strong>
+                            <strong>{{ appointment.time_slot.start_time }}-{{ appointment.time_slot.end_time }}</strong>
                         </div>
 
                     </div>

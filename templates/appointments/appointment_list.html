@@ -61,6 +61,8 @@
                         <span class="rounded-full bg-[#F7EAE0] px-3 py-1.5 text-xs font-bold text-[#1D4533]">
                             {% if appointment.patient %}
                                 رزرو شده
+                            {% elif appointment.is_reserved == True %}
+                                رزرو شده
                             {% else %}
                                 آزاد
                             {% endif %}
@@ -94,10 +96,17 @@
                         <span>←</span>
                     </a> -->
 
+
+                {% if appointment.is_reserved == False %}
                     <form method="post" action="{% url 'appointment_book' appointment.pk %}" class="mt-7">
                         {% csrf_token %}
                         <button class="btn btn-primary btn-lg w-full justify-center">رزرو این نوبت <span>✓</span></button>
                     </form>
+                {% elif not user.is_authenticated %}
+                    <a href="{% url 'login' %}" class="btn btn-primary btn-lg mt-7 w-full justify-center">برای رزرو وارد شو <span>→</span></a>
+                {% else %}
+                    <div class="mt-7 rounded-2xl bg-[#F7EAE0] p-4 text-center text-sm font-bold text-[#5E3122]">این نوبت قبلاً رزرو شده است.</div>
+                {% endif %}
                 </article>
 
             {% empty %}

@@ -10,10 +10,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 
 
-class AppointmentListView(ListView):
-    # model = Appointment
-    template_name = "appointments/appointment_list.html"
-    context_object_name = "appointments"
+class TimeSlotListView(ListView):
+    template_name = "appointments/timeslot_list.html"
+    context_object_name = "timeslots"
 
     def get_queryset(self):
         doctor_id = self.request.GET.get("doctor")
@@ -32,14 +31,13 @@ class AppointmentListView(ListView):
 
 
 class MyAppointmentListView(ListView):
-    model = Appointment
     template_name = "appointments/my_appointment_list.html"
     context_object_name = "appointments"
 
     def get_queryset(self):
         return Appointment.objects.filter(patient=self.request.user).select_related(
             "doctor"
-        )
+        ).select_related("time_slot")
 
 
 class AppointmentBookView(LoginRequiredMixin, View):
@@ -50,6 +48,7 @@ class AppointmentBookView(LoginRequiredMixin, View):
         appointment = Appointment(doctor=timeslot.doctor,time_slot=timeslot,patient=request.user)
         timeslot.is_reserved = True
         appointment.save()
+        timeslot.save()
 
         messages.success(request, "Appointment booked successfully.")
 
@@ -66,7 +65,7 @@ class AppointmentCancelView(LoginRequiredMixin, View):
             timeslot.is_reserved = False
             timeslot.save()
         except Exception as e :
-            print("e")
+            print(e)
 
 
 
