@@ -16,8 +16,16 @@ class DoctorDetailView(DetailView):
     model = Doctor
     template_name = "doctors/doctor_detail.html"
     context_object_name = "doctor"
-    
+
     def get_queryset(self):
+        # return (
+        #     Doctor.objects.prefetch_related("specialities")
+        #     .annotate(
+        #         avg_rating=Avg("comments__rating"),
+        #         total_comments=Count("comments")
+        #     )
+        # )
+
         available_slots = TimeSlot.objects.filter(
             appointment__isnull=True
         )
@@ -34,6 +42,10 @@ class DoctorDetailView(DetailView):
             total_comments=Count("comments")
         )
         
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = CommentForm()
+        return context
 
 
 class DoctorListView(ListView):
