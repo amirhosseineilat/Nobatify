@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Doctor, Comment, Speciality
+from .models import TimeSlot, Doctor, Comment, Speciality
 
 
 # Register your models here.
@@ -20,3 +20,8 @@ class CommentAdmin(admin.ModelAdmin):
 class SpecialityAdmin(admin.ModelAdmin):
     list_display = ("name",)
     search_fields = ("name",)
+
+
+@admin.register(TimeSlot)
+class TimeSlotAdmin(admin.ModelAdmin):
+    pass
