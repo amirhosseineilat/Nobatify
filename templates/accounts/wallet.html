@@ -1,21 +1,149 @@
+```html
 {% extends "base.html" %}
+
 {% block title %}کیف پول | Nobatify{% endblock %}
+
 {% block content %}
+
 <section class="page-shell">
+
     <div class="mx-auto max-w-4xl">
+
+        <!-- Header -->
         <div class="mb-8 reveal-up">
-            <span class="eyebrow">مالی</span>
-            <h1 class="page-title">کیف پول</h1>
+
+            <span class="eyebrow">
+                مالی
+            </span>
+
+            <h1 class="page-title">
+                کیف پول
+            </h1>
+
+            <p class="mt-4 max-w-xl text-sm leading-7 text-[#5E3122]/55">
+                موجودی کیف پولت را مدیریت کن و در صورت نیاز آن را شارژ کن.
+            </p>
+
         </div>
+
+
+        <!-- Main wallet -->
         <div class="wallet-card reveal-scale">
-            <div>
-                <p class="text-sm text-[#F7EAE0]/55">موجودی فعلی</p>
-                <p class="mt-4 text-5xl font-black tracking-tight text-[#F7EAE0]">{{ wallet.balance|default:"0.00" }}</p>
-                <p class="mt-2 text-sm text-[#F7EAE0]/45">واحد پولی حساب</p>
+
+            <div class="relative z-10 w-full">
+
+                <div class="flex items-center justify-between">
+
+                    <div>
+
+                        <p class="text-sm text-[#F7EAE0]/55">
+                            موجودی فعلی
+                        </p>
+
+                        <div class="mt-3 flex items-end gap-3">
+
+                            <p
+                                class="text-5xl font-black tracking-tight text-[#F7EAE0]"
+                            >
+                                {{ wallet.balance|default:"0.00" }}
+                            </p>
+
+                            <span class="mb-2 text-sm text-[#F7EAE0]/45">
+                                تومان
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="wallet-large-icon">
+                        ◈
+                    </div>
+
+                </div>
+
+
+                <!-- Actions -->
+                <div class="mt-10 flex flex-wrap gap-3">
+
+                    <a
+                        href="{% url 'charge' %}"
+                        class="btn btn-primary"
+                    >
+                        <span>+</span>
+                        شارژ کیف پول
+                    </a>
+
+                    <a
+                        href="{% url 'mycards' %}"
+                        class="btn"
+                        style="background: rgba(247,234,224,.12); color:#F7EAE0;"
+                    >
+                        <span>💳</span>
+                        کارت‌های من
+                    </a>
+
+                </div>
+
             </div>
+
             <span class="wallet-glow"></span>
+
         </div>
-        <a href="{% url 'profile' %}" class="btn btn-outline mt-6">بازگشت به پروفایل</a>
+
+
+        <!-- Bottom actions -->
+        <div class="mt-5 grid gap-4 sm:grid-cols-2">
+
+            <a
+                href="{% url 'mycards' %}"
+                class="surface-card group reveal-up p-6"
+            >
+
+                <span class="icon-box">
+                    💳
+                </span>
+
+                <h3 class="mt-5 text-lg font-black text-[#1D4533]">
+                    مدیریت کارت‌ها
+                </h3>
+
+                <p class="mt-2 text-sm leading-7 text-[#5E3122]/55">
+                    کارت‌های بانکی ثبت‌شده را مشاهده یا کارت جدید اضافه کن.
+                </p>
+
+                <span class="mt-4 inline-block font-bold text-[#1D4533]">
+                    مشاهده کارت‌ها ←
+                </span>
+
+            </a>
+
+
+            <a
+                href="{% url 'profile' %}"
+                class="surface-card group reveal-up p-6"
+            >
+
+                <span class="icon-box">
+                    ←
+                </span>
+
+                <h3 class="mt-5 text-lg font-black text-[#1D4533]">
+                    بازگشت به پروفایل
+                </h3>
+
+                <p class="mt-2 text-sm leading-7 text-[#5E3122]/55">
+                    به صفحه حساب کاربری برگرد.
+                </p>
+
+            </a>
+
+        </div>
+
     </div>
+
 </section>
+
 {% endblock %}
+```

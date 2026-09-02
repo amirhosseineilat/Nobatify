@@ -5,7 +5,7 @@ from django.contrib.auth.forms import (
     SetPasswordForm,
 )
 from django.contrib.auth import get_user_model
-from .model import Card , Wallet
+from .models import Card , Wallet
 
 User = get_user_model()
 
@@ -40,6 +40,6 @@ class ValidateOTPForm(Form):
 
 class CardForm(ModelForm):
     class meta:
-        model = CardForm
+        model = Card
         fields = ['card_number','cvv2','month','day']
 

@@ -1,0 +1,180 @@
+```html
+{% extends "base.html" %}
+
+{% block title %}کارت‌های من | Nobatify{% endblock %}
+
+{% block content %}
+
+<section class="page-shell">
+
+    <div class="mx-auto max-w-5xl">
+
+        <!-- Header -->
+        <div class="mb-8 reveal-up">
+
+            <span class="eyebrow">
+                پرداخت
+            </span>
+
+            <h1 class="page-title">
+                کارت‌های من
+            </h1>
+
+            <p class="mt-4 max-w-xl text-sm leading-7 text-[#5E3122]/55">
+                یک کارت را برای پرداخت یا شارژ کیف پول انتخاب کن.
+            </p>
+
+        </div>
+
+
+        <!-- Cards -->
+        <form method="post">
+
+            {% csrf_token %}
+
+            <div class="grid gap-5 md:grid-cols-2">
+
+                {% for card in cards %}
+
+                <label class="card-selector reveal-up">
+
+                    <input
+                        type="radio"
+                        name="selected_card"
+                        value="{{ card.id }}"
+                        class="card-radio"
+                    >
+
+                    <div class="bank-card">
+
+                        <!-- Card header -->
+                        <div class="flex items-center justify-between">
+
+                            <div class="card-chip">
+                                ▦
+                            </div>
+
+                            <span class="card-brand">
+                                NOBATIFY
+                            </span>
+
+                        </div>
+
+
+                        <!-- Card number -->
+                        <div class="mt-10">
+
+                            <p class="text-xs text-[#F7EAE0]/45">
+                                شماره کارت
+                            </p>
+
+                            <p class="mt-2 text-lg font-bold tracking-[.16em] text-[#F7EAE0]">
+
+                                ****
+                                ****
+                                ****
+                                {{ card.card_number|stringformat:"s"|slice:"-4:" }}
+
+                            </p>
+
+                        </div>
+
+
+                        <!-- Card footer -->
+                        <div class="mt-8 flex items-end justify-between">
+
+                            <div>
+
+                                <p class="text-[10px] text-[#F7EAE0]/40">
+                                    اعتبار
+                                </p>
+
+                                <p class="mt-1 text-sm font-bold text-[#F7EAE0]">
+                                    {{ card.month|stringformat:"02d" }}/{{ card.day|stringformat:"02d" }}
+                                </p>
+
+                            </div>
+
+
+                            <div class="card-check">
+                                ✓
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </label>
+
+                {% empty %}
+
+                <!-- Empty -->
+                <div class="empty-state md:col-span-2">
+
+                    <div>
+
+                        <span class="icon-box mx-auto">
+                            💳
+                        </span>
+
+                        <h3 class="mt-5 text-xl font-black text-[#1D4533]">
+                            هنوز کارتی ثبت نکردی
+                        </h3>
+
+                        <p class="mt-2 text-sm text-[#5E3122]/50">
+                            برای شارژ کیف پول ابتدا یک کارت اضافه کن.
+                        </p>
+
+                        <a
+                            href="{% url 'card' %}"
+                            class="btn btn-primary mt-6"
+                        >
+                            افزودن کارت
+                        </a>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+
+            {% if cards %}
+
+            <div class="mt-6 flex flex-wrap gap-3">
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    انتخاب کارت
+                </button>
+
+                <a
+                    href="{% url 'card' %}"
+                    class="btn btn-outline"
+                >
+                    + افزودن کارت جدید
+                </a>
+
+                <a
+                    href="{% url 'wallet' %}"
+                    class="btn btn-ghost"
+                >
+                    بازگشت به کیف پول
+                </a>
+
+            </div>
+
+            {% endif %}
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}
+```

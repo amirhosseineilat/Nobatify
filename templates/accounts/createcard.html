@@ -1,0 +1,153 @@
+```html
+{% extends "base.html" %}
+
+{% block title %}افزودن کارت | Nobatify{% endblock %}
+
+{% block content %}
+
+<section class="page-shell">
+
+    <div class="mx-auto max-w-xl">
+
+        <!-- Header -->
+        <div class="mb-8 reveal-up">
+
+            <span class="eyebrow">
+                پرداخت
+            </span>
+
+            <h1 class="page-title">
+                افزودن کارت
+            </h1>
+
+            <p class="mt-4 text-sm leading-7 text-[#5E3122]/55">
+                اطلاعات کارت بانکی خودت را وارد کن تا بتوانی از آن برای شارژ کیف پول استفاده کنی.
+            </p>
+
+        </div>
+
+
+        <!-- Form -->
+        <div class="auth-card auth-card-wide reveal-scale">
+
+            <form
+                method="post"
+                class="form-stack"
+            >
+
+                {% csrf_token %}
+
+
+                {% if form.non_field_errors %}
+
+                    <div class="error-box">
+                        {{ form.non_field_errors }}
+                    </div>
+
+                {% endif %}
+
+
+                <!-- Card number -->
+                <div class="field-wrap">
+
+                    <label for="{{ form.card_number.id_for_label }}">
+                        شماره کارت
+                    </label>
+
+                    {{ form.card_number }}
+
+                    {% for error in form.card_number.errors %}
+                        <p class="field-error">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- CVV -->
+                <div class="field-wrap">
+
+                    <label for="{{ form.cvv2.id_for_label }}">
+                        CVV2
+                    </label>
+
+                    {{ form.cvv2 }}
+
+                    {% for error in form.cvv2.errors %}
+                        <p class="field-error">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- Expiration -->
+                <div class="grid gap-4 sm:grid-cols-2">
+
+                    <div class="field-wrap">
+
+                        <label for="{{ form.month.id_for_label }}">
+                            ماه انقضا
+                        </label>
+
+                        {{ form.month }}
+
+                        {% for error in form.month.errors %}
+                            <p class="field-error">
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <div class="field-wrap">
+
+                        <label for="{{ form.day.id_for_label }}">
+                            سال انقضا
+                        </label>
+
+                        {{ form.day }}
+
+                        {% for error in form.day.errors %}
+                            <p class="field-error">
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Actions -->
+                <div class="mt-3 flex flex-wrap gap-3">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        افزودن کارت
+                    </button>
+
+                    <a
+                        href="{% url 'mycards' %}"
+                        class="btn btn-outline"
+                    >
+                        انصراف
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+```

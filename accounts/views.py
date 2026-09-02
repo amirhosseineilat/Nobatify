@@ -27,7 +27,7 @@ from .service import AccountService
 from datetime import timedelta
 from utils.notifications import Sender, EmailNotification
 from django.contrib.auth import get_user_model
-from django.views import view
+from django.views import View
 
 User = get_user_model()
 # Create your views here.
@@ -149,17 +149,17 @@ class Wallet(LoginRequiredMixin, DetailView):
 
 class CardListView(ListView):
     model = Card
-    tamplate_name = "accounts/mycard.html"
+    template_name = "accounts/mycard.html"
     context_object_name = "cards"
 
 class CreateCardView(CreateView):
     model = Card
     template_name = "accounts/createcard.html"
-    form_class = CreateCardView
+    form_class = CardForm
     success_url = reverse_lazy('mycards')
 
     def form_valid(self,form):
-        wallet = wallet.objects.get(user=self.request.user)
+        wallet = Wallet.objects.get(user=self.request.user)
 
         card = form.save(commit=False)
 
@@ -169,7 +169,7 @@ class CreateCardView(CreateView):
 
         return super().form_valid(form)
 
-class ChargeWalletView(view):
+class ChargeWalletView(View):
 
         def get(self,request):
             return render(request,"acounts/chargewallet.html")
