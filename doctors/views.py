@@ -1,12 +1,14 @@
-from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Doctor, Comment
+from appointments.models import TimeSlot
 from django.views.generic import DetailView, ListView, CreateView
 from .service import DoctorService
 from .forms import CommentForm
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
-from django.db.models import Avg, Count
+from django.db.models import Avg, Count, Prefetch
+
+
 # Create your views here.
 
 
@@ -16,12 +18,22 @@ class DoctorDetailView(DetailView):
     context_object_name = "doctor"
     
     def get_queryset(self):
-        return (
-            Doctor.objects.prefetch_related("specialities")
-            .annotate(
-                avg_rating=Avg("comments__rating"),
-                total_comments=Count("comments")
-            ))
+        available_slots = TimeSlot.objects.filter(
+            appointment__isnull=True
+        )
+
+        return Doctor.objects.prefetch_related(
+            "specialities",
+            Prefetch(
+                "time_slots",
+                queryset=available_slots,
+                to_attr="available_time_slots"
+            )
+        ).annotate(
+            avg_rating=Avg("comments__rating"),
+            total_comments=Count("comments")
+        )
+        
 
 
 class DoctorListView(ListView):

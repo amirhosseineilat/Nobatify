@@ -1,26 +1,46 @@
 from django.db import models
 from django.contrib.auth.models import User
+from doctors.models import Doctor
 
 # Create your models here.
 
+class TimeSlot(models.Model):
+    doctor = models.ForeignKey(
+        Doctor, on_delete=models.CASCADE, related_name="time_slots"
+    )
+    date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    is_reserved = models.BooleanField(default=False)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["doctor", "date", "start_time"], name="unique_doctor_timeslot"
+            )
+        ]
+
+        ordering = ["date", "start_time"]
+
+    def __str__(self):
+        return f"{self.doctor} - {self.date} ({self.start_time} - {self.end_time})"
 
 class Appointment(models.Model):
     doctor = models.ForeignKey(
-        "doctors.Doctor", on_delete=models.CASCADE, related_name="appointments"
+        Doctor, on_delete=models.CASCADE, related_name="appointments"
     )
-    user = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        related_name="appointments",
-        null=True,
-        blank=True,
+
+    time_slot = models.OneToOneField(
+        TimeSlot, on_delete=models.CASCADE, related_name="appointment"
     )
-    date = models.DateField()
-    time = models.TimeField()
+    patient = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="appointments"
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ("doctor", "date", "time")
+        ordering = ["-created_at"]
 
     def __str__(self):
-        return f"Appointment with {self.doctor.first_name} {self.doctor.last_name} on {self.date} at {self.time}"
+        return f"Appointment with {self.doctor} on {self.time_slot}"

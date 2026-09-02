@@ -13,17 +13,12 @@
             <div class="p-7 md:p-10">
                 <div class="grid gap-4 sm:grid-cols-2">
                     <div class="detail-box"><span>تاریخ</span><strong>{{ appointment.date }}</strong></div>
-                    <div class="detail-box"><span>ساعت</span><strong>{{ appointment.time }}</strong></div>
+                    <div class="detail-box"><span>ساعت</span><strong>{{ appointment.start_time }}- {{ appointment.end_time }}</strong></div>
                     <div class="detail-box"><span>وضعیت</span><strong>{% if appointment.user %}رزرو شده{% else %}آزاد{% endif %}</strong></div>
                     <div class="detail-box"><span>ثبت شده در</span><strong>{{ appointment.created_at|date:"Y/m/d H:i" }}</strong></div>
                 </div>
 
-                {% if user.is_authenticated and not appointment.user %}
-                    <form method="post" action="{% url 'appointment_book' appointment.pk %}" class="mt-7">
-                        {% csrf_token %}
-                        <button class="btn btn-primary btn-lg w-full justify-center">رزرو این نوبت <span>✓</span></button>
-                    </form>
-                {% elif appointment.user == user %}
+                {% if appointment.patient == user %}
                     <form method="post" action="{% url 'appointment_cancel' appointment.pk %}" class="mt-7">
                         {% csrf_token %}
                         
