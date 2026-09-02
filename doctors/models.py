@@ -4,10 +4,17 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 # Create your models here.
 
+class Speciality(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
 class Doctor(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
+    specialities = models.ManyToManyField(Speciality,related_name='specialities')
 
 
     def __str__(self):
@@ -35,9 +42,3 @@ class Comment(models.Model):
     def __str__(self):
         return f"Comment by {self.user.first_name} {self.user.last_name} on {self.doctor.first_name} {self.doctor.last_name}"
 
-class Speciality(models.Model):
-    doctor = models.ManyToManyField(Doctor, related_name='specialities')
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
