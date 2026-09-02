@@ -42,7 +42,7 @@ MANIFEST
 .env
 .env.*
 !.env.example
-
+.env.docker
 .envrc
 
 # Django secret/local settings
