@@ -10,4 +10,7 @@ urlpatterns = [
     path("validate_otp/", ValidateOtpView.as_view(), name="validate_otp"),
     path("profile/", Profile.as_view(), name="profile"),
     path("profile/wallet", Wallet.as_view(), name="wallet"),
+    path("profile/wallet/mycards", CardListView.as_view(), name="mycards"),
+    path("profile/wallet/card", CreateCardView.as_view(), name="card"),
+    path("profile/wallet/charge", ChargeWalletView.as_view(), name="charge"),
 ]

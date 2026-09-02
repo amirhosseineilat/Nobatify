@@ -38,3 +38,11 @@ class Otp(models.Model):
 
     def __str__(self):
         return f"OTP for {self.user.username} - {'Used' if self.is_used else 'Unused'}"
+
+
+class Card(models.Model):
+    card_number = models.IntegerField()
+    cvv2 = models.IntegerField()
+    month = models.IntegerField()
+    day = models.IntegerField()
+    wallet = models.ForeignKey(Wallet,on_delete=models.CASCADE,related_name='card')

@@ -5,6 +5,7 @@ from django.contrib.auth.forms import (
     SetPasswordForm,
 )
 from django.contrib.auth import get_user_model
+from .model import Card , Wallet
 
 User = get_user_model()
 
@@ -35,3 +36,10 @@ class ForgetForm(ModelForm):
 
 class ValidateOTPForm(Form):
     otp_code = CharField(required=True, max_length=15)
+
+
+class CardForm(ModelForm):
+    class meta:
+        model = CardForm
+        fields = ['card_number','cvv2','month','day']
+

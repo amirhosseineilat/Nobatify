@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.utils.timezone import now
 from django.contrib.auth import login
 from django.contrib import messages
-from .models import Wallet
+from .models import Wallet,Card
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -11,6 +11,7 @@ from .forms import (
     LoginForm,
     ForgetForm,
     ValidateOTPForm,
+    CardForm,
 )
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -26,6 +27,7 @@ from .service import AccountService
 from datetime import timedelta
 from utils.notifications import Sender, EmailNotification
 from django.contrib.auth import get_user_model
+from django.views import view
 
 User = get_user_model()
 # Create your views here.
@@ -145,6 +147,43 @@ class Wallet(LoginRequiredMixin, DetailView):
     def get_object(self):
         return self.request.user
 
+class CardListView(ListView):
+    model = Card
+    tamplate_name = "accounts/mycard.html"
+    context_object_name = "cards"
+
+class CreateCardView(CreateView):
+    model = Card
+    template_name = "accounts/createcard.html"
+    form_class = CreateCardView
+    success_url = reverse_lazy('mycards')
+
+    def form_valid(self,form):
+        wallet = wallet.objects.get(user=self.request.user)
+
+        card = form.save(commit=False)
+
+        card.wallet = wallet
+
+        card.save()
+
+        return super().form_valid(form)
+
+class ChargeWalletView(view):
+
+        def get(self,request):
+            return render(request,"acounts/chargewallet.html")
+
+        def post(self,request,*args,**kwargs):
+
+            wallet = Wallet.objects.get(user=self.request.user)
+            balance = self.request.POST.get("balance")
+
+            wallet.balance += float(balance)
+
+            wallet.save()
+
+            return redirect("wallet")
 
 class Home(TemplateView):
     template_name = "home.html"
