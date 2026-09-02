@@ -27,9 +27,9 @@
             </p>
 
             <div class="mt-9 flex flex-wrap gap-3">
-                <a href="/doctors/" class="btn btn-primary btn-lg magnetic">پیدا کردن پزشک <span class="text-lg">←</span></a>
+                <a href="{% url 'doctors' %}" class="btn btn-primary btn-lg magnetic">پیدا کردن پزشک <span class="text-lg">←</span></a>
                 {% if not user.is_authenticated %}
-                    <a href="/account/register/" class="btn btn-outline btn-lg">ساخت حساب رایگان</a>
+                    <a href="{% url 'register' %}" class="btn btn-outline btn-lg">ساخت حساب رایگان</a>
                 {% endif %}
             </div>
 
@@ -166,7 +166,7 @@
         <div class="text-center reveal-up">
             <span class="eyebrow">شروع ساده</span>
             <h2 class="section-title mx-auto max-w-3xl">نوبت بعدی‌ات را همین الان پیدا کن.</h2>
-            <a href="/doctors/" class="btn btn-primary btn-lg mt-8 magnetic">مشاهده پزشکان <span>←</span></a>
+            <a href="{% url 'doctors' %}" class="btn btn-primary btn-lg mt-8 magnetic">مشاهده پزشکان <span>←</span></a>
         </div>
     </div>
 </section>

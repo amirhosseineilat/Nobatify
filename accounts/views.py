@@ -4,7 +4,7 @@ from django.contrib.auth import login
 from .models import Wallet
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import SetPasswordForm
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import (
     RegistrationForm,
@@ -34,11 +34,14 @@ class LogingView(LoginView):
     form_class = LoginForm
     success_url = reverse_lazy("home")
 
+class LogingoutView(LogoutView):
+    next_page = reverse_lazy("home")
+
 
 class RegisterView(FormView):
     template_name = "accounts/register.html"
     form_class = RegistrationForm
-    success_url = reverse_lazy("home")
+    success_url = reverse_lazy("login")
 
     def form_valid(self, form):
         form.save()
