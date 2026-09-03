@@ -28,6 +28,7 @@ from datetime import timedelta
 from utils.notifications import Sender, EmailNotification
 from django.contrib.auth import get_user_model
 from django.views import View
+from decimal import Decimal
 
 User = get_user_model()
 # Create your views here.
@@ -140,12 +141,12 @@ class Profile(LoginRequiredMixin, DetailView):
         return self.request.user
 
 
-class Wallet(LoginRequiredMixin, DetailView):
+class Walletview(LoginRequiredMixin, DetailView):
     template_name = "accounts/wallet.html"
     context_object_name = "wallet"
 
     def get_object(self):
-        return self.request.user
+        return self.request.user.wallet
 
 class CardListView(ListView):
     model = Card
@@ -156,10 +157,12 @@ class CreateCardView(CreateView):
     model = Card
     template_name = "accounts/createcard.html"
     form_class = CardForm
-    success_url = reverse_lazy('mycards')
+    success_url = reverse_lazy("mycards")
 
-    def form_valid(self,form):
-        wallet = Wallet.objects.get(user=self.request.user)
+    def form_valid(self, form):
+        wallet, created = Wallet.objects.get_or_create(
+            user=self.request.user
+        )
 
         form.instance.wallet = wallet
 
@@ -168,14 +171,20 @@ class CreateCardView(CreateView):
 class ChargeWalletView(View):
 
         def get(self,request):
-            return render(request,"accounts/chargewallet.html")
+            wallet = Wallet.objects.get(user=request.user)
+            cards = wallet.card.all()
+
+            return render(request,"accounts/chargewallet.html",{
+                "wallet": wallet,
+                "cards": cards,
+            })
 
         def post(self,request,*args,**kwargs):
 
             wallet = Wallet.objects.get(user=self.request.user)
             balance = self.request.POST.get("balance")
 
-            wallet.balance += float(balance)
+            wallet.balance += Decimal(balance)
 
             wallet.save()
 

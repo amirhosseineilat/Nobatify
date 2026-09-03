@@ -41,8 +41,13 @@ class Otp(models.Model):
 
 
 class Card(models.Model):
-    card_number = models.IntegerField()
-    cvv2 = models.IntegerField()
-    month = models.IntegerField()
-    day = models.IntegerField()
-    wallet = models.ForeignKey(Wallet,on_delete=models.CASCADE,related_name='card')
+    card_number = models.CharField(max_length=16)
+    cvv2 = models.CharField(max_length=4)
+    month = models.CharField(max_length=2)
+    day = models.CharField(max_length=2)
+
+    wallet = models.ForeignKey(
+        Wallet,
+        on_delete=models.CASCADE,
+        related_name="card"
+    )
