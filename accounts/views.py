@@ -26,7 +26,11 @@ from .service import AccountService
 from datetime import timedelta
 from utils.notifications import Sender, EmailNotification
 from django.contrib.auth import get_user_model
-from django.contrib.auth.mixins import UserPassesTestMixin
+from .mixins import AdminRequiredMixin
+from doctors.models import Doctor
+from appointments.models import Appointment, TimeSlot
+from .models import CustomUser
+
 
 User = get_user_model()
 # Create your views here.
@@ -151,22 +155,13 @@ class Home(TemplateView):
     template_name = "home.html"
 
 
+class AdminDashboardView(AdminRequiredMixin, TemplateView):
+    template_name = "account/dashboard/index.html"
 
-class AdminRequiredMixin(UserPassesTestMixin):
-
-    def test_func(self):
-        return self.request.user.is_authenticated and self.request.user.is_admin
-
-    def handle_no_permission(self):
-        if not self.request.user.is_authenticated:
-            return redirect("login")
-
-        messages.error(
-            self.request,
-            "You do not have permission to access this page."
-        )
-        return redirect("home")
-    
-    
-# class AdminDashboardView(AdminRequiredMixin, TemplateView):
-#         template_name = "dashboard/dashboard.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["doctors_count"] = Doctor.objects.count()
+        context["slots_count"] = TimeSlot.objects.count()
+        context["appointments_count"] = Appointment.objects.count()
+        context["users_count"] = CustomUser.objects.filter(is_active=True).count()
+        return context
