@@ -6,9 +6,11 @@ from .forms import TimeSlotForm
 from doctors.models import Doctor
 from .models import Appointment,TimeSlot
 from django.contrib.auth.mixins import LoginRequiredMixin
-from account.models import Wallet
+from accounts.models import Wallet
 from decimal import Decimal
 from django.db import transaction
+from doctors.service import DoctorService
+from utils.notifications import Sender , EmailNotification
 
 # Create your views here.
 #base view
@@ -64,7 +66,7 @@ class AppointmentBookView(LoginRequiredMixin, View):
         wallet = get_object_or_404(Wallet,user=request.user)
 
         if wallet.balance < timeslot.price:
-            return redirect("send_info_payment"), messages.success(request,"کیف دول خود را شار کنید")
+            return redirect("send_info_payment")
 
         with transaction.atomic():
             appointment = Appointment(doctor=timeslot.doctor,time_slot=timeslot,patient=request.user)
@@ -73,9 +75,9 @@ class AppointmentBookView(LoginRequiredMixin, View):
             wallet.balance = wallet.balance - Decimal(timeslot.price)
             wallet.save()
             timeslot.save()
-            
-
             messages.success(request, "رزرو شما با موفقیت انجاام ")
+            sender = Sender(EmailNotification())
+            DoctorService.send_reserved_notification(user=request.user, provider_name="Nobatify", appointment=appointment, sender=sender)
 
         return redirect("my_appointment")
 
