@@ -25,4 +25,5 @@ urlpatterns = [
     path("appointments/", include("appointments.urls")),
     path("doctors/", include("doctors.urls")),
     path("", Home.as_view(), name="home"),
+    path('dashboard/',include("admindashboard.urls"))
 ]
