@@ -1165,3 +1165,11 @@ body {
 
     transform: scale(1.08);
 }
+.floating-card.floating-one span,
+.floating-card.floating-one strong {
+    color: var(--green) !important;
+}
+.floating-card.floating-two span,
+.floating-card.floating-two strong {
+    color: var(--green) !important;
+}
