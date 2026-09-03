@@ -38,7 +38,7 @@
                     {% endfor %}
                 </div>
 
-                <a href="/appointments/appointment/"
+                <a href="{% url 'appointment' %}?doctor={{ doctor.id }} "
                    class="btn btn-primary mt-8 w-full justify-center">
                     دیدن نوبت‌های موجود
                     <span>←</span>
