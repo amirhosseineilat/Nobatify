@@ -1,9 +1,10 @@
 from .models import Otp
-from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.utils.timezone import now
 from utils.notifications import Sender
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
 class AccountService:
     @staticmethod

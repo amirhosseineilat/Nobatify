@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.utils.timezone import now
 from django.contrib.auth import login
 from .models import Wallet
-from django.contrib.auth.models import User
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -25,7 +24,9 @@ from django.views.generic import (
 from .service import AccountService
 from datetime import timedelta
 from utils.notifications import Sender, EmailNotification
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 # Create your views here.
 
 
