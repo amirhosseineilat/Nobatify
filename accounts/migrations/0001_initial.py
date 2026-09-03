@@ -63,4 +63,15 @@ class Migration(migrations.Migration):
                 ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='wallet', to=settings.AUTH_USER_MODEL)),
             ],
         ),
+        migrations.CreateModel(
+            name='Card',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('card_number', models.IntegerField()),
+                ('cvv2', models.IntegerField()),
+                ('month', models.IntegerField()),
+                ('day', models.IntegerField()),
+                ('wallet', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='card', to='accounts.wallet')),
+            ],
+        ),
     ]
