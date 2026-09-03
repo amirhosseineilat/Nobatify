@@ -39,7 +39,7 @@ class ValidateOTPForm(Form):
 
 
 class CardForm(ModelForm):
-    class meta:
+    class Meta:
         model = Card
         fields = ['card_number','cvv2','month','day']
 

@@ -161,18 +161,14 @@ class CreateCardView(CreateView):
     def form_valid(self,form):
         wallet = Wallet.objects.get(user=self.request.user)
 
-        card = form.save(commit=False)
-
-        card.wallet = wallet
-
-        card.save()
+        form.instance.wallet = wallet
 
         return super().form_valid(form)
 
 class ChargeWalletView(View):
 
         def get(self,request):
-            return render(request,"acounts/chargewallet.html")
+            return render(request,"accounts/chargewallet.html")
 
         def post(self,request,*args,**kwargs):
 
