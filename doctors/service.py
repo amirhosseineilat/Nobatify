@@ -3,6 +3,7 @@ from appointments.models import Appointment
 from django.db.models import Q
 from utils.notifications import Sender
 from django.contrib.auth import get_user_model
+from django.db.models import Avg
 
 User = get_user_model()
 
@@ -16,6 +17,19 @@ class DoctorService:
             | Q(last_name__icontains=q)
             | Q(specialities__name__icontains=q)
         ).distinct()
+        return doctors
+
+    @staticmethod
+    def filter(mean_rating,spec_pk):
+
+        doctors = Doctor.objects.prefetch_related("comments").annotate(mean_rate=Avg("comments__rating"))
+
+        if mean_rating:
+            doctors = doctors.filter(mean_rate__gte=mean_rating)
+
+        if spec_id:
+            doctors = doctors.filter(specialities__pk=spec_pk)
+
         return doctors
 
     @staticmethod

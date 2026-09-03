@@ -98,3 +98,17 @@ class BaseSearchDoctorView(ListView):
         
 class SearchDoctorView(BaseSearchDoctorView):
     template_name = "doctors/doctor_list.html"
+
+class FilterDoctorView(BaseSearchDoctorView):
+    template_name = "doctors/doctor_list.html"
+
+    def get_queryset(self):
+
+        speciality = self.request.GET.get("speciality", "").strip()
+        avg_rate = self.request.GET.get("avg_rate", "").strip()
+
+        if speciality or avg_rate:
+            return DoctorService.filter(avg_rate,speciality)
+
+        return Doctor.objects.all()
+
