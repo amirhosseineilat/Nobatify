@@ -12,8 +12,10 @@ from .models import Card , Wallet
 User = get_user_model()
 
 class RegistrationForm(UserCreationForm):
+
     class Meta:
         model = User
+
         fields = [
             "username",
             "password1",
@@ -22,6 +24,30 @@ class RegistrationForm(UserCreationForm):
             "first_name",
             "last_name",
         ]
+
+        widgets = {
+            "username": forms.TextInput(attrs={
+                "placeholder": "نام کاربری",
+            }),
+
+            "email": forms.EmailInput(attrs={
+                "placeholder": "ایمیل",
+            }),
+
+            "first_name": forms.TextInput(attrs={
+                "placeholder": "نام",
+            }),
+
+            "last_name": forms.TextInput(attrs={
+                "placeholder": "نام خانوادگی",
+            }),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["password1"].help_text = "Your password can’t be too similar..."
+        self.fields["password2"].help_text = "Your password must contain at least 8 characters..."
 
 
 class LoginForm(AuthenticationForm):
