@@ -1,28 +1,92 @@
 {% extends "base.html" %}
+
 {% block title %}ثبت‌نام | Nobatify{% endblock %}
+
 {% block content %}
+{% load socialaccount %}
+
 <section class="auth-page">
     <div class="auth-card auth-card-wide reveal-scale">
+
         <div class="mb-8">
             <span class="eyebrow">شروع کن</span>
             <h1 class="mt-3 text-3xl font-black text-[#1D4533]">حساب Nobatify بساز</h1>
-            <p class="mt-2 text-sm leading-7 text-[#5E3122]/55">فقط اطلاعات ضروری را وارد کن؛ بقیه مسیر با ما.</p>
+            <p class="mt-2 text-sm leading-7 text-[#5E3122]/55">
+                فقط اطلاعات ضروری را وارد کن؛ بقیه مسیر با ما.
+            </p>
         </div>
+
         <form method="post" class="form-stack">
             {% csrf_token %}
+
             <div class="grid gap-4 sm:grid-cols-2">
                 {% for field in form %}
                     <div class="field-wrap {% if field.name == 'email' %}sm:col-span-2{% endif %}">
                         <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                         {{ field }}
-                        {% for error in field.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
-                        {% if field.help_text %}<p class="field-help">{{ field.help_text|safe }}</p>{% endif %}
+
+                        {% for error in field.errors %}
+                            <p class="field-error">{{ error }}</p>
+                        {% endfor %}
+
+                        {% if field.help_text %}
+                            <p class="field-help">{{ field.help_text|safe }}</p>
+                        {% endif %}
                     </div>
                 {% endfor %}
             </div>
-            <button class="btn btn-primary btn-lg w-full" type="submit">ساخت حساب <span>←</span></button>
+
+            <button class="btn btn-primary btn-lg w-full" type="submit">
+                ساخت حساب <span>←</span>
+            </button>
         </form>
-        <p class="mt-6 text-center text-sm text-[#5E3122]/55">قبلاً ثبت‌نام کردی؟ <a href="{% url 'login' %}" class="font-bold text-[#1D4533]">وارد شو</a></p>
+
+        <div class="my-6 flex items-center gap-4">
+            <div class="h-px flex-1 bg-[#5E3122]/10"></div>
+            <span class="text-xs font-bold text-[#5E3122]/40">یا</span>
+            <div class="h-px flex-1 bg-[#5E3122]/10"></div>
+        </div>
+
+        <a
+            href="{% provider_login_url 'google' %}"
+            class="flex w-full items-center justify-center gap-3 rounded-2xl border border-[#5E3122]/10 bg-white px-5 py-4 text-sm font-bold text-[#1D4533] transition hover:border-[#1D4533]/20 hover:bg-[#F8F6F1]"
+        >
+            <svg
+                class="h-5 w-5"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+            >
+                <path
+                    fill="#4285F4"
+                    d="M21.35 12.23c0-.79-.07-1.55-.23-2.23H12v4.22h5.23a4.47 4.47 0 0 1-1.94 2.93v2.44h3.14c1.84-1.69 2.92-4.18 2.92-7.36z"
+                />
+                <path
+                    fill="#34A853"
+                    d="M12 21.75c2.63 0 4.84-.87 6.45-2.36l-3.14-2.44c-.87.58-1.98.92-3.31.92-2.55 0-4.71-1.72-5.49-4.04H3.27v2.52A9.75 9.75 0 0 0 12 21.75z"
+                />
+                <path
+                    fill="#FBBC05"
+                    d="M6.51 13.83A5.86 5.86 0 0 1 6.2 12c0-.64.11-1.26.31-1.83V7.65H3.27A9.75 9.75 0 0 0 2.25 12c0 1.57.38 3.06 1.02 4.35l3.24-2.52z"
+                />
+                <path
+                    fill="#EA4335"
+                    d="M12 6.13c1.43 0 2.72.49 3.74 1.45l2.8-2.8C16.84 3.17 14.63 2.25 12 2.25a9.75 9.75 0 0 0-8.73 5.4l3.24 2.52C7.29 7.85 9.45 6.13 12 6.13z"
+                />
+            </svg>
+
+            ثبت‌نام با Google
+        </a>
+
+        <p class="mt-6 text-center text-sm text-[#5E3122]/55">
+            قبلاً ثبت‌نام کردی؟
+            <a
+                href="{% url 'login' %}"
+                class="font-bold text-[#1D4533]"
+            >
+                وارد شو
+            </a>
+        </p>
+
     </div>
 </section>
 {% endblock %}
