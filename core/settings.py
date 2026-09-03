@@ -137,9 +137,15 @@ SOCIALACCOUNT_PROVIDERS = {
         "AUTH_PARAMS": {
             "access_type": "online",
         },
+        "APP": {
+            "client_id": os.getenv("GOOGLE_CLIENT_ID", "Client_id"),
+            "secret": os.getenv("GOOGLE_CLIENT_SECRET", "Client_secret"),
+            "key": "",
+        },
         "AUTH_PKCE_ENABLED": True,
     }
 }
+
 # Internationalization
 # https://docs.djangoproject.com/en/6.1/topics/i18n/
 
