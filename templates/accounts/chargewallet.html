@@ -21,7 +21,7 @@
             </h1>
 
             <p class="mt-4 max-w-xl text-sm leading-7 text-[#5E3122]/55">
-                کارت موردنظر را انتخاب کن و مبلغ شارژ را وارد کن.
+                مبلغ شارژ را وارد کن و سپس کارت موردنظر را انتخاب کن.
             </p>
 
         </div>
@@ -30,6 +30,52 @@
         <form method="post">
 
             {% csrf_token %}
+
+
+            {% if cards %}
+
+            <!-- ============================= -->
+            <!-- AMOUNT -->
+            <!-- ============================= -->
+
+            <div class="surface-card reveal-up p-7 mb-8">
+
+                <div class="mb-5">
+
+                    <h2 class="text-xl font-black text-[#1D4533]">
+                        مبلغ شارژ
+                    </h2>
+
+                    <p class="mt-1 text-sm text-[#5E3122]/50">
+                        مبلغ موردنظر را وارد کن.
+                    </p>
+
+                </div>
+
+
+                <div class="field-wrap">
+
+                    <label for="balance">
+                        مبلغ
+                    </label>
+
+                    <input
+                        id="balance"
+                        name="balance"
+                        type="number"
+                        min="1"
+                        step="0.01"
+                        placeholder="مثلاً 500000"
+                        required
+                    >
+
+                    <p class="field-help">
+                        مبلغ به تومان محاسبه می‌شود.
+                    </p>
+
+                </div>
+
+            </div>
 
 
             <!-- ============================= -->
@@ -67,6 +113,7 @@
 
                         <div class="bank-card">
 
+                            <!-- Card header -->
                             <div class="flex items-center justify-between">
 
                                 <div class="card-chip">
@@ -80,6 +127,7 @@
                             </div>
 
 
+                            <!-- Card number -->
                             <div class="mt-10">
 
                                 <p class="text-xs text-[#F7EAE0]/45">
@@ -98,16 +146,17 @@
                             </div>
 
 
-                            <div class="mt-8 flex justify-between">
+                            <!-- Expiration -->
+                            <div class="mt-8 flex justify-between items-end">
 
                                 <div>
 
                                     <p class="text-[10px] text-[#F7EAE0]/40">
-                                        اعتبار
+                                        تاریخ انقضا
                                     </p>
 
                                     <p class="mt-1 text-sm font-bold text-[#F7EAE0]">
-                                        {{ card.month|stringformat:"02d" }}/{{ card.day|stringformat:"02d" }}
+                                        {{ card.month }}/{{ card.day }}
                                     </p>
 
                                 </div>
@@ -123,35 +172,6 @@
 
                     </label>
 
-                    {% empty %}
-
-                    <div class="empty-state md:col-span-2">
-
-                        <div>
-
-                            <span class="icon-box mx-auto">
-                                💳
-                            </span>
-
-                            <h3 class="mt-5 text-xl font-black text-[#1D4533]">
-                                هنوز کارتی نداری
-                            </h3>
-
-                            <p class="mt-2 text-sm text-[#5E3122]/50">
-                                ابتدا یک کارت بانکی اضافه کن.
-                            </p>
-
-                            <a
-                                href="{% url 'card' %}"
-                                class="btn btn-primary mt-6"
-                            >
-                                افزودن کارت
-                            </a>
-
-                        </div>
-
-                    </div>
-
                     {% endfor %}
 
                 </div>
@@ -159,64 +179,60 @@
             </div>
 
 
-            {% if cards %}
-
             <!-- ============================= -->
-            <!-- AMOUNT -->
+            <!-- ACTIONS -->
             <!-- ============================= -->
 
-            <div class="surface-card reveal-up p-7">
+            <div class="flex flex-wrap gap-3 reveal-up">
 
-                <div class="mb-5">
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    شارژ کیف پول
+                </button>
 
-                    <h2 class="text-xl font-black text-[#1D4533]">
-                        مبلغ شارژ
-                    </h2>
+                <a
+                    href="{% url 'card' %}"
+                    class="btn btn-outline"
+                >
+                    + افزودن کارت
+                </a>
 
-                    <p class="mt-1 text-sm text-[#5E3122]/50">
-                        مبلغ موردنظر را وارد کن.
+                <a
+                    href="{% url 'wallet' %}"
+                    class="btn btn-ghost"
+                >
+                    بازگشت به کیف پول
+                </a>
+
+            </div>
+
+
+            {% else %}
+
+            <!-- Empty -->
+            <div class="empty-state reveal-up">
+
+                <div>
+
+                    <span class="icon-box mx-auto">
+                        💳
+                    </span>
+
+                    <h3 class="mt-5 text-xl font-black text-[#1D4533]">
+                        هنوز کارتی نداری
+                    </h3>
+
+                    <p class="mt-2 text-sm text-[#5E3122]/50">
+                        برای شارژ کیف پول ابتدا یک کارت بانکی اضافه کن.
                     </p>
-
-                </div>
-
-
-                <div class="field-wrap">
-
-                    <label for="balance">
-                        مبلغ
-                    </label>
-
-                    <input
-                        id="balance"
-                        name="balance"
-                        type="number"
-                        min="1"
-                        step="0.01"
-                        placeholder="مثلاً 500000"
-                        required
-                    >
-
-                    <p class="field-help">
-                        مبلغ به تومان محاسبه می‌شود.
-                    </p>
-
-                </div>
-
-
-                <div class="mt-6 flex flex-wrap gap-3">
-
-                    <button
-                        type="submit"
-                        class="btn btn-primary"
-                    >
-                        شارژ کیف پول
-                    </button>
 
                     <a
-                        href="{% url 'wallet' %}"
-                        class="btn btn-outline"
+                        href="{% url 'card' %}"
+                        class="btn btn-primary mt-6"
                     >
-                        انصراف
+                        افزودن کارت
                     </a>
 
                 </div>

@@ -161,8 +161,12 @@
 </section>
 
 <script>
+
     const cardForm = document.getElementById("card-form");
-    const cardInput = document.getElementById("{{ form.card_number.id_for_label }}");
+    const cardInput = document.getElementById(
+        "{{ form.card_number.id_for_label }}"
+    );
+
 
     cardInput.addEventListener("input", function () {
 
@@ -175,17 +179,19 @@
         // تقسیم به گروه‌های 4 تایی
         const groups = value.match(/.{1,4}/g);
 
-        // نمایش به صورت 4-4-4-4
+        // نمایش 4-4-4-4
         this.value = groups ? groups.join("-") : "";
+
     });
 
 
     cardForm.addEventListener("submit", function () {
 
-        // قبل از ارسال، خط تیره‌ها حذف شوند
+        // حذف خط تیره قبل از ارسال به Django
         cardInput.value = cardInput.value.replace(/\D/g, "");
 
     });
+
 </script>
 
 {% endblock %}
