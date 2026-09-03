@@ -1,57 +1,139 @@
 <header id="site-nav" class="fixed inset-x-0 top-0 z-40 px-4 pt-4 transition-all duration-500">
     <nav class="mx-auto flex max-w-7xl items-center justify-between rounded-[22px] border border-white/70 bg-[#fffaf7]/75 px-4 py-3 shadow-[0_12px_50px_rgba(29,69,51,.07)] backdrop-blur-xl md:px-6">
+
+        <!-- Logo -->
         <a href="/" class="group flex items-center gap-3" aria-label="Nobatify">
-            <span class="grid h-11 w-11 place-items-center rounded-2xl bg-[#1D4533] text-lg font-black text-[#F7EAE0] transition duration-500 group-hover:rotate-6 group-hover:scale-105">N</span>
+            <span class="grid h-11 w-11 place-items-center rounded-2xl bg-[#1D4533] text-lg font-black text-[#F7EAE0] transition duration-500 group-hover:rotate-6 group-hover:scale-105">
+                N
+            </span>
+
             <span>
-                <span class="block text-lg font-black tracking-tight text-[#1D4533]">Nobatify</span>
-                <span class="hidden text-[10px] font-medium text-[#5E3122]/60 sm:block">نوبتت، همین‌جا.</span>
+                <span class="block text-lg font-black tracking-tight text-[#1D4533]">
+                    Nobatify
+                </span>
+
+                <span class="hidden text-[10px] font-medium text-[#5E3122]/60 sm:block">
+                    نوبتت، همین‌جا.
+                </span>
             </span>
         </a>
 
+
+        <!-- Desktop Navigation -->
         <div class="hidden items-center gap-8 md:flex">
-            <a href="{% url 'doctors' %}" class="nav-link">پزشکان</a>
-            <a href="{% url 'appointment' %}" class="nav-link">نوبت‌ها</a>
+            <a href="{% url 'doctors' %}" class="nav-link">
+                پزشکان
+            </a>
+
+            <a href="{% url 'appointment' %}" class="nav-link">
+                نوبت‌ها
+            </a>
+
             {% if user.is_authenticated %}
-                <a href="{% url 'profile' %}" class="nav-link">پروفایل</a>
+                <a href="{% url 'profile' %}" class="nav-link">
+                    پروفایل
+                </a>
             {% endif %}
         </div>
 
+
+        <!-- Desktop Buttons -->
         <div class="hidden items-center gap-2 sm:flex">
+
             {% if user.is_authenticated %}
-                <a href="{% url 'profile' %}" class="btn btn-primary">حساب من <span>↗</span></a>
+
+                <a href="{% url 'profile' %}" class="btn btn-primary">
+                    حساب من <span>↗</span>
+                </a>
 
                 <form action="{% url 'logout' %}" method="post" class="flex items-center">
-                   {% csrf_token %}
- 
+                    {% csrf_token %}
+
                     <button type="submit" class="btn btn-ghost btn-logout">
-                    خروج
+                        خروج
                     </button>
                 </form>
+
             {% else %}
-                <a href="{% url 'login' %}" class="btn btn-ghost">ورود</a>
-                <a href="{% url 'register' %}" class="btn btn-primary">شروع کنید <span>↗</span></a>
+
+                <a href="{% url 'login' %}" class="btn btn-ghost">
+                    ورود
+                </a>
+
+                <a href="{% url 'register' %}" class="btn btn-primary">
+                    شروع کنید <span>↗</span>
+                </a>
+
             {% endif %}
+
         </div>
 
-        <button class="mobile-menu-btn grid h-11 w-11 place-items-center rounded-2xl bg-[#F7EAE0] text-[#1D4533] md:hidden" aria-label="باز کردن منو" aria-expanded="false">
+
+        <!-- Mobile Menu Button -->
+        <button
+            class="mobile-menu-btn grid h-11 w-11 place-items-center rounded-2xl bg-[#F7EAE0] text-[#1D4533] md:hidden"
+            aria-label="باز کردن منو"
+            aria-expanded="false"
+        >
             <span class="space-y-1.5">
                 <i class="block h-0.5 w-5 bg-current"></i>
                 <i class="block h-0.5 w-5 bg-current"></i>
                 <i class="block h-0.5 w-5 bg-current"></i>
             </span>
         </button>
+
     </nav>
 
+
+    <!-- Mobile Menu -->
     <div class="mobile-menu mx-auto mt-2 hidden max-w-7xl rounded-[22px] border border-white/70 bg-[#fffaf7]/95 p-4 shadow-soft backdrop-blur-xl md:hidden">
+
         <div class="grid gap-2">
-            <a href="{% url 'doctors' %}" class="mobile-link">پزشکان</a>
-            <a href="{% url 'appointment' %}" class="mobile-link">نوبت‌ها</a>
+
+            <a href="{% url 'doctors' %}" class="mobile-link">
+                پزشکان
+            </a>
+
+            <a href="{% url 'appointment' %}" class="mobile-link">
+                نوبت‌ها
+            </a>
+
+
             {% if user.is_authenticated %}
-                <a href="{% url 'profile' %}" class="mobile-link">پروفایل</a>
+
+                <a href="{% url 'profile' %}" class="mobile-link">
+                    پروفایل
+                </a>
+
+                <!-- Mobile Logout -->
+                <form action="{% url 'logout' %}" method="post" class="mt-2 w-full">
+                    {% csrf_token %}
+
+                    <button
+                        type="submit"
+                        class="btn btn-ghost btn-logout w-full justify-center"
+                    >
+                        خروج
+                    </button>
+                </form>
+
             {% else %}
-                <a href="{% url 'login' %}" class="mobile-link">ورود</a>
-                <a href="{% url 'register' %}" class="btn btn-primary mt-2 justify-center">ساخت حساب</a>
+
+                <a href="{% url 'login' %}" class="mobile-link">
+                    ورود
+                </a>
+
+                <a
+                    href="{% url 'register' %}"
+                    class="btn btn-primary mt-2 justify-center"
+                >
+                    ساخت حساب
+                </a>
+
             {% endif %}
+
         </div>
+
     </div>
+
 </header>

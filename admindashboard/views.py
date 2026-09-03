@@ -12,10 +12,12 @@ from appointments.forms import TimeSlotForm
 from django.db.models import Q
 from django.contrib.auth.views import LoginView
 from .forms import AdminLogingForm
+from accounts.mixins import AdminRequiredMixin
+
 # Create your views here.
-class AdminDoctorListView(BaseListDoctorView):
+class AdminDoctorListView(AdminRequiredMixin,BaseListDoctorView):
     template_name = "dashboard/admin_doctors.html"
-class AdminDashboardView( TemplateView):
+class AdminDashboardView(AdminRequiredMixin,TemplateView):
     template_name = "dashboard/index.html"
 
     def get_context_data(self, **kwargs):
@@ -26,19 +28,19 @@ class AdminDashboardView( TemplateView):
         context["users_count"] = CustomUser.objects.filter(is_active=True).count()
         return context
 
-class AdminCreateDoctorView(BaseCreateDoctorView):
+class AdminCreateDoctorView(AdminRequiredMixin,BaseCreateDoctorView):
     template_name = "dashboard/admin_doctor_create.html"
     success_url = reverse_lazy("admin_doctor_list")
-class AdminDoctorDetailView(BaseDetailDoctorView):
+class AdminDoctorDetailView(AdminRequiredMixin,BaseDetailDoctorView):
     pass
-class AdminDoctorUpdateView(UpdateView):
+class AdminDoctorUpdateView(AdminRequiredMixin,UpdateView):
     model = Doctor
     template_name = "dashboard/admin_doctor_create.html"
     form_class = DoctorForm
     success_url = reverse_lazy("admin_doctor_list")
 
 
-class AdminDoctorDeleteView(DeleteView):
+class AdminDoctorDeleteView(AdminRequiredMixin,DeleteView):
     model = Doctor
     success_url = reverse_lazy("admin_doctor_list")
     
@@ -47,33 +49,33 @@ class AdminDoctorDeleteView(DeleteView):
         try:
             doctor = self.get_object()
             doctor.delete()
-            messages.success(request,"delete successfuly complited")
+            messages.success(request,"حذف با موفقیت انجام شد")
             return redirect("admin_doctor_list")
         except Exception as e:
-            messages.error(request,"delete failed")
+            messages.error(request,"حذف شکست خورد")
             return redirect("admin_doctor_list")
 
 class AdminSearchDoctor(BaseSearchDoctorView):
     template_name = "dashboard/admin_doctors.html"
 
 #timeslots
-class AdminListTimesLotView(BaseTimeSlotListView):
+class AdminListTimesLotView(AdminRequiredMixin,BaseTimeSlotListView):
     template_name = "dashboard/admin_timeslot_list.html"
     def get_queryset(self):
         timeslots = TimeSlot.objects.all()
         return timeslots
 
-class AdminCreateTimesLotView(BaseTimeSlotCreateView):
+class AdminCreateTimesLotView(AdminRequiredMixin,BaseTimeSlotCreateView):
     template_name = "dashboard/admin_timeslot_create.html"
     success_url = reverse_lazy("admin_timeslots")
 
-class AdminUpdaterTimeslotView(UpdateView):
+class AdminUpdaterTimeslotView(AdminRequiredMixin,UpdateView):
     model = TimeSlot
     template_name = "dashboard/admin_timeslot_create.html"
     form_class = TimeSlotForm 
     success_url = reverse_lazy("admin_timeslots")
 
-class AdminTimesLotDeleteView(DeleteView):
+class AdminTimesLotDeleteView(AdminRequiredMixin,DeleteView):
     model = TimeSlot
     success_url = reverse_lazy("admin_timeslots")
     
@@ -82,13 +84,13 @@ class AdminTimesLotDeleteView(DeleteView):
         try:
             timeslot = self.get_object()
             timeslot.delete()
-            messages.success(request,"delete successfuly complited")
+            messages.success(request,"حذف با موفقیت انجام شد")
             return redirect("admin_timeslots")
         except Exception as e:
-            messages.error(request,"delete failed")
+            messages.error(request,"حذف شکست خورد")
             return redirect("admin_timeslots")
 
-class AdminTimeSlotSearchView(ListView):
+class AdminTimeSlotSearchView(AdminRequiredMixin,ListView):
     template_name = "dashboard/admin_timeslot_list.html"
     context_object_name = "timeslots"
 
@@ -99,8 +101,6 @@ class AdminTimeSlotSearchView(ListView):
 
         return timeslots
 
-
-    
 class AdminLoginView(LoginView):
 
     template_name = 'dashboard/login.html'
