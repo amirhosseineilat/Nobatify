@@ -165,13 +165,13 @@ class Walletview(LoginRequiredMixin, DetailView):
             return wallet
 
 
-class CardListView(ListView):
+class CardListView(LoginRequiredMixin,ListView):
     model = Card
     template_name = "accounts/mycard.html"
     context_object_name = "cards"
 
 
-class CreateCardView(CreateView):
+class CreateCardView(LoginRequiredMixin,CreateView):
     model = Card
     template_name = "accounts/createcard.html"
     form_class = CardForm
@@ -185,7 +185,7 @@ class CreateCardView(CreateView):
         return super().form_valid(form)
 
 
-class RemoveCardView(DeleteView):
+class RemoveCardView(LoginRequiredMixin,DeleteView):
     model = Card
     success_url = reverse_lazy("mycards")
 
@@ -195,7 +195,7 @@ class RemoveCardView(DeleteView):
         return redirect(self.success_url)
 
 
-class EditCardView(UpdateView):
+class EditCardView(LoginRequiredMixin,UpdateView):
     model = Card
     form_class = CardForm
     template_name = "accounts/createcard.html"
