@@ -116,6 +116,13 @@ body {
     color: var(--green);
 }
 
+.btn-logout {
+    color: #dc2626;
+}
+
+.btn-logout:hover {
+    color: #b91c1c;
+}
 .btn-lg {
     min-height: 54px;
     padding: .9rem 1.35rem;

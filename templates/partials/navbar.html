@@ -23,7 +23,9 @@
                 <form action="{% url 'logout' %}" method="post" >
                    {% csrf_token %}
  
-                    <button type="submit" class="btn btn-ghost">خروج</button>
+                    <button type="submit" class="btn btn-ghost btn-logout">
+                    خروج
+                    </button>
                 </form>
             {% else %}
                 <a href="{% url 'login' %}" class="btn btn-ghost">ورود</a>
