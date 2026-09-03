@@ -8,7 +8,6 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.db.models import Avg, Count, Prefetch
 
-
 # Create your views here.
 
 #base views
@@ -95,5 +94,6 @@ class BaseSearchDoctorView(ListView):
         if q:
             return DoctorService.search(q)
         return Doctor.objects.all()
+        
 class SearchDoctorView(BaseSearchDoctorView):
     template_name = "doctors/doctor_list.html"
