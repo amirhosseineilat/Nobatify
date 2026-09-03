@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path,include
 from .views import *
 
 urlpatterns = [
@@ -10,4 +10,5 @@ urlpatterns = [
     path("validate_otp/", ValidateOtpView.as_view(), name="validate_otp"),
     path("profile/", Profile.as_view(), name="profile"),
     path("profile/wallet", Wallet.as_view(), name="wallet"),
+    path("", include("allauth.urls")),
 ]
