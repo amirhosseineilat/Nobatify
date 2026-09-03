@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import TransActoin
 from dotenv import load_dotenv
 import os
+from decimal import Decimal
 
 load_dotenv()
 
@@ -68,8 +69,8 @@ class VerifyPaymentView(LoginRequiredMixin, View):
                     transaction.card_number = data["data"]["card_pan"]
                     transaction.fee = data["data"]["fee"]
                     transaction.save()
-                    user_amount = float(user.wallet.balance)
-                    user.wallet.balance = user_amount + amount
+                    user_amount = user.wallet.balance
+                    user.wallet.balance = user_amount + Decimal(amount)
                     user.wallet.save(update_fields=["balance"])
                     messages.success(request, "پرداخت با موفق انجام شد")
                     return redirect("wallet")

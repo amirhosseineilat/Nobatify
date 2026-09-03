@@ -6,6 +6,9 @@ from .forms import TimeSlotForm
 from doctors.models import Doctor
 from .models import Appointment,TimeSlot
 from django.contrib.auth.mixins import LoginRequiredMixin
+from account.models import Wallet
+from decimal import Decimal
+from django.db import transaction
 
 # Create your views here.
 #base view
@@ -58,13 +61,21 @@ class AppointmentBookView(LoginRequiredMixin, View):
 
     def post(self, request, pk):
         timeslot = get_object_or_404(TimeSlot,pk=pk,is_reserved=False)
+        wallet = get_object_or_404(Wallet,user=request.user)
 
-        appointment = Appointment(doctor=timeslot.doctor,time_slot=timeslot,patient=request.user)
-        timeslot.is_reserved = True
-        appointment.save()
-        timeslot.save()
+        if wallet.balance < timeslot.price:
+            return redirect("send_info_payment"), messages.success(request,"کیف دول خود را شار کنید")
 
-        messages.success(request, "Appointment booked successfully.")
+        with transaction.atomic():
+            appointment = Appointment(doctor=timeslot.doctor,time_slot=timeslot,patient=request.user)
+            timeslot.is_reserved = True
+            appointment.save()
+            wallet.balance = wallet.balance - Decimal(timeslot.price)
+            wallet.save()
+            timeslot.save()
+            
+
+            messages.success(request, "رزرو شما با موفقیت انجاام ")
 
         return redirect("my_appointment")
 
@@ -80,8 +91,6 @@ class AppointmentCancelView(LoginRequiredMixin, View):
             timeslot.save()
         except Exception as e :
             print(e)
-
-
 
         messages.success(request, "Appointment cancelled successfully.")
 
