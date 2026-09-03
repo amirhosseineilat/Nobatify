@@ -103,15 +103,16 @@ class AppointmentCancelView(LoginRequiredMixin, View):
 
     def post(self, request, pk):
         appointment = get_object_or_404(Appointment, pk=pk, patient=request.user)
-        try:
+        wallet = get_object_or_404(Wallet,user=request.user)
+
+        with transaction.atomic():
             timeslot = appointment.time_slot
             appointment.delete()
             timeslot.is_reserved = False
             timeslot.save()
-        except Exception as e:
-            print(e)
-
-        messages.success(request, "Appointment cancelled successfully.")
+            wallet.balance = wallet.balance + Decimal(timeslot.price)
+            wallet.save()
+            messages.success(request, "رزرو شما با موفقیت کنسل شد")
 
         return redirect("my_appointment")
 
