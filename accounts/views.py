@@ -26,6 +26,7 @@ from .service import AccountService
 from datetime import timedelta
 from utils.notifications import Sender, EmailNotification
 from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 User = get_user_model()
 # Create your views here.
@@ -148,3 +149,24 @@ class Wallet(LoginRequiredMixin, DetailView):
 
 class Home(TemplateView):
     template_name = "home.html"
+
+
+
+class AdminRequiredMixin(UserPassesTestMixin):
+
+    def test_func(self):
+        return self.request.user.is_authenticated and self.request.user.is_admin
+
+    def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return redirect("login")
+
+        messages.error(
+            self.request,
+            "You do not have permission to access this page."
+        )
+        return redirect("home")
+    
+    
+# class AdminDashboardView(AdminRequiredMixin, TemplateView):
+#         template_name = "dashboard/dashboard.html"

@@ -6,6 +6,11 @@ from django.contrib.auth.models import AbstractUser
 # Create your models here.
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
+    is_admin = models.BooleanField(default=False, verbose_name="Admin Status", help_text="Designates whether the user has admin privileges.")
+    
+    def __str__(self):
+        return self.username
+    
 
 class Wallet(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="wallet")
