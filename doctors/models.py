@@ -18,6 +18,11 @@ class Doctor(models.Model):
     last_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     specialities = models.ManyToManyField(Speciality, related_name="doctors")
+    birth_date = models.DateField()
+    medical_license_number = models.CharField(max_length=20)
+    phone = models.CharField(max_length=8)
+    address = models.TextField()
+    bio = models.TextField()
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
