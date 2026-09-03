@@ -1,9 +1,10 @@
 from .models import Doctor, Comment, Speciality
-from django.contrib.auth.models import User
 from appointments.models import Appointment
 from django.db.models import Q
 from utils.notifications import Sender
+from django.contrib.auth import get_user_model
 
+User = get_user_model()
 
 class DoctorService:
 
