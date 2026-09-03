@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "accounts",
     "appointments",
     "doctors",
+    "admindashboard"
     # third party apps
     "allauth",
     "allauth.account",
