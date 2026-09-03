@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.utils.timezone import now
 from django.contrib.auth import login
+from django.contrib import messages
 from .models import Wallet
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.views import LoginView, LogoutView
@@ -35,10 +36,17 @@ class LogingView(LoginView):
     form_class = LoginForm
     success_url = reverse_lazy("home")
 
+    def form_valid(self, form):
+        messages.success(self.request,"login successfuly")
+        return super().form_valid(form)
+
 class LogingoutView(LogoutView):
     next_page = reverse_lazy("home")
 
 
+    def form_valid(self, form):
+        messages.success(self.request,"logout successfuly")
+        return super().form_valid(form)
 class RegisterView(FormView):
     template_name = "accounts/register.html"
     form_class = RegistrationForm
@@ -46,6 +54,7 @@ class RegisterView(FormView):
 
     def form_valid(self, form):
         form.save()
+        messages.success(request=self.request,message="register successfuly")
         return super().form_valid(form)
 
 
@@ -79,6 +88,7 @@ class ChangePasswordView(FormView):
         self.request.session.pop("reset_verified", None)
         self.request.session.pop("reset_user_id", None)
         self.request.session.pop("rest_expire_time", None)
+        messages.success(self.request,"password changed successfuly")
         return super().form_valid(form)
 
 
@@ -92,7 +102,9 @@ class ForgetPasswordView(FormView):
         print("email", email)
         if email:
             sender = Sender(EmailNotification())
-            AccountService.request_password_reset(email, sender)
+            is_sendign = AccountService.request_password_reset(self.request,email, sender)
+            if not is_sendign:
+                return redirect("forget_password")
         return super().form_valid(form)
 
 
@@ -104,7 +116,7 @@ class ValidateOtpView(FormView):
 
     def form_valid(self, form):
         status, user = AccountService.validate_otp(
-            form.cleaned_data["otp_code"], "password_reset"
+            self.request,form.cleaned_data["otp_code"], "password_reset"
         )
         if status:
             self.request.session["reset_user_id"] = user.id
@@ -114,6 +126,7 @@ class ValidateOtpView(FormView):
             ).timestamp()
             return super().form_valid(form)
         print("validate otp failed")
+    
         return redirect("forget_password")
 
 
