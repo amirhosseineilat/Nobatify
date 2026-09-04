@@ -100,8 +100,11 @@ class AdminTimeSlotSearchView(ListView):
         return timeslots
 
 
+    
 class AdminLoginView(LoginView):
 
-	template_name = 'dashboard/login.html'
-	authentication_form = AdminLogingForm
-	success_url = reverse_lazy('admin_dashboard')
+    template_name = 'dashboard/login.html'
+    authentication_form = AdminLogingForm
+
+    def get_success_url(self):
+        return reverse_lazy("admin_dashboard")

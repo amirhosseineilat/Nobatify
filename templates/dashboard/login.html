@@ -288,7 +288,7 @@
 
 
                     <!-- Login Form -->
-                    <form method="post" class="space-y-5">
+                    <form method="post" action="{% url 'admin_login' %}" class="space-y-5">
 
                         {% csrf_token %}
 
