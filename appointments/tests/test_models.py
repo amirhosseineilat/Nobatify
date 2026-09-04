@@ -122,3 +122,63 @@ class AppointmentModelTest(TestCase):
 			)
 			time_slot.full_clean()
 
+	def test_each_doctor_should_have_its_own_time_slot(self):
+
+		doctor2 = Doctor.objects.create(
+			first_name = 'amirhossein',
+		    last_name = 'eilat',
+		    email = 'amirhosseineilat@gmail.com',
+		    birth_date = jmodels.datetime.date(1384,11,21),
+		    medical_license_number = "126756",
+		    phone = "66509912",
+		    address = "Fatemi,Tehran, Iran ",
+		    bio = "he is a skilled doctor with years of experience in his field.",
+		)
+
+		self.doctor.specialities.add(self.speciality)
+
+		time_slot2 = time_slot = TimeSlot(
+				doctor = self.doctor,
+				start_time = time(1, 0),
+				end_time = time(2, 0),
+				price = 120.00,
+				is_reserved = False,
+			)
+
+		self.assertEqual(self.time_slot.doctor,self.doctor)
+		self.assertEqual(time_slot2.doctor,doctor2)
+		self.assertEqual(self.doctor.time_slots.count(),1)
+		self.assertEqual(doctor2.time_slots.count(),1)
+
+	def test_if_a_doctor_delete_timeslot_should_remove(self):
+
+		time_slot2 = time_slot = TimeSlot(
+				doctor = self.doctor,
+				start_time = time(1, 0),
+				end_time = time(2, 0),
+				price = 120.00,
+				is_reserved = False,
+			)
+
+		self.assertEqual(time_slot2.objects.count(),1)
+
+		self.doctor.delete()
+
+		self.assertEqual(time_slot2.objects.count(),0)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
