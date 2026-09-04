@@ -6,6 +6,7 @@ from .models import Wallet, Card
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ObjectDoesNotExist
 from .forms import (
     RegistrationForm,
     LoginForm,
@@ -150,7 +151,13 @@ class Walletview(LoginRequiredMixin, DetailView):
     context_object_name = "wallet"
 
     def get_object(self):
-        return self.request.user.wallet
+        user = self.request.user
+        try:
+            return user.wallet
+        except ObjectDoesNotExist:
+            wallet = Wallet(user=user)
+            wallet.save()
+            return wallet
 
 
 class CardListView(ListView):
