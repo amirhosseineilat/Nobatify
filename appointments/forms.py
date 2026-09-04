@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Doctor, Speciality, TimeSlot
+from .models import TimeSlot
 
 
 class TimeSlotForm(forms.ModelForm):
