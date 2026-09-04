@@ -1,12 +1,15 @@
 from django.shortcuts import render,redirect
-from django.views.generic import TemplateView,DeleteView,UpdateView
+from django.views.generic import TemplateView,DeleteView,UpdateView,ListView
 from doctors.models import Doctor
 from accounts.models import CustomUser
 from appointments.models import TimeSlot,Appointment
 from doctors.views import BaseSearchDoctorView,BaseListDoctorView,BaseCreateDoctorView,BaseDetailDoctorView
+from appointments.views import BaseTimeSlotListView,BaseTimeSlotCreateView
 from django.urls import reverse_lazy
 from django.contrib import messages
 from doctors.forms import DoctorForm
+from appointments.forms import TimeSlotForm
+from django.db.models import Q
 # Create your views here.
 
 class AdminDoctorListView(BaseListDoctorView):
@@ -52,4 +55,45 @@ class AdminDoctorDeleteView(DeleteView):
 class AdminSearchDoctor(BaseSearchDoctorView):
     template_name = "dashboard/admin_doctors.html"
 
+#timeslots
+class AdminListTimesLotView(BaseTimeSlotListView):
+    template_name = "dashboard/admin_timeslot_list.html"
+    def get_queryset(self):
+        timeslots = TimeSlot.objects.all()
+        return timeslots
 
+class AdminCreateTimesLotView(BaseTimeSlotCreateView):
+    template_name = "dashboard/admin_timeslot_create.html"
+    success_url = reverse_lazy("admin_timeslots")
+
+class AdminUpdaterTimeslotView(UpdateView):
+    model = TimeSlot
+    template_name = "dashboard/admin_timeslot_create.html"
+    form_class = TimeSlotForm 
+    success_url = reverse_lazy("admin_timeslots")
+
+class AdminTimesLotDeleteView(DeleteView):
+    model = TimeSlot
+    success_url = reverse_lazy("admin_timeslots")
+    
+
+    def post(self,request,pk):
+        try:
+            timeslot = self.get_object()
+            timeslot.delete()
+            messages.success(request,"delete successfuly complited")
+            return redirect("admin_timeslots")
+        except Exception as e:
+            messages.error(request,"delete failed")
+            return redirect("admin_timeslots")
+
+class AdminTimeSlotSearchView(ListView):
+    template_name = "dashboard/admin_timeslot_list.html"
+    context_object_name = "timeslots"
+
+    def get_queryset(self):
+        q = self.request.GET.get("q")
+        if q:
+            timeslots = TimeSlot.objects.filter(Q(doctor__first_name__icontains=q) | Q(doctor__email__icontains=q))
+
+        return timeslots

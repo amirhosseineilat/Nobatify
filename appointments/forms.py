@@ -1,16 +1,19 @@
-from django import forms
 
+from django import forms
 from .models import TimeSlot
 
 
 class TimeSlotForm(forms.ModelForm):
+
     class Meta:
         model = TimeSlot
+
         fields = [
             "doctor",
             "date",
             "start_time",
             "end_time",
+            "price",
         ]
 
         widgets = {
@@ -19,22 +22,34 @@ class TimeSlotForm(forms.ModelForm):
                     "class": "admin-input",
                 }
             ),
+
             "date": forms.DateInput(
                 attrs={
                     "class": "admin-input",
                     "type": "date",
                 }
             ),
+
             "start_time": forms.TimeInput(
                 attrs={
                     "class": "admin-input",
                     "type": "time",
                 }
             ),
+
             "end_time": forms.TimeInput(
                 attrs={
                     "class": "admin-input",
                     "type": "time",
+                }
+            ),
+
+            "price": forms.NumberInput(
+                attrs={
+                    "class": "admin-input",
+                    "placeholder": "مثلاً 500000",
+                    "min": "0",
+                    "step": "1000",
                 }
             ),
         }

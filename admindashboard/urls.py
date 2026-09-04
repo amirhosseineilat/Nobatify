@@ -6,7 +6,13 @@ from .views import (
     AdminDoctorDetailView,
     AdminDoctorUpdateView,
     AdminDoctorDeleteView,
-    AdminSearchDoctor
+    AdminSearchDoctor,
+    #timeslot
+    AdminListTimesLotView,
+    AdminCreateTimesLotView,
+    AdminUpdaterTimeslotView,
+    AdminTimesLotDeleteView,
+    AdminTimeSlotSearchView
 )
 
 urlpatterns = [
@@ -41,4 +47,9 @@ urlpatterns = [
         name="admin_doctor_delete",
     ),
     path("search/",AdminSearchDoctor.as_view(),name="admin_doctor_search"),
+    path("admin_timeslots/",AdminListTimesLotView.as_view(),name="admin_timeslots"),
+    path("admin_timeslots_create/",AdminCreateTimesLotView.as_view(),name="admin_timeslot_create"),
+    path("admin_timeslot_update/<int:pk>/",AdminUpdaterTimeslotView.as_view(),name="admin_timeslot_update"),
+    path("admin_timeslot_delete/<int:pk>/",AdminTimesLotDeleteView.as_view(),name="admin_timeslot_delete"),
+    path("admin_timeslot_search/",AdminTimeSlotSearchView.as_view(),name="admin_timeslot_search")
 ]
