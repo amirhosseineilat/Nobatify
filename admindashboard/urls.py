@@ -12,7 +12,8 @@ from .views import (
     AdminCreateTimesLotView,
     AdminUpdaterTimeslotView,
     AdminTimesLotDeleteView,
-    AdminTimeSlotSearchView
+    AdminTimeSlotSearchView,
+    AdminLoginView
 )
 
 urlpatterns = [
@@ -51,5 +52,6 @@ urlpatterns = [
     path("admin_timeslots_create/",AdminCreateTimesLotView.as_view(),name="admin_timeslot_create"),
     path("admin_timeslot_update/<int:pk>/",AdminUpdaterTimeslotView.as_view(),name="admin_timeslot_update"),
     path("admin_timeslot_delete/<int:pk>/",AdminTimesLotDeleteView.as_view(),name="admin_timeslot_delete"),
-    path("admin_timeslot_search/",AdminTimeSlotSearchView.as_view(),name="admin_timeslot_search")
+    path("admin_timeslot_search/",AdminTimeSlotSearchView.as_view(),name="admin_timeslot_search"),
+    path("login/",AdminLoginView.as_view(),name="admin_login"),
 ]

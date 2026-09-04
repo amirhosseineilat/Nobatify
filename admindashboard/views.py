@@ -10,8 +10,9 @@ from django.contrib import messages
 from doctors.forms import DoctorForm
 from appointments.forms import TimeSlotForm
 from django.db.models import Q
+from django.contrib.auth.views import LoginView
+from .forms import AdminLogingForm
 # Create your views here.
-
 class AdminDoctorListView(BaseListDoctorView):
     template_name = "dashboard/admin_doctors.html"
 class AdminDashboardView( TemplateView):
@@ -97,3 +98,10 @@ class AdminTimeSlotSearchView(ListView):
             timeslots = TimeSlot.objects.filter(Q(doctor__first_name__icontains=q) | Q(doctor__email__icontains=q))
 
         return timeslots
+
+
+class AdminLoginView(LoginView):
+
+	template_name = 'dashboard/login.html'
+	authentication_form = AdminLogingForm
+	success_url = reverse_lazy('admin_dashboard')
