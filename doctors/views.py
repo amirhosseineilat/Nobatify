@@ -13,7 +13,7 @@ from django.db.models import Avg, Count, Prefetch
 
 #base views
 class BaseDetailDoctorView(DetailView):
-    # model = Doctor
+    model = Doctor
 
     context_object_name = "doctor"
 
@@ -47,7 +47,7 @@ class BaseDetailDoctorView(DetailView):
         context["form"] = CommentForm()
         return context
 class BaseListDoctorView(ListView):
-    # model = Doctor
+    model = Doctor
     context_object_name = "doctors"
 
     def get_queryset(self):
@@ -66,7 +66,7 @@ class BaseCreateSpecialityView(CreateView):
 class DoctorDetailView(BaseDetailDoctorView):
     template_name = "doctors/doctor_detail.html"
         
-class DoctorListView(ListView):
+class DoctorListView(BaseListDoctorView):
     template_name = "doctors/doctor_list.html"
     
 
