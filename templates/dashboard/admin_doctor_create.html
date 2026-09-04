@@ -1,0 +1,347 @@
+{% extends "dashboard/base_admin.html" %}
+
+{% block title %}افزودن پزشک | Nobatify{% endblock %}
+
+{% block extra_head %}
+<style>
+    .doctor-input {
+        width: 100%;
+        height: 52px;
+        padding: 0 16px;
+
+        border: 1px solid #d6cec7 !important;
+        border-radius: 14px;
+
+        background: #ffffff !important;
+        color: #1D4533 !important;
+
+        font-size: 14px;
+        font-weight: 500;
+
+        outline: none !important;
+
+        transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease,
+            background-color 0.2s ease;
+    }
+
+    .doctor-input::placeholder {
+        color: #a99d94;
+    }
+
+    .doctor-input:hover {
+        border-color: #b8aaa0 !important;
+    }
+
+    .doctor-input:focus {
+        border-color: #1D4533 !important;
+        box-shadow: 0 0 0 4px rgba(29, 69, 51, 0.08) !important;
+        background: #ffffff !important;
+    }
+
+    /* خطاهای فرم */
+    .doctor-error {
+        margin-top: 7px;
+        font-size: 12px;
+        font-weight: 700;
+        color: #dc2626;
+    }
+
+    /* بخش تخصص‌ها */
+    .doctor-specialities {
+        display: grid;
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+        gap: 10px;
+
+        margin: 0;
+        padding: 0;
+
+        list-style: none;
+    }
+
+    @media (min-width: 640px) {
+        .doctor-specialities {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    .doctor-specialities li {
+        list-style: none;
+    }
+
+    .doctor-specialities label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        min-height: 52px;
+        padding: 0 14px;
+
+        border: 1px solid #d6cec7;
+        border-radius: 14px;
+
+        background: #ffffff;
+
+        color: #5E3122;
+        font-size: 14px;
+        font-weight: 600;
+
+        cursor: pointer;
+
+        transition:
+            border-color 0.2s ease,
+            background-color 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .doctor-specialities label:hover {
+        border-color: rgba(29, 69, 51, 0.35);
+        background: #fbfdfb;
+    }
+
+    .doctor-specialities input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+
+        margin: 0;
+
+        accent-color: #1D4533;
+
+        cursor: pointer;
+    }
+
+    .doctor-specialities input[type="checkbox"]:checked {
+        accent-color: #1D4533;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="mx-auto max-w-4xl">
+
+    <div class="mb-8">
+        <div class="mb-3 flex items-center gap-2 text-xs font-bold text-[#5E3122]/40">
+            <a
+                href="{% url 'admin_doctor_list' %}"
+                class="transition hover:text-[#1D4533]"
+            >
+                پزشکان
+            </a>
+
+            <span>←</span>
+
+            <span>افزودن پزشک</span>
+        </div>
+
+        <h1 class="text-3xl font-black text-[#1D4533]">
+            افزودن پزشک جدید
+        </h1>
+
+        <p class="mt-2 text-sm leading-7 text-[#5E3122]/55">
+            اطلاعات پزشک را وارد کن تا در Nobatify ثبت شود.
+        </p>
+    </div>
+
+
+    <div class="overflow-hidden rounded-3xl border border-[#5E3122]/10 bg-white shadow-sm">
+
+        <div class="border-b border-[#5E3122]/8 bg-[#FDFCFA] px-6 py-5 sm:px-8">
+
+            <div class="flex items-center gap-4">
+
+                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#1D4533]/8 text-xl">
+                    🩺
+                </div>
+
+                <div>
+                    <h2 class="text-base font-black text-[#1D4533]">
+                        اطلاعات پزشک
+                    </h2>
+
+                    <p class="mt-1 text-xs text-[#5E3122]/45">
+                        مشخصات اصلی پزشک را وارد کنید.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <form method="post" class="p-6 sm:p-8">
+
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="mb-6 rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+
+            <!-- نام و نام خانوادگی -->
+            <div class="grid gap-5 sm:grid-cols-2">
+
+                <div>
+                    <label
+                        for="{{ form.first_name.id_for_label }}"
+                        class="mb-2 block text-sm font-bold text-[#5E3122]/75"
+                    >
+                        نام
+                    </label>
+
+                    <input
+                        type="text"
+                        name="{{ form.first_name.name }}"
+                        id="{{ form.first_name.id_for_label }}"
+                        value="{{ form.first_name.value|default:'' }}"
+                        placeholder="مثلاً علی"
+                        autocomplete="given-name"
+                        class="doctor-input"
+                    >
+
+                    {% for error in form.first_name.errors %}
+                        <p class="doctor-error">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+
+                <div>
+                    <label
+                        for="{{ form.last_name.id_for_label }}"
+                        class="mb-2 block text-sm font-bold text-[#5E3122]/75"
+                    >
+                        نام خانوادگی
+                    </label>
+
+                    <input
+                        type="text"
+                        name="{{ form.last_name.name }}"
+                        id="{{ form.last_name.id_for_label }}"
+                        value="{{ form.last_name.value|default:'' }}"
+                        placeholder="مثلاً احمدی"
+                        autocomplete="family-name"
+                        class="doctor-input"
+                    >
+
+                    {% for error in form.last_name.errors %}
+                        <p class="doctor-error">{{ error }}</p>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+
+            <!-- ایمیل -->
+            <div class="mt-5">
+
+                <label
+                    for="{{ form.email.id_for_label }}"
+                    class="mb-2 block text-sm font-bold text-[#5E3122]/75"
+                >
+                    ایمیل
+                </label>
+
+                <input
+                    type="email"
+                    name="{{ form.email.name }}"
+                    id="{{ form.email.id_for_label }}"
+                    value="{{ form.email.value|default:'' }}"
+                    placeholder="doctor@example.com"
+                    autocomplete="email"
+                    dir="ltr"
+                    class="doctor-input text-left"
+                >
+
+                <p class="mt-2 text-xs text-[#5E3122]/35">
+                    ایمیل برای شناسایی و ارتباط با پزشک استفاده می‌شود.
+                </p>
+
+                {% for error in form.email.errors %}
+                    <p class="doctor-error">{{ error }}</p>
+                {% endfor %}
+
+            </div>
+
+
+            <!-- تخصص‌ها -->
+            <div class="mt-7">
+
+                <div class="mb-3">
+
+                    <label class="block text-sm font-bold text-[#5E3122]/75">
+                        تخصص‌ها
+                    </label>
+
+                    <p class="mt-1 text-xs text-[#5E3122]/40">
+                        یک یا چند تخصص را برای پزشک انتخاب کن.
+                    </p>
+
+                </div>
+
+
+                <div class="doctor-specialities">
+                    {{ form.specialities }}
+                </div>
+
+                {% for error in form.specialities.errors %}
+                    <p class="doctor-error">
+                        {{ error }}
+                    </p>
+                {% endfor %}
+
+            </div>
+
+
+            <!-- دکمه‌ها -->
+            <div class="mt-8 flex flex-col-reverse gap-3 border-t border-[#5E3122]/8 pt-6 sm:flex-row sm:justify-end">
+
+                <a
+                    href="{% url 'admin_doctor_list' %}"
+                    class="inline-flex items-center justify-center rounded-2xl border border-[#5E3122]/15 bg-white px-6 py-3 text-sm font-bold text-[#5E3122]/65 transition hover:border-[#5E3122]/25 hover:bg-[#F8F6F1]"
+                >
+                    انصراف
+                </a>
+
+                <button
+                    type="submit"
+                    class="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#1D4533] px-6 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-[#163a2b]"
+                >
+                    <span>✓</span>
+                    ثبت پزشک
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- نکته -->
+    <div class="mt-5 flex gap-3 rounded-2xl border border-[#1D4533]/10 bg-[#1D4533]/5 p-4">
+
+        <div class="mt-0.5 shrink-0 text-sm">
+            💡
+        </div>
+
+        <div>
+            <p class="text-xs font-bold text-[#1D4533]">
+                نکته
+            </p>
+
+            <p class="mt-1 text-xs leading-6 text-[#5E3122]/55">
+                بعد از ثبت پزشک، می‌توانی از صفحه پزشکان اطلاعات او را
+                ویرایش کنی یا برایش زمان‌های قابل رزرو ایجاد کنی.
+            </p>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

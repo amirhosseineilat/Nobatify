@@ -1,0 +1,398 @@
+{% extends "dashboard/base_admin.html" %}
+
+{% block title %}افزودن نوبت | Nobatify{% endblock %}
+
+{% block extra_head %}
+
+<style>
+
+    .slot-input {
+        width: 100%;
+        height: 52px;
+
+        padding: 0 16px;
+
+        border: 1px solid #d6cec7 !important;
+        border-radius: 14px;
+
+        background: #ffffff !important;
+        color: #1D4533 !important;
+
+        font-size: 14px;
+        font-weight: 600;
+
+        outline: none !important;
+
+        transition:
+            border-color .2s ease,
+            box-shadow .2s ease,
+            background-color .2s ease;
+    }
+
+
+    .slot-input:hover {
+        border-color: #b8aaa0 !important;
+    }
+
+
+    .slot-input:focus {
+        border-color: #1D4533 !important;
+
+        box-shadow:
+            0 0 0 4px rgba(29, 69, 51, .08) !important;
+
+        background: #fff !important;
+    }
+
+
+    .slot-input[type="date"],
+    .slot-input[type="time"] {
+        direction: ltr;
+        text-align: left;
+    }
+
+
+    .slot-input[type="number"] {
+        direction: ltr;
+        text-align: left;
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="mx-auto max-w-3xl">
+
+
+    <!-- Breadcrumb -->
+    <div class="mb-6 flex items-center gap-2 text-xs font-bold text-[#5E3122]/40">
+
+        <a
+            href="{% url 'admin_timeslots' %}"
+            class="transition hover:text-[#1D4533]"
+        >
+            نوبت‌ها
+        </a>
+
+        <span>←</span>
+
+        <span>افزودن نوبت</span>
+
+    </div>
+
+
+    <!-- Header -->
+    <div class="mb-8">
+
+        <div class="flex items-center gap-4">
+
+            <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#1D4533] text-2xl text-white shadow-sm">
+                🗓
+            </div>
+
+            <div>
+
+                <h1 class="text-2xl font-black text-[#1D4533] sm:text-3xl">
+                    ایجاد نوبت جدید
+                </h1>
+
+                <p class="mt-1 text-sm text-[#5E3122]/45">
+                    یک زمان قابل رزرو برای پزشک ایجاد کن.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Form Card -->
+    <div class="overflow-hidden rounded-3xl border border-[#5E3122]/10 bg-white shadow-sm">
+
+
+        <!-- Card header -->
+        <div class="border-b border-[#5E3122]/8 bg-[#FDFCFA] px-6 py-5 sm:px-8">
+
+            <p class="text-xs font-black text-[#5E3122]/40">
+                تنظیمات نوبت
+            </p>
+
+            <h2 class="mt-1 text-base font-black text-[#1D4533]">
+                زمان و هزینه ویزیت
+            </h2>
+
+        </div>
+
+
+        <form method="post" class="p-6 sm:p-8">
+
+            {% csrf_token %}
+
+
+            {% if form.non_field_errors %}
+
+                <div class="mb-6 rounded-2xl border border-red-100 bg-red-50 px-4 py-3">
+
+                    {% for error in form.non_field_errors %}
+
+                        <p class="text-xs font-bold leading-6 text-red-600">
+                            {{ error }}
+                        </p>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- Doctor -->
+            <div>
+
+                <label
+                    for="{{ form.doctor.id_for_label }}"
+                    class="mb-2 block text-sm font-black text-[#5E3122]/75"
+                >
+                    پزشک
+                </label>
+
+                <select
+                    name="{{ form.doctor.name }}"
+                    id="{{ form.doctor.id_for_label }}"
+                    class="slot-input"
+                >
+
+                    {% for value, label in form.doctor.field.choices %}
+
+                        <option
+                            value="{{ value }}"
+                            {% if form.doctor.value|stringformat:"s" == value|stringformat:"s" %}
+                                selected
+                            {% endif %}
+                        >
+                            {{ label }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+
+                {% for error in form.doctor.errors %}
+
+                    <p class="mt-2 text-xs font-bold text-red-500">
+                        {{ error }}
+                    </p>
+
+                {% endfor %}
+
+            </div>
+
+
+            <!-- Date -->
+            <div class="mt-6">
+
+                <label
+                    for="{{ form.date.id_for_label }}"
+                    class="mb-2 block text-sm font-black text-[#5E3122]/75"
+                >
+                    تاریخ نوبت
+                </label>
+
+                <input
+                    type="date"
+                    name="{{ form.date.name }}"
+                    id="{{ form.date.id_for_label }}"
+                    value="{{ form.date.value|default:'' }}"
+                    class="slot-input"
+                >
+
+                {% for error in form.date.errors %}
+
+                    <p class="mt-2 text-xs font-bold text-red-500">
+                        {{ error }}
+                    </p>
+
+                {% endfor %}
+
+            </div>
+
+
+            <!-- Time -->
+            <div class="mt-6">
+
+                <div class="mb-2">
+
+                    <label class="block text-sm font-black text-[#5E3122]/75">
+                        ساعت نوبت
+                    </label>
+
+                    <p class="mt-1 text-xs text-[#5E3122]/35">
+                        ساعت شروع و پایان مراجعه را مشخص کن.
+                    </p>
+
+                </div>
+
+
+                <div class="grid gap-4 sm:grid-cols-2">
+
+                    <div>
+
+                        <label
+                            for="{{ form.start_time.id_for_label }}"
+                            class="mb-2 block text-xs font-bold text-[#5E3122]/50"
+                        >
+                            ساعت شروع
+                        </label>
+
+                        <input
+                            type="time"
+                            name="{{ form.start_time.name }}"
+                            id="{{ form.start_time.id_for_label }}"
+                            value="{{ form.start_time.value|default:'' }}"
+                            class="slot-input"
+                        >
+
+                        {% for error in form.start_time.errors %}
+
+                            <p class="mt-2 text-xs font-bold text-red-500">
+                                {{ error }}
+                            </p>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <div>
+
+                        <label
+                            for="{{ form.end_time.id_for_label }}"
+                            class="mb-2 block text-xs font-bold text-[#5E3122]/50"
+                        >
+                            ساعت پایان
+                        </label>
+
+                        <input
+                            type="time"
+                            name="{{ form.end_time.name }}"
+                            id="{{ form.end_time.id_for_label }}"
+                            value="{{ form.end_time.value|default:'' }}"
+                            class="slot-input"
+                        >
+
+                        {% for error in form.end_time.errors %}
+
+                            <p class="mt-2 text-xs font-bold text-red-500">
+                                {{ error }}
+                            </p>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Price -->
+            <div class="mt-6">
+
+                <label
+                    for="{{ form.price.id_for_label }}"
+                    class="mb-2 block text-sm font-black text-[#5E3122]/75"
+                >
+                    هزینه ویزیت
+                </label>
+
+                <div class="relative">
+
+                    <input
+                        type="number"
+                        name="{{ form.price.name }}"
+                        id="{{ form.price.id_for_label }}"
+                        value="{{ form.price.value|default:'' }}"
+                        placeholder="مثلاً 500000"
+                        min="0"
+                        step="1000"
+                        class="slot-input pl-20"
+                    >
+
+                    <span class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-[#5E3122]/35">
+                        تومان
+                    </span>
+
+                </div>
+
+
+                {% for error in form.price.errors %}
+
+                    <p class="mt-2 text-xs font-bold text-red-500">
+                        {{ error }}
+                    </p>
+
+                {% endfor %}
+
+            </div>
+
+
+            <!-- Summary -->
+            <div class="mt-7 rounded-2xl border border-[#1D4533]/10 bg-[#1D4533]/5 p-4">
+
+                <div class="flex gap-3">
+
+                    <span class="text-base">
+                        💡
+                    </span>
+
+                    <div>
+
+                        <p class="text-xs font-black text-[#1D4533]">
+                            قبل از ثبت
+                        </p>
+
+                        <p class="mt-1 text-xs leading-6 text-[#5E3122]/50">
+                            بعد از ایجاد، این زمان به عنوان یک نوبت آزاد
+                            برای پزشک ثبت می‌شود و کاربران می‌توانند آن را رزرو کنند.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Actions -->
+            <div class="mt-8 flex flex-col-reverse gap-3 border-t border-[#5E3122]/8 pt-6 sm:flex-row sm:justify-end">
+
+                <a
+                    href="{% url 'admin_timeslots' %}"
+                    class="inline-flex items-center justify-center rounded-2xl border border-[#5E3122]/10 bg-white px-6 py-3 text-sm font-black text-[#5E3122]/65 transition hover:border-[#5E3122]/20 hover:bg-[#F8F6F1]"
+                >
+                    انصراف
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#1D4533] px-7 py-3 text-sm font-black text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-[#163a2b]"
+                >
+                    <span>✓</span>
+                    ایجاد نوبت
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,9 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Doctor, Comment
+from .models import Doctor, Comment,Speciality
 from appointments.models import TimeSlot
 from django.views.generic import DetailView, ListView, CreateView
 from .service import DoctorService
-from .forms import CommentForm
+from .forms import CommentForm,DoctorForm,SpecialityForm
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.db.models import Avg, Count, Prefetch
@@ -11,10 +11,10 @@ from django.db.models import Avg, Count, Prefetch
 
 # Create your views here.
 
-
-class DoctorDetailView(DetailView):
+#base views
+class BaseDetailDoctorView(DetailView):
     model = Doctor
-    template_name = "doctors/doctor_detail.html"
+
     context_object_name = "doctor"
 
     def get_queryset(self):
@@ -41,23 +41,38 @@ class DoctorDetailView(DetailView):
             avg_rating=Avg("comments__rating"),
             total_comments=Count("comments")
         )
-        
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["form"] = CommentForm()
         return context
-
-
-class DoctorListView(ListView):
+class BaseListDoctorView(ListView):
     model = Doctor
-    template_name = "doctors/doctor_list.html"
     context_object_name = "doctors"
-    
+
     def get_queryset(self):
         return Doctor.objects.annotate(
             avg_rating=Avg('comments__rating'),
             total_comments=Count('comments')
         )
+class BaseCreateDoctorView(CreateView):
+    model = Doctor
+    form_class = DoctorForm
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+class BaseCreateSpecialityView(CreateView):
+    model = Speciality
+    form_class = SpecialityForm
+
+#public view
+class DoctorDetailView(BaseDetailDoctorView):
+    template_name = "doctors/doctor_detail.html"
+        
+class DoctorListView(BaseListDoctorView):
+    template_name = "doctors/doctor_list.html"
+    
 
 class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment
@@ -72,9 +87,7 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse('doctor_detail', kwargs={'pk': self.kwargs.get('doctor_id')})
 
-
-class SearchDoctorView(ListView):
-    template_name = "doctors/doctor_list.html"
+class BaseSearchDoctorView(ListView):
     context_object_name = "doctors"
 
     def get_queryset(self):
@@ -82,3 +95,5 @@ class SearchDoctorView(ListView):
         if q:
             return DoctorService.search(q)
         return Doctor.objects.all()
+class SearchDoctorView(BaseSearchDoctorView):
+    template_name = "doctors/doctor_list.html"

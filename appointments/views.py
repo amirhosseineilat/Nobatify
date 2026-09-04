@@ -1,17 +1,16 @@
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
-from django.views.generic import ListView, DetailView
-
+from django.views.generic import ListView, DetailView,CreateView
+from .forms import TimeSlotForm
 from doctors.models import Doctor
 from .models import Appointment,TimeSlot
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
+#base view
+class BaseTimeSlotListView(ListView):
 
-
-class TimeSlotListView(ListView):
-    template_name = "appointments/timeslot_list.html"
     context_object_name = "timeslots"
 
     def get_queryset(self):
@@ -28,6 +27,17 @@ class TimeSlotListView(ListView):
             context["selected_doctor"] = Doctor.objects.filter(pk=doctor_id).first()
 
         return context
+
+class BaseTimeSlotDetailView(DetailView):
+    model = TimeSlot
+    context_object_name = "timeslot"
+class BaseTimeSlotCreateView(CreateView):
+    model = TimeSlot
+    form_class = TimeSlotForm
+#public view
+
+class TimeSlotListView(BaseTimeSlotListView):
+    template_name = "appointments/timeslot_list.html"
 
 
 class MyAppointmentListView(ListView):
