@@ -50,6 +50,42 @@ class SpecialityForm(forms.ModelForm):
         }
 
 
+# class DoctorForm(forms.ModelForm):
+#     class Meta:
+#         model = Doctor
+#         fields = [
+#             "first_name",
+#             "last_name",
+#             "email",
+#             "specialities",
+#         ]
+
+#         widgets = {
+#             "first_name": forms.TextInput(
+#                 attrs={
+#                     "class": "admin-input",
+#                     "placeholder": "نام پزشک",
+#                 }
+#             ),
+#             "last_name": forms.TextInput(
+#                 attrs={
+#                     "class": "admin-input",
+#                     "placeholder": "نام خانوادگی پزشک",
+#                 }
+#             ),
+#             "email": forms.EmailInput(
+#                 attrs={
+#                     "class": "admin-input",
+#                     "placeholder": "doctor@example.com",
+#                     "dir": "ltr",
+#                 }
+#             ),
+#             "specialities": forms.CheckboxSelectMultiple(
+#                 attrs={
+#                     "class": "admin-specialities",
+#                 }
+#             ),
+#         }
 class DoctorForm(forms.ModelForm):
     class Meta:
         model = Doctor
@@ -64,13 +100,15 @@ class DoctorForm(forms.ModelForm):
             "first_name": forms.TextInput(
                 attrs={
                     "class": "admin-input",
-                    "placeholder": "نام پزشک",
+                    "placeholder": "مثلاً علی",
+                    "autocomplete": "given-name",
                 }
             ),
             "last_name": forms.TextInput(
                 attrs={
                     "class": "admin-input",
-                    "placeholder": "نام خانوادگی پزشک",
+                    "placeholder": "مثلاً احمدی",
+                    "autocomplete": "family-name",
                 }
             ),
             "email": forms.EmailInput(
@@ -78,6 +116,7 @@ class DoctorForm(forms.ModelForm):
                     "class": "admin-input",
                     "placeholder": "doctor@example.com",
                     "dir": "ltr",
+                    "autocomplete": "email",
                 }
             ),
             "specialities": forms.CheckboxSelectMultiple(

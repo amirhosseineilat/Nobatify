@@ -235,14 +235,3 @@ class ChargeWalletView(View):
 class Home(TemplateView):
     template_name = "home.html"
 
-
-class AdminDashboardView( TemplateView):
-    template_name = "accounts/dashboard/index.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["doctors_count"] = Doctor.objects.count()
-        context["slots_count"] = TimeSlot.objects.count()
-        context["appointments_count"] = Appointment.objects.count()
-        context["users_count"] = CustomUser.objects.filter(is_active=True).count()
-        return context

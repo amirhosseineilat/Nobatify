@@ -58,6 +58,10 @@ class BaseListDoctorView(ListView):
 class BaseCreateDoctorView(CreateView):
     model = Doctor
     form_class = DoctorForm
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
 class BaseCreateSpecialityView(CreateView):
     model = Speciality
     form_class = SpecialityForm
@@ -83,8 +87,7 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse('doctor_detail', kwargs={'pk': self.kwargs.get('doctor_id')})
 
-class SearchDoctorView(ListView):
-    template_name = "doctors/doctor_list.html"
+class BaseSearchDoctorView(ListView):
     context_object_name = "doctors"
 
     def get_queryset(self):
@@ -92,3 +95,5 @@ class SearchDoctorView(ListView):
         if q:
             return DoctorService.search(q)
         return Doctor.objects.all()
+class SearchDoctorView(BaseSearchDoctorView):
+    template_name = "doctors/doctor_list.html"

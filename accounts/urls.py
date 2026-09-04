@@ -12,7 +12,6 @@ urlpatterns = [
     path("forget_password/", ForgetPasswordView.as_view(), name="forget_password"),
     path("validate_otp/", ValidateOtpView.as_view(), name="validate_otp"),
     path("profile/", Profile.as_view(), name="profile"),
-    path('dashboard/', AdminDashboardView.as_view(), name='admin_dashboard'),
     path("profile/wallet", Walletview.as_view(), name="wallet"),
     path("profile/wallet/mycards", CardListView.as_view(), name="mycards"),
     path("profile/wallet/card", CreateCardView.as_view(), name="card"),
