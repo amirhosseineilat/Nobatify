@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path,include
 from .views import *
 
 
@@ -14,4 +14,11 @@ urlpatterns = [
     path("profile/", Profile.as_view(), name="profile"),
     path("profile/wallet/", Wallet.as_view(), name="wallet"),
     path('dashboard/', AdminDashboardView.as_view(), name='admin_dashboard'),
+    path("profile/wallet", Walletview.as_view(), name="wallet"),
+    path("profile/wallet/mycards", CardListView.as_view(), name="mycards"),
+    path("profile/wallet/card", CreateCardView.as_view(), name="card"),
+    path("profile/wallet/charge", ChargeWalletView.as_view(), name="charge"),
+    path("profile/wallet/edit/<int:pk>", EditCardView.as_view(), name="edit_card"),
+    path("profile/wallet/delete/<int:pk>", RemoveCardView.as_view(), name="delete_card"),
+    path("",include("allauth.urls"))
 ]

@@ -2,15 +2,17 @@ from django.shortcuts import render, redirect
 from django.utils.timezone import now
 from django.contrib.auth import login
 from django.contrib import messages
-from .models import Wallet
+from .models import Wallet, Card
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ObjectDoesNotExist
 from .forms import (
     RegistrationForm,
     LoginForm,
     ForgetForm,
     ValidateOTPForm,
+    CardForm,
 )
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -31,6 +33,8 @@ from doctors.models import Doctor
 from appointments.models import Appointment, TimeSlot
 from .models import CustomUser
 
+from django.views import View
+from decimal import Decimal
 
 User = get_user_model()
 # Create your views here.
@@ -42,16 +46,18 @@ class LogingView(LoginView):
     success_url = reverse_lazy("home")
 
     def form_valid(self, form):
-        messages.success(self.request,"login successfuly")
+        messages.success(self.request, "login successfuly")
         return super().form_valid(form)
+
 
 class LogingoutView(LogoutView):
     next_page = reverse_lazy("home")
 
-
     def form_valid(self, form):
-        messages.success(self.request,"logout successfuly")
+        messages.success(self.request, "logout successfuly")
         return super().form_valid(form)
+
+
 class RegisterView(FormView):
     template_name = "accounts/register.html"
     form_class = RegistrationForm
@@ -59,7 +65,7 @@ class RegisterView(FormView):
 
     def form_valid(self, form):
         form.save()
-        messages.success(request=self.request,message="register successfuly")
+        messages.success(request=self.request, message="register successfuly")
         return super().form_valid(form)
 
 
@@ -93,7 +99,7 @@ class ChangePasswordView(FormView):
         self.request.session.pop("reset_verified", None)
         self.request.session.pop("reset_user_id", None)
         self.request.session.pop("rest_expire_time", None)
-        messages.success(self.request,"password changed successfuly")
+        messages.success(self.request, "password changed successfuly")
         return super().form_valid(form)
 
 
@@ -107,7 +113,9 @@ class ForgetPasswordView(FormView):
         print("email", email)
         if email:
             sender = Sender(EmailNotification())
-            is_sendign = AccountService.request_password_reset(self.request,email, sender)
+            is_sendign = AccountService.request_password_reset(
+                self.request, email, sender
+            )
             if not is_sendign:
                 return redirect("forget_password")
         return super().form_valid(form)
@@ -121,7 +129,7 @@ class ValidateOtpView(FormView):
 
     def form_valid(self, form):
         status, user = AccountService.validate_otp(
-            self.request,form.cleaned_data["otp_code"], "password_reset"
+            self.request, form.cleaned_data["otp_code"], "password_reset"
         )
         if status:
             self.request.session["reset_user_id"] = user.id
@@ -131,7 +139,7 @@ class ValidateOtpView(FormView):
             ).timestamp()
             return super().form_valid(form)
         print("validate otp failed")
-    
+
         return redirect("forget_password")
 
 
@@ -143,12 +151,85 @@ class Profile(LoginRequiredMixin, DetailView):
         return self.request.user
 
 
-class Wallet(LoginRequiredMixin, DetailView):
+class Walletview(LoginRequiredMixin, DetailView):
     template_name = "accounts/wallet.html"
     context_object_name = "wallet"
 
     def get_object(self):
-        return self.request.user
+        user = self.request.user
+        try:
+            return user.wallet
+        except ObjectDoesNotExist:
+            wallet = Wallet(user=user)
+            wallet.save()
+            return wallet
+
+
+class CardListView(ListView):
+    model = Card
+    template_name = "accounts/mycard.html"
+    context_object_name = "cards"
+
+
+class CreateCardView(CreateView):
+    model = Card
+    template_name = "accounts/createcard.html"
+    form_class = CardForm
+    success_url = reverse_lazy("mycards")
+
+    def form_valid(self, form):
+        wallet, created = Wallet.objects.get_or_create(user=self.request.user)
+
+        form.instance.wallet = wallet
+
+        return super().form_valid(form)
+
+
+class RemoveCardView(DeleteView):
+    model = Card
+    success_url = reverse_lazy("mycards")
+
+    def post(self, request, *args, **kwargs):
+        card = self.get_object()
+        card.delete()
+        return redirect(self.success_url)
+
+
+class EditCardView(UpdateView):
+    model = Card
+    form_class = CardForm
+    template_name = "accounts/createcard.html"
+    success_url = reverse_lazy("mycards")
+
+    def get_queryset(self):
+        return Card.objects.filter(wallet__user=self.request.user)
+
+
+class ChargeWalletView(View):
+
+    def get(self, request):
+        wallet = Wallet.objects.get(user=request.user)
+        cards = wallet.card.all()
+
+        return render(
+            request,
+            "accounts/chargewallet.html",
+            {
+                "wallet": wallet,
+                "cards": cards,
+            },
+        )
+
+    def post(self, request, *args, **kwargs):
+
+        wallet = Wallet.objects.get(user=self.request.user)
+        balance = self.request.POST.get("balance")
+
+        wallet.balance += Decimal(balance)
+
+        wallet.save()
+
+        return redirect("wallet")
 
 
 class Home(TemplateView):
