@@ -1,0 +1,70 @@
+{% load static %}
+<!doctype html>
+<html lang="fa" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#1D4533">
+    <meta name="description" content="Nobatify — رزرو نوبت ساده، سریع و بدون دردسر.">
+
+    <title>{% block title %}Nobatify{% endblock %}</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        nobat: {
+                            green: "#1D4533",
+                            cream: "#F7EAE0",
+                            peach: "#F9D2BA",
+                            brown: "#5E3122",
+                        }
+                    },
+                    fontFamily: {
+                        sans: ["Vazirmatn", "ui-sans-serif", "system-ui", "sans-serif"]
+                    },
+                    boxShadow: {
+                        soft: "0 20px 70px rgba(29, 69, 51, .10)",
+                        card: "0 14px 45px rgba(94, 49, 34, .08)"
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/nobatify.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body class="bg-[#fffaf7] text-[#241a16] antialiased selection:bg-[#F9D2BA] selection:text-[#1D4533]">
+    <div class="noise-overlay pointer-events-none fixed inset-0 z-[100] opacity-[.035]"></div>
+
+    {% include "partials/navbar.html" %}
+
+    <main class="relative overflow-hidden">
+        {% if messages %}
+            <div class="fixed left-5 top-24 z-50 flex w-[min(92vw,420px)] flex-col gap-3">
+                {% for message in messages %}
+                    <div class="glass-message reveal-up rounded-2xl border border-white/60 px-5 py-4 shadow-soft">
+                        <div class="flex items-start gap-3">
+                            <span class="mt-1 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[#1D4533] text-white">✓</span>
+                            <p class="text-sm font-medium leading-7">{{ message }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    {% include "partials/footer.html" %}
+
+    <script src="{% static 'js/nobatify.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

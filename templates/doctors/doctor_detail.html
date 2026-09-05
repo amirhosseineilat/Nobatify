@@ -1,0 +1,832 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ doctor.first_name }} {{ doctor.last_name }} | Nobatify
+{% endblock %}
+
+{% block content %}
+
+<section class="page-shell">
+
+```
+<div class="mx-auto max-w-6xl">
+
+    <!-- ========================================= -->
+    <!-- Back Button -->
+    <!-- ========================================= -->
+
+    <a href="{% url 'doctors' %}" class="back-link reveal-up">
+        → بازگشت به پزشکان
+    </a>
+
+
+    <!-- ========================================= -->
+    <!-- Main Layout -->
+    <!-- ========================================= -->
+
+    <div class="mt-7 grid items-start gap-5 lg:grid-cols-[.85fr_1.15fr]">
+
+
+        <!-- ========================================= -->
+        <!-- Doctor Profile -->
+        <!-- ========================================= -->
+
+        <aside class="doctor-profile-card reveal-left">
+
+            <!-- Avatar -->
+
+            <div class="doctor-avatar doctor-avatar-lg">
+                {{ doctor.first_name|first }}{{ doctor.last_name|first }}
+            </div>
+
+
+            <!-- Doctor Name -->
+
+            <h1 class="mt-7 text-3xl font-black text-[#1D4533]">
+                {{ doctor.first_name }} {{ doctor.last_name }}
+            </h1>
+
+
+            <!-- Email -->
+
+            <p class="mt-2 text-sm text-[#5E3122]/50">
+                {{ doctor.email }}
+            </p>
+
+
+            <!-- ========================================= -->
+            <!-- Specialities -->
+            <!-- ========================================= -->
+
+            <div class="mt-6">
+
+                <p class="mb-3 text-xs font-black text-[#5E3122]/50">
+                    تخصص‌ها
+                </p>
+
+                <div class="flex flex-wrap gap-2">
+
+                    {% for speciality in doctor.specialities.all %}
+
+                        <span class="tag">
+                            {{ speciality.name }}
+                        </span>
+
+                    {% empty %}
+
+                        <span class="text-sm text-[#5E3122]/50">
+                            تخصصی ثبت نشده است.
+                        </span>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+
+            <!-- ========================================= -->
+            <!-- Rating Summary -->
+            <!-- ========================================= -->
+
+            <div class="mt-7 rounded-2xl bg-[#F7EAE0] p-5">
+
+                <div class="flex items-center justify-between">
+
+                    <div>
+
+                        <p class="text-xs font-bold text-[#5E3122]/50">
+                            امتیاز پزشک
+                        </p>
+
+                        <div class="mt-1 flex items-center gap-2">
+
+                            <span class="text-2xl font-black text-[#1D4533]">
+                                {{ doctor.average_rating }}
+                            </span>
+
+                            <span class="text-xl text-[#E5A55D]">
+                                ★
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="text-left">
+
+                        <p class="text-xs font-bold text-[#5E3122]/50">
+                            تعداد نظرات
+                        </p>
+
+                        <p class="mt-1 text-xl font-black text-[#1D4533]">
+                            {{ doctor.comment_count }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ========================================= -->
+            <!-- Doctor Information -->
+            <!-- ========================================= -->
+
+            <div class="mt-7 space-y-4">
+
+
+                <!-- Phone -->
+
+                <div class="flex items-start gap-3">
+
+                    <div class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F7EAE0] text-[#1D4533]">
+                        ☎
+                    </div>
+
+                    <div>
+
+                        <p class="text-xs font-bold text-[#5E3122]/45">
+                            شماره تماس
+                        </p>
+
+                        <p class="mt-1 text-sm font-bold text-[#1D4533]">
+                            {{ doctor.phone }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Medical License -->
+
+                <div class="flex items-start gap-3">
+
+                    <div class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F7EAE0] text-[#1D4533]">
+                        #
+                    </div>
+
+                    <div>
+
+                        <p class="text-xs font-bold text-[#5E3122]/45">
+                            شماره نظام پزشکی
+                        </p>
+
+                        <p class="mt-1 text-sm font-bold text-[#1D4533]">
+                            {{ doctor.medical_license_number }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Birth Date -->
+
+                <div class="flex items-start gap-3">
+
+                    <div class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F7EAE0] text-[#1D4533]">
+                        🎂
+                    </div>
+
+                    <div>
+
+                        <p class="text-xs font-bold text-[#5E3122]/45">
+                            تاریخ تولد
+                        </p>
+
+                        <p class="mt-1 text-sm font-bold text-[#1D4533]">
+                            {{ doctor.birth_date }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Address -->
+
+                <div class="flex items-start gap-3">
+
+                    <div class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#F7EAE0] text-[#1D4533]">
+                        📍
+                    </div>
+
+                    <div>
+
+                        <p class="text-xs font-bold text-[#5E3122]/45">
+                            آدرس
+                        </p>
+
+                        <p class="mt-1 text-sm font-bold leading-6 text-[#1D4533]">
+                            {{ doctor.address }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- ========================================= -->
+            <!-- Appointment Button -->
+            <!-- ========================================= -->
+
+            <a
+                href="{% url 'appointment' %}?doctor={{ doctor.id }}"
+                class="btn btn-primary mt-8 w-full justify-center"
+            >
+                دیدن نوبت‌های موجود
+                <span>←</span>
+            </a>
+
+        </aside>
+
+
+        <!-- ========================================= -->
+        <!-- Right Side -->
+        <!-- ========================================= -->
+
+        <div class="grid gap-5">
+
+
+            <!-- ========================================= -->
+            <!-- About Doctor -->
+            <!-- ========================================= -->
+
+            <section class="surface-card reveal-up p-8">
+
+                <span class="eyebrow">
+                    درباره پزشک
+                </span>
+
+                <h2 class="mt-2 text-2xl font-black text-[#1D4533]">
+                    معرفی پزشک
+                </h2>
+
+
+                {% if doctor.bio %}
+
+                    <p class="mt-5 text-sm leading-8 text-[#5E3122]/70">
+                        {{ doctor.bio }}
+                    </p>
+
+                {% else %}
+
+                    <p class="mt-5 rounded-2xl bg-[#F7EAE0] p-5 text-sm text-[#5E3122]/50">
+                        اطلاعاتی درباره این پزشک ثبت نشده است.
+                    </p>
+
+                {% endif %}
+
+            </section>
+
+
+            <!-- ========================================= -->
+            <!-- Comments Section -->
+            <!-- ========================================= -->
+
+            <section class="surface-card reveal-up p-8">
+
+
+                <!-- Header -->
+
+                <div class="flex items-center justify-between gap-4">
+
+                    <div>
+
+                        <span class="eyebrow">
+                            تجربه دیگران
+                        </span>
+
+                        <h2 class="mt-2 text-2xl font-black text-[#1D4533]">
+                            نظرات کاربران
+                        </h2>
+
+                    </div>
+
+
+                    <span
+                        class="rounded-full bg-[#F9D2BA] px-4 py-2 text-sm font-black text-[#1D4533]"
+                    >
+                        {{ doctor.comment_count }} نظر
+                    </span>
+
+                </div>
+
+
+                <!-- ========================================= -->
+                <!-- Average Rating -->
+                <!-- ========================================= -->
+
+                <div class="mt-6 flex items-center justify-between rounded-2xl bg-[#F7EAE0] p-5">
+
+                    <div>
+
+                        <p class="text-xs font-bold text-[#5E3122]/50">
+                            میانگین امتیاز
+                        </p>
+
+                        <div class="mt-1 flex items-center gap-2">
+
+                            <span class="text-3xl font-black text-[#1D4533]">
+                                {{ doctor.average_rating }}
+                            </span>
+
+                            <span class="text-2xl text-[#E5A55D]">
+                                ★
+                            </span>
+
+                            <span class="text-sm text-[#5E3122]/50">
+                                از 5
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="flex items-center gap-1 text-2xl">
+
+                        {% for i in "12345" %}
+
+                            {% if forloop.counter <= doctor.average_rating %}
+
+                                <span class="text-[#E5A55D]">
+                                    ★
+                                </span>
+
+                            {% else %}
+
+                                <span class="text-[#D9C5B8]">
+                                    ★
+                                </span>
+
+                            {% endif %}
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- ========================================= -->
+                <!-- Add Comment Button -->
+                <!-- ========================================= -->
+
+                {% if user.is_authenticated %}
+
+                    <div class="mt-5">
+
+                        <a
+                            href="#comment-form"
+                            class="btn btn-primary"
+                        >
+                            افزودن نظر
+                            <span>←</span>
+                        </a>
+
+                    </div>
+
+                {% else %}
+
+                    <div class="mt-5 rounded-2xl bg-[#F7EAE0] p-5 text-center">
+
+                        <p class="text-sm text-[#5E3122]/60">
+                            برای ثبت نظر ابتدا وارد حساب کاربری خود شوید.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- ========================================= -->
+                <!-- Existing Comments -->
+                <!-- ========================================= -->
+
+                <div class="mt-7 grid gap-4">
+
+                    {% for comment in doctor.comments.all %}
+
+                        <article class="comment-card">
+
+                            <div class="flex items-center justify-between gap-4">
+
+
+                                <!-- User -->
+
+                                <div>
+
+                                    <strong class="text-[#1D4533]">
+                                        {{ comment.user.get_full_name|default:comment.user.username }}
+                                    </strong>
+
+                                    {% if comment.created_at %}
+
+                                        <p class="mt-1 text-xs text-[#5E3122]/40">
+                                            {{ comment.created_at|date:"Y/m/d" }}
+                                        </p>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <!-- Rating -->
+
+                                <div class="flex items-center gap-1 text-xl">
+
+                                    {% for i in "12345" %}
+
+                                        {% if forloop.counter <= comment.rating %}
+
+                                            <span class="text-[#E5A55D]">
+                                                ★
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="text-[#D9C5B8]">
+                                                ★
+                                            </span>
+
+                                        {% endif %}
+
+                                    {% endfor %}
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Comment -->
+
+                            <p class="mt-3 text-sm leading-7 text-[#5E3122]/65">
+                                {{ comment.content }}
+                            </p>
+
+                        </article>
+
+
+                    {% empty %}
+
+                        <div
+                            class="rounded-2xl bg-[#F7EAE0] p-6 text-center text-sm text-[#5E3122]/55"
+                        >
+                            هنوز نظری ثبت نشده است.
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- ========================================= -->
+                <!-- Add Comment Form -->
+                <!-- ========================================= -->
+
+                {% if user.is_authenticated %}
+
+                    <div
+                        id="comment-form"
+                        class="mt-6 rounded-2xl bg-[#F7EAE0] p-6"
+                    >
+
+                        <h3 class="text-xl font-black text-[#1D4533]">
+                            نظر خود را بنویسید
+                        </h3>
+
+
+                        <form
+                            method="post"
+                            action="{% url 'add_comment' doctor.id %}"
+                            class="mt-5"
+                        >
+
+                            {% csrf_token %}
+
+
+                            <!-- ========================================= -->
+                            <!-- Rating -->
+                            <!-- ========================================= -->
+
+                            <div>
+
+                                <label
+                                    class="mb-3 block text-sm font-black text-[#1D4533]"
+                                >
+                                    امتیاز شما
+                                </label>
+
+
+                                <div
+                                    id="rating-stars"
+                                    class="rating-stars"
+                                    dir="ltr"
+                                >
+
+                                    {% for radio in form.rating %}
+
+                                        <div class="rating-option">
+
+                                            {{ radio.tag }}
+
+                                            <label
+                                                for="{{ radio.id_for_label }}"
+                                                class="rating-star"
+                                                title="{{ radio.choice_label }} از 5"
+                                            >
+                                                ★
+                                            </label>
+
+                                        </div>
+
+                                    {% endfor %}
+
+                                </div>
+
+
+                                <!-- Rating Error -->
+
+                                {% if form.rating.errors %}
+
+                                    <p class="mt-2 text-sm font-bold text-red-600">
+                                        {{ form.rating.errors.0 }}
+                                    </p>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- ========================================= -->
+                            <!-- Comment Content -->
+                            <!-- ========================================= -->
+
+                            <div class="mt-6">
+
+                                <label
+                                    for="{{ form.content.id_for_label }}"
+                                    class="mb-3 block text-sm font-black text-[#1D4533]"
+                                >
+                                    نظر شما
+                                </label>
+
+
+                                {{ form.content }}
+
+
+                                {% if form.content.errors %}
+
+                                    <p class="mt-2 text-sm font-bold text-red-600">
+                                        {{ form.content.errors.0 }}
+                                    </p>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- ========================================= -->
+                            <!-- Submit -->
+                            <!-- ========================================= -->
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary mt-8"
+                            >
+                                ثبت نظر
+                                <span>←</span>
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                {% endif %}
+
+
+            </section>
+
+        </div>
+
+    </div>
+
+</div>
+```
+
+</section>
+
+<!-- ========================================================= -->
+
+<!-- Rating JavaScript -->
+
+<!-- ========================================================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | پیدا کردن Container ستاره‌ها
+    |--------------------------------------------------------------------------
+    */
+
+    const ratingContainer =
+        document.getElementById("rating-stars");
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | اگر فرم Rating وجود نداشت
+    |--------------------------------------------------------------------------
+    */
+
+    if (!ratingContainer) {
+        return;
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | گرفتن تمام گزینه‌های Rating
+    |--------------------------------------------------------------------------
+    */
+
+    const options =
+        ratingContainer.querySelectorAll(".rating-option");
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | تغییر وضعیت ستاره‌ها
+    |--------------------------------------------------------------------------
+    |
+    | اگر کاربر 3 را انتخاب کند:
+    |
+    | ★ ★ ★ ☆ ☆
+    |
+    */
+
+    function updateStars(value) {
+
+        options.forEach(function (option) {
+
+            const radio =
+                option.querySelector('input[type="radio"]');
+
+            const star =
+                option.querySelector(".rating-star");
+
+
+            if (!radio || !star) {
+                return;
+            }
+
+
+            if (Number(radio.value) <= value) {
+
+                star.classList.add("active");
+
+            } else {
+
+                star.classList.remove("active");
+
+            }
+
+        });
+
+    }
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | وقتی روی یک Rating کلیک می‌شود
+    |--------------------------------------------------------------------------
+    */
+
+    options.forEach(function (option) {
+
+        const radio =
+            option.querySelector('input[type="radio"]');
+
+
+        if (!radio) {
+            return;
+        }
+
+
+        radio.addEventListener("change", function () {
+
+            const selectedValue =
+                Number(this.value);
+
+            updateStars(selectedValue);
+
+        });
+
+    });
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Hover روی ستاره‌ها
+    |--------------------------------------------------------------------------
+    |
+    | وقتی موس روی ستاره سوم باشد:
+    |
+    | ★ ★ ★ ☆ ☆
+    |
+    */
+
+    options.forEach(function (option) {
+
+        option.addEventListener("mouseenter", function () {
+
+            const radio =
+                this.querySelector('input[type="radio"]');
+
+
+            if (!radio) {
+                return;
+            }
+
+
+            const hoverValue =
+                Number(radio.value);
+
+
+            updateStars(hoverValue);
+
+        });
+
+    });
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | وقتی موس از ستاره‌ها خارج می‌شود
+    |--------------------------------------------------------------------------
+    */
+
+    ratingContainer.addEventListener("mouseleave", function () {
+
+
+        const checkedRadio =
+            ratingContainer.querySelector(
+                'input[type="radio"]:checked'
+            );
+
+
+        if (checkedRadio) {
+
+            updateStars(
+                Number(checkedRadio.value)
+            );
+
+        } else {
+
+            updateStars(0);
+
+        }
+
+    });
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | اگر فرم قبلاً مقدار داشته باشد
+    |--------------------------------------------------------------------------
+    |
+    | مثلاً Validation Error رخ داده باشد.
+    |
+    */
+
+    const checkedRadio =
+        ratingContainer.querySelector(
+            'input[type="radio"]:checked'
+        );
+
+
+    if (checkedRadio) {
+
+        updateStars(
+            Number(checkedRadio.value)
+        );
+
+    }
+
+});
+
+</script>
+
+{% endblock %}
