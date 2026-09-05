@@ -1,5 +1,7 @@
 {% load static %}
+
 <!doctype html>
+
 <html lang="fa" dir="rtl" class="scroll-smooth">
 
 <head>
@@ -7,80 +9,81 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#1D4533">
 
-    <title>
-        {% block title %}داشبورد ادمین | Nobatify{% endblock %}
-    </title>
+<title>
+    {% block title %}داشبورد ادمین | Nobatify{% endblock %}
+</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.tailwindcss.com"></script>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        nobat: {
-                            green: "#1D4533",
-                            cream: "#F7EAE0",
-                            peach: "#F9D2BA",
-                            brown: "#5E3122",
-                            bg: "#FBF8F5",
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    nobat: {
+                        green: "#1D4533",
+                        cream: "#F7EAE0",
+                        peach: "#F9D2BA",
+                        brown: "#5E3122",
+                        bg: "#FBF8F5",
+                    }
+                },
+
+                fontFamily: {
+                    sans: [
+                        "Vazirmatn",
+                        "ui-sans-serif",
+                        "system-ui",
+                        "sans-serif"
+                    ]
+                },
+
+                boxShadow: {
+                    soft: "0 10px 40px rgba(29, 69, 51, 0.07)",
+                    card: "0 4px 24px rgba(29, 69, 51, 0.06)",
+                },
+
+                animation: {
+                    "fade-in": "fadeIn .5s ease-out",
+                    "slide-up": "slideUp .5s ease-out",
+                },
+
+                keyframes: {
+                    fadeIn: {
+                        "0%": {
+                            opacity: "0"
+                        },
+                        "100%": {
+                            opacity: "1"
                         }
                     },
 
-                    fontFamily: {
-                        sans: [
-                            "Vazirmatn",
-                            "ui-sans-serif",
-                            "system-ui",
-                            "sans-serif"
-                        ]
-                    },
-
-                    boxShadow: {
-                        soft: "0 10px 40px rgba(29, 69, 51, 0.07)",
-                        card: "0 4px 24px rgba(29, 69, 51, 0.06)",
-                    },
-
-                    animation: {
-                        "fade-in": "fadeIn .5s ease-out",
-                        "slide-up": "slideUp .5s ease-out",
-                    },
-
-                    keyframes: {
-                        fadeIn: {
-                            "0%": {
-                                opacity: "0"
-                            },
-                            "100%": {
-                                opacity: "1"
-                            }
+                    slideUp: {
+                        "0%": {
+                            opacity: "0",
+                            transform: "translateY(12px)"
                         },
-
-                        slideUp: {
-                            "0%": {
-                                opacity: "0",
-                                transform: "translateY(12px)"
-                            },
-                            "100%": {
-                                opacity: "1",
-                                transform: "translateY(0)"
-                            }
+                        "100%": {
+                            opacity: "1",
+                            transform: "translateY(0)"
                         }
                     }
                 }
             }
         }
-    </script>
+    }
+</script>
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap"
-        rel="stylesheet"
-    >
+<link
+    href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+>
 
-    <link rel="stylesheet" href="{% static 'css/nobatify.css' %}">
+<link rel="stylesheet" href="{% static 'css/nobatify.css' %}">
 
-    {% block extra_head %}{% endblock %}
-    <style>
+{% block extra_head %}{% endblock %}
+
+<style>
     nav.hide-scrollbar {
         -ms-overflow-style: none !important;
         scrollbar-width: none !important;
@@ -92,334 +95,416 @@
         display: none !important;
     }
 </style>
-</head>
 
+</head>
 
 <body class="bg-[#FBF8F5] font-sans text-[#241a16] antialiased">
 
 <div class="flex min-h-screen">
 
+<!-- ================================================= -->
+<!-- SIDEBAR -->
+<!-- ================================================= -->
 
-    <!-- ================================================= -->
-    <!-- SIDEBAR -->
-    <!-- ================================================= -->
+<aside
+    class="
+        fixed right-0 top-0 z-40
+        flex h-screen w-[280px] flex-col
+        border-l border-white/10
+        bg-[#1D4533]
+        text-white
+        shadow-2xl
+    "
+>
 
-    <aside
-        class="
-            fixed right-0 top-0 z-40
-            flex h-screen w-[280px] flex-col
-            border-l border-white/10
-            bg-[#1D4533]
-            text-white
-            shadow-2xl
-        "
-    >
+    <!-- Logo -->
+    <div class="px-6 pt-7 pb-5">
 
-        <!-- Logo -->
-        <div class="px-6 pt-7 pb-5">
+        <div class="flex items-center gap-3">
 
-            <div class="flex items-center gap-3">
+            <div
+                class="
+                    grid h-11 w-11 shrink-0 place-items-center
+                    rounded-2xl
+                    bg-[#F7EAE0]
+                    text-lg font-black
+                    text-[#1D4533]
+                    shadow-lg
+                "
+            >
+                N
+            </div>
 
-                <div
-                    class="
-                        grid h-11 w-11 shrink-0 place-items-center
-                        rounded-2xl
-                        bg-[#F7EAE0]
-                        text-lg font-black
-                        text-[#1D4533]
-                        shadow-lg
-                    "
-                >
-                    N
-                </div>
+            <div>
+                <p class="text-[15px] font-black tracking-tight">
+                    Nobatify
+                </p>
 
-                <div>
-                    <p class="text-[15px] font-black tracking-tight">
-                        Nobatify
-                    </p>
-
-                    <p class="mt-0.5 text-[11px] text-white/45">
-                        پنل مدیریت سیستم
-                    </p>
-                </div>
-
+                <p class="mt-0.5 text-[11px] text-white/45">
+                    پنل مدیریت سیستم
+                </p>
             </div>
 
         </div>
 
-
-        <!-- Divider -->
-        <div class="mx-5 border-t border-white/10"></div>
+    </div>
 
 
-        <!-- Navigation -->
-        <nav class="flex-1 overflow-y-auto px-4 py-6 hide-scrollbar">
-
-            <!-- Main -->
-            <div class="mb-3 px-3">
-                <span
-                    class="
-                        text-[10px]
-                        font-bold
-                        uppercase
-                        tracking-widest
-                        text-white/30
-                    "
-                >
-                    اصلی
-                </span>
-            </div>
+    <!-- Divider -->
+    <div class="mx-5 border-t border-white/10"></div>
 
 
-            <!-- Dashboard -->
-            <a
-                href="{% url 'admin_dashboard' %}"
+    <!-- Navigation -->
+    <nav class="flex-1 overflow-y-auto px-4 py-6 hide-scrollbar">
+
+        <!-- Main -->
+        <div class="mb-3 px-3">
+            <span
                 class="
-                    group mb-1 flex items-center gap-3
-                    rounded-2xl px-3 py-3
-                    text-sm font-medium
+                    text-[10px]
+                    font-bold
+                    uppercase
+                    tracking-widest
+                    text-white/30
+                "
+            >
+                اصلی
+            </span>
+        </div>
+
+
+        <!-- Dashboard -->
+        <a
+            href="{% url 'admin_dashboard' %}"
+            class="
+                group mb-1 flex items-center gap-3
+                rounded-2xl px-3 py-3
+                text-sm font-medium
+                transition-all duration-300
+                hover:translate-x-[-2px]
+
+                {% if request.resolver_match.url_name == 'admin_dashboard' %}
+                    bg-white text-[#1D4533] shadow-lg
+                {% else %}
+                    text-white/65 hover:bg-white/[0.07] hover:text-white
+                {% endif %}
+            "
+        >
+
+            <span
+                class="
+                    grid h-9 w-9 shrink-0 place-items-center
+                    rounded-xl
                     transition-all duration-300
-                    hover:translate-x-[-2px]
+
                     {% if request.resolver_match.url_name == 'admin_dashboard' %}
-                        bg-white text-[#1D4533] shadow-lg
+                        bg-[#F7EAE0]
                     {% else %}
-                        text-white/65 hover:bg-white/[0.07] hover:text-white
+                        bg-white/[0.06] group-hover:bg-white/10
                     {% endif %}
                 "
             >
+                📊
+            </span>
 
-                <span
-                    class="
-                        grid h-9 w-9 shrink-0 place-items-center
-                        rounded-xl
-                        transition-all duration-300
-                        {% if request.resolver_match.url_name == 'admin_dashboard' %}
-                            bg-[#F7EAE0]
-                        {% else %}
-                            bg-white/[0.06] group-hover:bg-white/10
-                        {% endif %}
-                    "
-                >
-                    📊
+            <span class="flex-1">
+                داشبورد
+            </span>
+
+            {% if request.resolver_match.url_name == 'admin_dashboard' %}
+                <span class="text-xs">
+                    ●
                 </span>
+            {% endif %}
 
-                <span class="flex-1">
-                    داشبورد
-                </span>
+        </a>
 
-                {% if request.resolver_match.url_name == 'admin_dashboard' %}
-                    <span class="text-xs">●</span>
+
+        <!-- Doctors -->
+        <a
+            href="{% url 'admin_doctor_list' %}"
+            class="
+                group mb-1 flex items-center gap-3
+                rounded-2xl px-3 py-3
+                text-sm font-medium
+                transition-all duration-300
+                hover:translate-x-[-2px]
+
+                {% if request.resolver_match.url_name == 'admin_doctor_list' or request.resolver_match.url_name == 'admin_doctor_create' or request.resolver_match.url_name == 'admin_doctor_detail' or request.resolver_match.url_name == 'admin_doctor_update' or request.resolver_match.url_name == 'admin_doctor_delete' or request.resolver_match.url_name == 'admin_doctor_search' %}
+                    bg-white text-[#1D4533] shadow-lg
+                {% else %}
+                    text-white/65 hover:bg-white/[0.07] hover:text-white
                 {% endif %}
+            "
+        >
 
-            </a>
-
-
-            <!-- Doctors -->
-            <a
-                href="{% url 'admin_doctor_list' %}"
+            <span
                 class="
-                    group mb-1 flex items-center gap-3
-                    rounded-2xl px-3 py-3
-                    text-sm font-medium
-                    text-white/65
+                    grid h-9 w-9 shrink-0 place-items-center
+                    rounded-xl
                     transition-all duration-300
-                    hover:translate-x-[-2px]
-                    hover:bg-white/[0.07]
-                    hover:text-white
+
+                    {% if request.resolver_match.url_name == 'admin_doctor_list' or request.resolver_match.url_name == 'admin_doctor_create' or request.resolver_match.url_name == 'admin_doctor_detail' or request.resolver_match.url_name == 'admin_doctor_update' or request.resolver_match.url_name == 'admin_doctor_delete' or request.resolver_match.url_name == 'admin_doctor_search' %}
+                        bg-[#F7EAE0]
+                    {% else %}
+                        bg-white/[0.06] group-hover:bg-white/10
+                    {% endif %}
                 "
             >
+                👨‍⚕️
+            </span>
 
-                <span
-                    class="
-                        grid h-9 w-9 shrink-0 place-items-center
-                        rounded-xl
-                        bg-white/[0.06]
-                        transition-all duration-300
-                        group-hover:bg-white/10
-                    "
-                >
-                    👨‍⚕️
+            <span class="flex-1">
+                مدیریت پزشکان
+            </span>
+
+            {% if request.resolver_match.url_name == 'admin_doctor_list' or request.resolver_match.url_name == 'admin_doctor_create' or request.resolver_match.url_name == 'admin_doctor_detail' or request.resolver_match.url_name == 'admin_doctor_update' or request.resolver_match.url_name == 'admin_doctor_delete' or request.resolver_match.url_name == 'admin_doctor_search' %}
+                <span class="text-xs">
+                    ●
                 </span>
+            {% endif %}
 
-                <span class="flex-1">
-                    مدیریت پزشکان
-                </span>
-
-            </a>
+        </a>
 
 
-            <!-- Appointments -->
-            <a
-                href="{% url 'admin_timeslots' %}"
+        <!-- Appointments -->
+        <a
+            href="{% url 'admin_timeslots' %}"
+            class="
+                group mb-1 flex items-center gap-3
+                rounded-2xl px-3 py-3
+                text-sm font-medium
+                transition-all duration-300
+                hover:translate-x-[-2px]
+
+                {% if request.resolver_match.url_name == 'admin_timeslots' or request.resolver_match.url_name == 'admin_timeslot_create' or request.resolver_match.url_name == 'admin_timeslot_update' or request.resolver_match.url_name == 'admin_timeslot_delete' or request.resolver_match.url_name == 'admin_timeslot_search' %}
+                    bg-white text-[#1D4533] shadow-lg
+                {% else %}
+                    text-white/65 hover:bg-white/[0.07] hover:text-white
+                {% endif %}
+            "
+        >
+
+            <span
                 class="
-                    group mb-1 flex items-center gap-3
-                    rounded-2xl px-3 py-3
-                    text-sm font-medium
-                    text-white/65
+                    grid h-9 w-9 shrink-0 place-items-center
+                    rounded-xl
                     transition-all duration-300
-                    hover:translate-x-[-2px]
-                    hover:bg-white/[0.07]
-                    hover:text-white
+
+                    {% if request.resolver_match.url_name == 'admin_timeslots' or request.resolver_match.url_name == 'admin_timeslot_create' or request.resolver_match.url_name == 'admin_timeslot_update' or request.resolver_match.url_name == 'admin_timeslot_delete' or request.resolver_match.url_name == 'admin_timeslot_search' %}
+                        bg-[#F7EAE0]
+                    {% else %}
+                        bg-white/[0.06] group-hover:bg-white/10
+                    {% endif %}
                 "
             >
+                🩺
+            </span>
 
-                <span
-                    class="
-                        grid h-9 w-9 shrink-0 place-items-center
-                        rounded-xl
-                        bg-white/[0.06]
-                        transition-all duration-300
-                        group-hover:bg-white/10
-                    "
-                >
-                    🩺
+            <span class="flex-1">
+                مدیریت ویزیت‌ها
+            </span>
+
+            {% if request.resolver_match.url_name == 'admin_timeslots' or request.resolver_match.url_name == 'admin_timeslot_create' or request.resolver_match.url_name == 'admin_timeslot_update' or request.resolver_match.url_name == 'admin_timeslot_delete' or request.resolver_match.url_name == 'admin_timeslot_search' %}
+                <span class="text-xs">
+                    ●
                 </span>
+            {% endif %}
 
-                <span class="flex-1">
-                    مدیریت ویزیت‌ها
-                </span>
-
-            </a>
+        </a>
 
 
-            <!-- Specialities -->
-            <a
-                href="{% url 'admin_speciality_list' %}"
+        <!-- Specialities -->
+        <a
+            href="{% url 'admin_speciality_list' %}"
+            class="
+                group mb-1 flex items-center gap-3
+                rounded-2xl px-3 py-3
+                text-sm font-medium
+                transition-all duration-300
+                hover:translate-x-[-2px]
+
+                {% if request.resolver_match.url_name == 'admin_speciality_list' or request.resolver_match.url_name == 'admin_speciality_create' or request.resolver_match.url_name == 'admin_speciality_update' or request.resolver_match.url_name == 'admin_speciality_delete' or request.resolver_match.url_name == 'admin_speciality_search' %}
+                    bg-white text-[#1D4533] shadow-lg
+                {% else %}
+                    text-white/65 hover:bg-white/[0.07] hover:text-white
+                {% endif %}
+            "
+        >
+
+            <span
                 class="
-                    group mb-1 flex items-center gap-3
-                    rounded-2xl px-3 py-3
-                    text-sm font-medium
-                    text-white/65
+                    grid h-9 w-9 shrink-0 place-items-center
+                    rounded-xl
                     transition-all duration-300
-                    hover:translate-x-[-2px]
-                    hover:bg-white/[0.07]
-                    hover:text-white
+
+                    {% if request.resolver_match.url_name == 'admin_speciality_list' or request.resolver_match.url_name == 'admin_speciality_create' or request.resolver_match.url_name == 'admin_speciality_update' or request.resolver_match.url_name == 'admin_speciality_delete' or request.resolver_match.url_name == 'admin_speciality_search' %}
+                        bg-[#F7EAE0]
+                    {% else %}
+                        bg-white/[0.06] group-hover:bg-white/10
+                    {% endif %}
                 "
             >
+                🏷️
+            </span>
 
-                <span
-                    class="
-                        grid h-9 w-9 shrink-0 place-items-center
-                        rounded-xl
-                        bg-white/[0.06]
-                        transition-all duration-300
-                        group-hover:bg-white/10
-                    "
-                >
-                    🏷️
+            <span class="flex-1">
+                مدیریت تخصص‌ها
+            </span>
+
+            {% if request.resolver_match.url_name == 'admin_speciality_list' or request.resolver_match.url_name == 'admin_speciality_create' or request.resolver_match.url_name == 'admin_speciality_update' or request.resolver_match.url_name == 'admin_speciality_delete' or request.resolver_match.url_name == 'admin_speciality_search' %}
+                <span class="text-xs">
+                    ●
                 </span>
+            {% endif %}
 
-                <span class="flex-1">
-                    مدیریت تخصص‌ها
-                </span>
-
-            </a>
+        </a>
 
 
-            <!-- Divider -->
-            <div class="my-6 border-t border-white/10"></div>
+        <!-- Divider -->
+        <div class="my-6 border-t border-white/10"></div>
 
 
-            <!-- Management -->
-            <div class="mb-3 px-3">
-                <span
-                    class="
-                        text-[10px]
-                        font-bold
-                        uppercase
-                        tracking-widest
-                        text-white/30
-                    "
-                >
-                    مدیریت
-                </span>
-            </div>
-
-
-            <!-- Users -->
-            <a
-                href="#"
+        <!-- Management -->
+        <div class="mb-3 px-3">
+            <span
                 class="
-                    group mb-1 flex items-center gap-3
-                    rounded-2xl px-3 py-3
-                    text-sm font-medium
-                    text-white/65
-                    transition-all duration-300
-                    hover:translate-x-[-2px]
-                    hover:bg-white/[0.07]
-                    hover:text-white
+                    text-[10px]
+                    font-bold
+                    uppercase
+                    tracking-widest
+                    text-white/30
                 "
             >
-
-                <span
-                    class="
-                        grid h-9 w-9 shrink-0 place-items-center
-                        rounded-xl
-                        bg-white/[0.06]
-                        transition-all duration-300
-                        group-hover:bg-white/10
-                    "
-                >
-                    👥
-                </span>
-
-                <span class="flex-1">
-                    کاربران
-                </span>
-
-            </a>
+                مدیریت
+            </span>
+        </div>
 
 
-            <!-- Comments -->
-            <a
-                href="#"
+        <!-- Users -->
+        <a
+            href="#"
+            class="
+                group mb-1 flex items-center gap-3
+                rounded-2xl px-3 py-3
+                text-sm font-medium
+                text-white/65
+                transition-all duration-300
+                hover:translate-x-[-2px]
+                hover:bg-white/[0.07]
+                hover:text-white
+            "
+        >
+
+            <span
                 class="
-                    group mb-1 flex items-center gap-3
-                    rounded-2xl px-3 py-3
-                    text-sm font-medium
-                    text-white/65
+                    grid h-9 w-9 shrink-0 place-items-center
+                    rounded-xl
+                    bg-white/[0.06]
                     transition-all duration-300
-                    hover:translate-x-[-2px]
-                    hover:bg-white/[0.07]
-                    hover:text-white
+                    group-hover:bg-white/10
                 "
             >
+                👥
+            </span>
 
-                <span
-                    class="
-                        grid h-9 w-9 shrink-0 place-items-center
-                        rounded-xl
-                        bg-white/[0.06]
-                        transition-all duration-300
-                        group-hover:bg-white/10
-                    "
-                >
-                    💬
-                </span>
+            <span class="flex-1">
+                کاربران
+            </span>
 
-                <span class="flex-1">
-                    نظرات کاربران
-                </span>
-
-            </a>
-
-        </nav>
+        </a>
 
 
-        <!-- Bottom -->
-        <div class="border-t border-white/10 p-4">
+        <!-- Comments -->
+        <a
+            href="#"
+            class="
+                group mb-1 flex items-center gap-3
+                rounded-2xl px-3 py-3
+                text-sm font-medium
+                text-white/65
+                transition-all duration-300
+                hover:translate-x-[-2px]
+                hover:bg-white/[0.07]
+                hover:text-white
+            "
+        >
 
-            <!-- Back to website -->
-            <a
-                href="{% url 'home' %}"
+            <span
                 class="
-                    group mb-1 flex items-center gap-3
+                    grid h-9 w-9 shrink-0 place-items-center
+                    rounded-xl
+                    bg-white/[0.06]
+                    transition-all duration-300
+                    group-hover:bg-white/10
+                "
+            >
+                💬
+            </span>
+
+            <span class="flex-1">
+                نظرات کاربران
+            </span>
+
+        </a>
+
+    </nav>
+
+
+    <!-- Bottom -->
+    <div class="border-t border-white/10 p-4">
+
+        <!-- Back to website -->
+        <a
+            href="{% url 'home' %}"
+            class="
+                group mb-1 flex items-center gap-3
+                rounded-2xl px-3 py-3
+                text-sm
+                text-white/55
+                transition-all duration-300
+                hover:bg-white/[0.07]
+                hover:text-white
+            "
+        >
+
+            <span
+                class="
+                    grid h-9 w-9 place-items-center
+                    rounded-xl
+                    bg-white/[0.05]
+                    transition
+                    group-hover:bg-white/10
+                "
+            >
+                🏠
+            </span>
+
+            <span>
+                بازگشت به سایت
+            </span>
+
+        </a>
+
+
+        <!-- Logout -->
+        <form
+            action="{% url 'logout' %}"
+            method="post"
+        >
+
+            {% csrf_token %}
+
+            <button
+                type="submit"
+                class="
+                    group flex w-full items-center gap-3
                     rounded-2xl px-3 py-3
                     text-sm
-                    text-white/55
+                    text-white/45
                     transition-all duration-300
-                    hover:bg-white/[0.07]
-                    hover:text-white
+                    hover:bg-red-400/10
+                    hover:text-red-200
                 "
             >
 
@@ -429,207 +514,167 @@
                         rounded-xl
                         bg-white/[0.05]
                         transition
-                        group-hover:bg-white/10
+                        group-hover:bg-red-400/10
                     "
                 >
-                    🏠
+                    🚪
                 </span>
 
                 <span>
-                    بازگشت به سایت
+                    خروج از حساب
                 </span>
 
-            </a>
+            </button>
+
+        </form>
+
+    </div>
+
+</aside>
 
 
-            <!-- Logout -->
-            <form
-                action="{% url 'logout' %}"
-                method="post"
+
+<!-- ================================================= -->
+<!-- MAIN -->
+<!-- ================================================= -->
+
+<div class="mr-[280px] flex min-h-screen flex-1 flex-col">
+
+
+    <!-- Topbar -->
+    <header
+        class="
+            sticky top-0 z-30
+            flex items-center justify-between
+            border-b border-[#1D4533]/[0.07]
+            bg-[#FBF8F5]/80
+            px-8 py-4
+            backdrop-blur-xl
+        "
+    >
+
+        <div>
+
+            <p class="text-[11px] font-bold text-[#5E3122]/35">
+                NOBATIFY ADMIN
+            </p>
+
+            <h1
+                class="mt-1 text-lg font-black text-[#1D4533]"
             >
-                {% csrf_token %}
+                {% block page_title %}
+                    داشبورد
+                {% endblock %}
+            </h1>
 
-                <button
-                    type="submit"
+        </div>
+
+
+        <!-- User -->
+        <div
+            class="
+                flex items-center gap-3
+                rounded-2xl
+                border border-[#1D4533]/[0.07]
+                bg-white
+                px-3 py-2
+                shadow-sm
+            "
+        >
+
+            <div class="hidden text-left sm:block">
+
+                <p class="text-xs font-bold text-[#1D4533]">
+                    {{ request.user.username }}
+                </p>
+
+                <p class="mt-0.5 text-[10px] text-[#5E3122]/40">
+                    مدیر سیستم
+                </p>
+
+            </div>
+
+
+            <div
+                class="
+                    grid h-10 w-10 place-items-center
+                    rounded-xl
+                    bg-[#1D4533]
+                    text-sm font-black
+                    text-white
+                    shadow-sm
+                "
+            >
+                {{ request.user.username|first|upper }}
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- Messages -->
+    {% if messages %}
+
+        <div class="px-8 pt-5">
+
+            {% for message in messages %}
+
+                <div
                     class="
-                        group flex w-full items-center gap-3
-                        rounded-2xl px-3 py-3
-                        text-sm
-                        text-white/45
-                        transition-all duration-300
-                        hover:bg-red-400/10
-                        hover:text-red-200
+                        mb-3 flex items-center gap-3
+                        rounded-2xl
+                        border border-[#1D4533]/10
+                        bg-white
+                        px-5 py-4
+                        text-sm font-medium
+                        text-[#1D4533]
+                        shadow-card
+                        animate-fade-in
                     "
                 >
 
                     <span
                         class="
-                            grid h-9 w-9 place-items-center
+                            grid h-8 w-8 place-items-center
                             rounded-xl
-                            bg-white/[0.05]
-                            transition
-                            group-hover:bg-red-400/10
+                            bg-[#F7EAE0]
                         "
                     >
-                        🚪
+                        ✓
                     </span>
 
-                    <span>
-                        خروج از حساب
-                    </span>
+                    {{ message }}
 
-                </button>
+                </div>
 
-            </form>
+            {% endfor %}
 
         </div>
 
-    </aside>
+    {% endif %}
 
 
 
-    <!-- ================================================= -->
-    <!-- MAIN -->
-    <!-- ================================================= -->
+    <!-- Page -->
+    <main
+        class="
+            flex-1
+            p-6
+            sm:p-8
+            animate-slide-up
+        "
+    >
 
-    <div class="mr-[280px] flex min-h-screen flex-1 flex-col">
+        {% block content %}{% endblock %}
 
+    </main>
 
-        <!-- Topbar -->
-        <header
-            class="
-                sticky top-0 z-30
-                flex items-center justify-between
-                border-b border-[#1D4533]/[0.07]
-                bg-[#FBF8F5]/80
-                px-8 py-4
-                backdrop-blur-xl
-            "
-        >
-
-            <div>
-
-                <p class="text-[11px] font-bold text-[#5E3122]/35">
-                    NOBATIFY ADMIN
-                </p>
-
-                <h1
-                    class="mt-1 text-lg font-black text-[#1D4533]"
-                >
-                    {% block page_title %}
-                        داشبورد
-                    {% endblock %}
-                </h1>
-
-            </div>
-
-
-            <!-- User -->
-            <div
-                class="
-                    flex items-center gap-3
-                    rounded-2xl
-                    border border-[#1D4533]/[0.07]
-                    bg-white
-                    px-3 py-2
-                    shadow-sm
-                "
-            >
-
-                <div class="hidden text-left sm:block">
-
-                    <p class="text-xs font-bold text-[#1D4533]">
-                        {{ request.user.username }}
-                    </p>
-
-                    <p class="mt-0.5 text-[10px] text-[#5E3122]/40">
-                        مدیر سیستم
-                    </p>
-
-                </div>
-
-
-                <div
-                    class="
-                        grid h-10 w-10 place-items-center
-                        rounded-xl
-                        bg-[#1D4533]
-                        text-sm font-black
-                        text-white
-                        shadow-sm
-                    "
-                >
-                    {{ request.user.username|first|upper }}
-                </div>
-
-            </div>
-
-        </header>
-
-
-
-        <!-- Messages -->
-        {% if messages %}
-
-            <div class="px-8 pt-5">
-
-                {% for message in messages %}
-
-                    <div
-                        class="
-                            mb-3 flex items-center gap-3
-                            rounded-2xl
-                            border border-[#1D4533]/10
-                            bg-white
-                            px-5 py-4
-                            text-sm font-medium
-                            text-[#1D4533]
-                            shadow-card
-                            animate-fade-in
-                        "
-                    >
-
-                        <span
-                            class="
-                                grid h-8 w-8 place-items-center
-                                rounded-xl
-                                bg-[#F7EAE0]
-                            "
-                        >
-                            ✓
-                        </span>
-
-                        {{ message }}
-
-                    </div>
-
-                {% endfor %}
-
-            </div>
-
-        {% endif %}
-
-
-
-        <!-- Page -->
-        <main
-            class="
-                flex-1
-                p-6
-                sm:p-8
-                animate-slide-up
-            "
-        >
-
-            {% block content %}{% endblock %}
-
-        </main>
-
-
-    </div>
 
 </div>
 
+</div>
 
 {% block extra_js %}{% endblock %}
 
