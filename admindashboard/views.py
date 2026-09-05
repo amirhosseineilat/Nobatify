@@ -1,13 +1,13 @@
 from django.shortcuts import render,redirect
 from django.views.generic import TemplateView,DeleteView,UpdateView,ListView
-from doctors.models import Doctor
+from doctors.models import Doctor,Speciality
 from accounts.models import CustomUser
 from appointments.models import TimeSlot,Appointment
-from doctors.views import BaseSearchDoctorView,BaseListDoctorView,BaseCreateDoctorView,BaseDetailDoctorView
+from doctors.views import BaseCreateSpecialityView,BaseSearchDoctorView,BaseListDoctorView,BaseCreateDoctorView,BaseDetailDoctorView
 from appointments.views import BaseTimeSlotListView,BaseTimeSlotCreateView
 from django.urls import reverse_lazy
 from django.contrib import messages
-from doctors.forms import DoctorForm
+from doctors.forms import DoctorForm,SpecialityForm
 from appointments.forms import TimeSlotForm
 from django.db.models import Q
 from django.contrib.auth.views import LoginView
@@ -108,3 +108,42 @@ class AdminLoginView(LoginView):
 
     def get_success_url(self):
         return reverse_lazy("admin_dashboard")
+
+#speciality
+class AdminSpecialityListView(ListView):
+    model = Speciality
+    template_name = "dashboard/admin_speciality_list.html"
+    context_object_name = "specialitys"
+
+
+class AdminCreaterSpecialityView(BaseCreateSpecialityView):
+    template_name = "dashboard/admin_speciality_create.html"
+    success_url = reverse_lazy("admin_speciality_list")
+
+class AdminUpdateSpecialityView(UpdateView):
+    model = Speciality
+    template_name = "dashboard/admin_speciality_create.html"
+    form_class = SpecialityForm
+    success_url = reverse_lazy("admin_speciality_list")
+
+class AdminSpecialityDeleteView(DeleteView):
+    model = Speciality
+    success_url = reverse_lazy("admin_speciality_list")
+    
+
+    def post(self,request,pk):
+        try:
+            speciality = self.get_object()
+            speciality.delete()
+            messages.success(request,"حذف با موفقیت انجام شد")
+            return redirect("admin_speciality_list")
+        except Exception as e:
+            messages.error(request,"حذف ناموفق بود")
+            return redirect("admin_speciality_list")
+
+class AdminSearchSpeciality(AdminSpecialityListView):
+    def get_queryset(self):
+        q = self.request.GET.get("q")
+        if q:
+            specialitys = Speciality.objects.filter(name__icontains=q)
+        return specialitys

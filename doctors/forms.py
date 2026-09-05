@@ -141,3 +141,4 @@ class DoctorForm(forms.ModelForm):
                 }
             ),
         }
+

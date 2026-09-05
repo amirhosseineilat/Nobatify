@@ -1,0 +1,224 @@
+{% extends "dashboard/base_admin.html" %}
+
+{% block title %}مدیریت تخصص‌ها | Nobatify{% endblock %}
+
+{% block extra_head %}
+
+<style>
+    .speciality-card {
+        transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+
+    .speciality-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(29, 69, 51, 0.08);
+        border-color: #d8cec7;
+    }
+
+    .search-input {
+        width: 100%;
+        height: 48px;
+        padding: 0 16px;
+        border: 1px solid #d9d0ca;
+        border-radius: 14px;
+        background: #fff;
+        outline: none;
+        transition: .2s ease;
+    }
+
+    .search-input:focus {
+        border-color: #1D4533;
+        box-shadow: 0 0 0 4px rgba(29, 69, 51, .08);
+    }
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="mx-auto max-w-6xl px-4 py-8">
+
+<!-- Header -->
+<div class="mb-8 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+
+    <div>
+        <div class="mb-2 text-sm font-medium text-[#8c7d73]">
+            داشبورد مدیریت
+        </div>
+
+        <h1 class="text-3xl font-extrabold text-[#1D4533]">
+            مدیریت تخصص‌ها
+        </h1>
+
+        <p class="mt-2 text-sm text-[#806f65]">
+            تخصص‌های پزشکان Nobatify را مدیریت کنید.
+        </p>
+    </div>
+
+    <!-- Add button -->
+    <a
+        href="{% url 'admin_speciality_create' %}"
+        class="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#1D4533] px-5 text-sm font-bold text-white transition hover:bg-[#153c2c]"
+    >
+        <span class="text-xl leading-none">+</span>
+        افزودن تخصص
+    </a>
+
+</div>
+
+
+<!-- Search -->
+<div class="mb-6 rounded-2xl border border-[#e5ddd7] bg-white p-4 shadow-sm">
+
+    <form method="get" action="{% url 'admin_speciality_search' %}" class="flex flex-col gap-3 md:flex-row">
+
+        <div class="flex-1">
+            <input
+                type="text"
+                name="q"
+                value="{{ request.GET.q|default:'' }}"
+                placeholder="جستجوی تخصص..."
+                class="search-input"
+            >
+        </div>
+
+        <button
+            type="submit"
+            class="h-12 rounded-xl bg-[#F7EAE0] px-6 text-sm font-bold text-[#5E3122] transition hover:bg-[#F1DED1]"
+        >
+            جستجو
+        </button>
+
+        {% if request.GET.q %}
+            <a
+                href="{% url 'admin_speciality_list' %}"
+                class="flex h-12 items-center justify-center rounded-xl border border-[#ded5ce] px-5 text-sm font-semibold text-[#6f625b] transition hover:bg-[#FBF8F5]"
+            >
+                پاک کردن
+            </a>
+        {% endif %}
+
+    </form>
+
+</div>
+
+
+<!-- Specialities -->
+{% if specialitys %}
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+
+        {% for speciality in specialitys %}
+
+            <div class="speciality-card rounded-2xl border border-[#e8e0da] bg-white p-5 shadow-sm">
+
+                <div class="flex items-center justify-between gap-4">
+
+                    <!-- Icon + name -->
+                    <div class="flex min-w-0 items-center gap-4">
+
+                        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#F7EAE0] text-xl">
+                            🩺
+                        </div>
+
+                        <div class="min-w-0">
+                            <h2 class="truncate text-base font-bold text-[#1D4533]">
+                                {{ speciality.name }}
+                            </h2>
+
+                            <p class="mt-1 text-xs text-[#9a8b82]">
+                                تخصص پزشکی
+                            </p>
+                        </div>
+
+                    </div>
+
+
+                    <!-- Actions -->
+                    <div class="flex shrink-0 items-center gap-2">
+
+                        <a
+                            href="{% url 'admin_speciality_update' speciality.pk %}"
+                            title="ویرایش"
+                            class="flex h-9 w-9 items-center justify-center rounded-lg bg-[#F7EAE0] text-[#5E3122] transition hover:bg-[#F1DCCF]"
+                        >
+                            ✏️
+                        </a>
+                        <form method="post" action="{% url 'admin_speciality_delete' speciality.pk %}">
+                            {% csrf_token %}
+                        <button
+                            type="submit"
+                            title="حذف"
+                            class="flex h-9 w-9 items-center justify-center rounded-lg bg-red-50 text-red-600 transition hover:bg-red-100"
+                        >
+                            🗑️
+                        </button>
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% else %}
+
+    <!-- Empty state -->
+    <div class="rounded-3xl border border-dashed border-[#dcd2cb] bg-white px-6 py-16 text-center">
+
+        <div class="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#F7EAE0] text-3xl">
+            🩺
+        </div>
+
+        {% if request.GET.q %}
+
+            <h2 class="text-lg font-bold text-[#1D4533]">
+                تخصصی پیدا نشد
+            </h2>
+
+            <p class="mt-2 text-sm text-[#8b7d74]">
+                برای عبارت
+                <span class="font-bold text-[#5E3122]">
+                    «{{ request.GET.q }}»
+                </span>
+                نتیجه‌ای وجود ندارد.
+            </p>
+
+            <a
+                href="{% url 'admin_speciality_list' %}"
+                class="mt-6 inline-flex h-10 items-center rounded-xl bg-[#1D4533] px-5 text-sm font-bold text-white"
+            >
+                نمایش همه تخصص‌ها
+            </a>
+
+        {% else %}
+
+            <h2 class="text-lg font-bold text-[#1D4533]">
+                هنوز تخصصی ثبت نشده
+            </h2>
+
+            <p class="mt-2 text-sm text-[#8b7d74]">
+                اولین تخصص را برای پزشکان Nobatify ایجاد کنید.
+            </p>
+
+            <a
+                href="{% url 'admin_speciality_create' %}"
+                class="mt-6 inline-flex h-10 items-center gap-2 rounded-xl bg-[#1D4533] px-5 text-sm font-bold text-white"
+            >
+                <span class="text-lg">+</span>
+                افزودن تخصص
+            </a>
+
+        {% endif %}
+
+    </div>
+
+{% endif %}
+
+</div>
+
+{% endblock %}
