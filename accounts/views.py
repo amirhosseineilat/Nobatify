@@ -46,7 +46,7 @@ class LogingView(LoginView):
     success_url = reverse_lazy("home")
 
     def form_valid(self, form):
-        messages.success(self.request, "login successfuly")
+        messages.success(self.request, "ورود با موفقیت انجام شد")
         return super().form_valid(form)
 
 
@@ -54,7 +54,7 @@ class LogingoutView(LogoutView):
     next_page = reverse_lazy("home")
 
     def form_valid(self, form):
-        messages.success(self.request, "logout successfuly")
+        messages.success(self.request, "شما خارج شدشد")
         return super().form_valid(form)
 
 
@@ -65,7 +65,7 @@ class RegisterView(FormView):
 
     def form_valid(self, form):
         form.save()
-        messages.success(request=self.request, message="register successfuly")
+        messages.success(request=self.request, message="کاربر عزیز ثبت شدی")
         return super().form_valid(form)
 
 
@@ -99,7 +99,7 @@ class ChangePasswordView(FormView):
         self.request.session.pop("reset_verified", None)
         self.request.session.pop("reset_user_id", None)
         self.request.session.pop("rest_expire_time", None)
-        messages.success(self.request, "password changed successfuly")
+        messages.success(self.request, "رمز عبور با موفقیت تغییر یافت")
         return super().form_valid(form)
 
 
@@ -165,13 +165,13 @@ class Walletview(LoginRequiredMixin, DetailView):
             return wallet
 
 
-class CardListView(ListView):
+class CardListView(LoginRequiredMixin,ListView):
     model = Card
     template_name = "accounts/mycard.html"
     context_object_name = "cards"
 
 
-class CreateCardView(CreateView):
+class CreateCardView(LoginRequiredMixin,CreateView):
     model = Card
     template_name = "accounts/createcard.html"
     form_class = CardForm
@@ -185,7 +185,7 @@ class CreateCardView(CreateView):
         return super().form_valid(form)
 
 
-class RemoveCardView(DeleteView):
+class RemoveCardView(LoginRequiredMixin,DeleteView):
     model = Card
     success_url = reverse_lazy("mycards")
 
@@ -195,7 +195,7 @@ class RemoveCardView(DeleteView):
         return redirect(self.success_url)
 
 
-class EditCardView(UpdateView):
+class EditCardView(LoginRequiredMixin,UpdateView):
     model = Card
     form_class = CardForm
     template_name = "accounts/createcard.html"
