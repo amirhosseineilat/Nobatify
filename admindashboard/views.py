@@ -114,6 +114,7 @@ class AdminSpecialityListView(ListView):
     model = Speciality
     template_name = "dashboard/admin_speciality_list.html"
     context_object_name = "specialitys"
+    paginate_by = 10
 
 
 class AdminCreaterSpecialityView(BaseCreateSpecialityView):

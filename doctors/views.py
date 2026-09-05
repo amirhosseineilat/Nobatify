@@ -49,6 +49,7 @@ class BaseDetailDoctorView(DetailView):
 class BaseListDoctorView(ListView):
     model = Doctor
     context_object_name = "doctors"
+    paginate_by = 5
 
     def get_queryset(self):
         return Doctor.objects.annotate(

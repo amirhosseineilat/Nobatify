@@ -1,4 +1,3 @@
-
 {% extends "dashboard/base_admin.html" %}
 
 {% block title %}مدیریت نوبت‌ها | Nobatify{% endblock %}
@@ -200,15 +199,20 @@
                                             ✎
                                         </a>
 
-                                        <form method="post" action="{% url 'admin_timeslot_delete' timeslot.id %}">
-                                            {% csrf_token %}
-                                        <button
-                                            type="submit"
-                                            class="flex h-9 w-9 items-center justify-center rounded-xl border border-red-100 text-sm text-red-500 transition hover:bg-red-50"
-                                            title="حذف"
+                                        <form
+                                            method="post"
+                                            action="{% url 'admin_timeslot_delete' timeslot.id %}"
                                         >
-                                            🗑
-                                        </button>
+                                            {% csrf_token %}
+
+                                            <button
+                                                type="submit"
+                                                class="flex h-9 w-9 items-center justify-center rounded-xl border border-red-100 text-sm text-red-500 transition hover:bg-red-50"
+                                                title="حذف"
+                                            >
+                                                🗑
+                                            </button>
+
                                         </form>
 
                                     </div>
@@ -308,6 +312,7 @@
                     <div class="mt-3 flex items-center justify-between">
 
                         <div>
+
                             <span class="text-sm font-black text-[#1D4533]">
                                 {{ timeslot.price|floatformat:0 }}
                             </span>
@@ -315,24 +320,35 @@
                             <span class="text-[10px] text-[#5E3122]/40">
                                 تومان
                             </span>
+
                         </div>
 
 
                         <div class="flex gap-2">
 
                             <a
-                                href="#"
+                                href="{% url 'admin_timeslot_update' timeslot.id %}"
                                 class="flex h-9 w-9 items-center justify-center rounded-xl border border-[#5E3122]/10 text-sm"
+                                title="ویرایش"
                             >
                                 ✎
                             </a>
 
-                            <a
-                                href="#"
-                                class="flex h-9 w-9 items-center justify-center rounded-xl border border-red-100 text-sm text-red-500"
+                            <form
+                                method="post"
+                                action="{% url 'admin_timeslot_delete' timeslot.id %}"
                             >
-                                🗑
-                            </a>
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="flex h-9 w-9 items-center justify-center rounded-xl border border-red-100 text-sm text-red-500"
+                                    title="حذف"
+                                >
+                                    🗑
+                                </button>
+
+                            </form>
 
                         </div>
 
@@ -345,9 +361,113 @@
         </div>
 
 
+        <!-- ==========================
+             Pagination
+        =========================== -->
+
+        {% if is_paginated %}
+
+            <div class="mt-10 flex flex-col items-center gap-4">
+
+                <div class="flex items-center justify-center gap-2">
+
+                    <!-- Previous -->
+
+                    {% if page_obj.has_previous %}
+
+                        <a
+                            href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
+                            class="grid h-10 min-w-10 place-items-center rounded-xl border border-[#5E3122]/10 bg-white px-3 text-sm font-black text-[#1D4533] transition hover:-translate-y-0.5 hover:bg-[#1D4533] hover:text-white"
+                            aria-label="صفحه قبلی"
+                            title="صفحه قبلی"
+                        >
+                            →
+                        </a>
+
+                    {% else %}
+
+                        <span
+                            class="grid h-10 min-w-10 place-items-center rounded-xl border border-[#5E3122]/5 bg-white px-3 text-sm font-black text-[#1D4533]/20"
+                            aria-hidden="true"
+                        >
+                            →
+                        </span>
+
+                    {% endif %}
+
+
+                    <!-- Page Numbers -->
+
+                    {% for num in page_obj.paginator.page_range %}
+
+                        {% if page_obj.number == num %}
+
+                            <span
+                                class="grid h-10 min-w-10 place-items-center rounded-xl bg-[#1D4533] px-3 text-sm font-black text-white shadow-sm"
+                                aria-current="page"
+                            >
+                                {{ num }}
+                            </span>
+
+                        {% else %}
+
+                            <a
+                                href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
+                                class="grid h-10 min-w-10 place-items-center rounded-xl border border-[#5E3122]/10 bg-white px-3 text-sm font-black text-[#1D4533] transition hover:-translate-y-0.5 hover:bg-[#1D4533] hover:text-white"
+                            >
+                                {{ num }}
+                            </a>
+
+                        {% endif %}
+
+                    {% endfor %}
+
+
+                    <!-- Next -->
+
+                    {% if page_obj.has_next %}
+
+                        <a
+                            href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
+                            class="grid h-10 min-w-10 place-items-center rounded-xl border border-[#5E3122]/10 bg-white px-3 text-sm font-black text-[#1D4533] transition hover:-translate-y-0.5 hover:bg-[#1D4533] hover:text-white"
+                            aria-label="صفحه بعدی"
+                            title="صفحه بعدی"
+                        >
+                            ←
+                        </a>
+
+                    {% else %}
+
+                        <span
+                            class="grid h-10 min-w-10 place-items-center rounded-xl border border-[#5E3122]/5 bg-white px-3 text-sm font-black text-[#1D4533]/20"
+                            aria-hidden="true"
+                        >
+                            ←
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Pagination Info -->
+
+                <p class="text-xs font-bold text-[#5E3122]/40">
+                    صفحه
+                    {{ page_obj.number }}
+                    از
+                    {{ page_obj.paginator.num_pages }}
+                </p>
+
+            </div>
+
+        {% endif %}
+
+
     {% else %}
 
         <!-- Empty -->
+
         <div class="rounded-3xl border border-dashed border-[#5E3122]/15 bg-white px-6 py-16 text-center">
 
             <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-[#1D4533]/8 text-2xl">

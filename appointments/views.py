@@ -12,13 +12,16 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 class BaseTimeSlotListView(ListView):
 
     context_object_name = "timeslots"
+    paginate_by = 10
 
     def get_queryset(self):
         doctor_id = self.request.GET.get("doctor")
         if doctor_id:
-            queryset = TimeSlot.objects.filter(doctor__id=doctor_id)
+            queryset = TimeSlot.objects.filter(doctor_id=doctor_id)
             return queryset
-        
+
+        queryset = TimeSlot.objects.none()
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -43,6 +46,7 @@ class TimeSlotListView(BaseTimeSlotListView):
 class MyAppointmentListView(ListView):
     template_name = "appointments/my_appointment_list.html"
     context_object_name = "appointments"
+    paginate_by = 10
 
     def get_queryset(self):
         return Appointment.objects.filter(patient=self.request.user).select_related(
@@ -81,7 +85,7 @@ class AppointmentCancelView(LoginRequiredMixin, View):
 
         messages.success(request, "Appointment cancelled successfully.")
 
-        return redirect("appointment")
+        return redirect("my_appointment")
 
 
 class AppointmentDetail(DetailView):

@@ -8,6 +8,8 @@
 
     <div class="mx-auto max-w-7xl">
 
+        <!-- Header -->
+
         <div class="reveal-up">
 
             <span class="eyebrow">
@@ -25,6 +27,8 @@
         </div>
 
 
+        <!-- Appointments -->
+
         <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 
             {% for appointment in appointments %}
@@ -33,6 +37,8 @@
                     class="appointment-card reveal-up"
                     data-delay="{{ forloop.counter0|add:'50' }}"
                 >
+
+                    <!-- Doctor -->
 
                     <div class="flex items-start justify-between gap-4">
 
@@ -51,27 +57,59 @@
 
                         </div>
 
-                        <span class="rounded-full bg-[#F7EAE0] px-3 py-1.5 text-xs font-bold text-[#1D4533]">
+
+                        <!-- Status -->
+
+                        <span
+                            class="
+                                rounded-full
+                                bg-[#F7EAE0]
+                                px-3 py-1.5
+                                text-xs font-bold
+                                text-[#1D4533]
+                            "
+                        >
                             رزرو شده
                         </span>
 
                     </div>
 
 
+                    <!-- Date & Time -->
+
                     <div class="mt-7 grid grid-cols-2 gap-3">
 
                         <div class="mini-info">
-                            <span>تاریخ</span>
-                            <strong>{{ appointment.time_slot.date }}</strong>
+
+                            <span>
+                                تاریخ
+                            </span>
+
+                            <strong>
+                                {{ appointment.time_slot.date }}
+                            </strong>
+
                         </div>
 
+
                         <div class="mini-info">
-                            <span>ساعت</span>
-                            <strong>{{ appointment.time_slot.start_time }}-{{ appointment.time_slot.end_time }}</strong>
+
+                            <span>
+                                ساعت
+                            </span>
+
+                            <strong>
+                                {{ appointment.time_slot.start_time }}
+                                -
+                                {{ appointment.time_slot.end_time }}
+                            </strong>
+
                         </div>
 
                     </div>
 
+
+                    <!-- Detail -->
 
                     <a
                         href="{% url 'appointment_detail' appointment.pk %}"
@@ -83,7 +121,10 @@
 
                 </article>
 
+
             {% empty %}
+
+                <!-- Empty State -->
 
                 <div class="empty-state sm:col-span-2 lg:col-span-3">
 
@@ -111,6 +152,172 @@
             {% endfor %}
 
         </div>
+
+
+        <!-- =================================
+             Pagination
+        ================================== -->
+
+        {% if is_paginated %}
+
+            <div class="mt-12 flex items-center justify-center gap-2">
+
+                <!-- Previous -->
+
+                {% if page_obj.has_previous %}
+
+                    <a
+                        href="?page={{ page_obj.previous_page_number }}"
+                        class="
+                            grid h-10 min-w-10
+                            place-items-center
+                            rounded-xl
+                            border border-[#1D4533]/10
+                            bg-white
+                            px-3
+                            text-sm font-black
+                            text-[#1D4533]
+                            transition
+                            hover:-translate-y-0.5
+                            hover:bg-[#1D4533]
+                            hover:text-white
+                        "
+                        aria-label="صفحه قبلی"
+                        title="صفحه قبلی"
+                    >
+                        →
+                    </a>
+
+                {% else %}
+
+                    <span
+                        class="
+                            grid h-10 min-w-10
+                            place-items-center
+                            rounded-xl
+                            border border-[#1D4533]/5
+                            bg-white
+                            px-3
+                            text-sm font-black
+                            text-[#1D4533]/25
+                        "
+                    >
+                        →
+                    </span>
+
+                {% endif %}
+
+
+                <!-- Page Numbers -->
+
+                {% for num in page_obj.paginator.page_range %}
+
+                    {% if page_obj.number == num %}
+
+                        <span
+                            class="
+                                grid h-10 min-w-10
+                                place-items-center
+                                rounded-xl
+                                bg-[#1D4533]
+                                px-3
+                                text-sm font-black
+                                text-white
+                                shadow-[0_6px_16px_rgba(29,69,51,.18)]
+                            "
+                        >
+                            {{ num }}
+                        </span>
+
+                    {% else %}
+
+                        <a
+                            href="?page={{ num }}"
+                            class="
+                                grid h-10 min-w-10
+                                place-items-center
+                                rounded-xl
+                                border border-[#1D4533]/10
+                                bg-white
+                                px-3
+                                text-sm font-black
+                                text-[#1D4533]
+                                transition
+                                hover:-translate-y-0.5
+                                hover:bg-[#1D4533]
+                                hover:text-white
+                            "
+                        >
+                            {{ num }}
+                        </a>
+
+                    {% endif %}
+
+                {% endfor %}
+
+
+                <!-- Next -->
+
+                {% if page_obj.has_next %}
+
+                    <a
+                        href="?page={{ page_obj.next_page_number }}"
+                        class="
+                            grid h-10 min-w-10
+                            place-items-center
+                            rounded-xl
+                            border border-[#1D4533]/10
+                            bg-white
+                            px-3
+                            text-sm font-black
+                            text-[#1D4533]
+                            transition
+                            hover:-translate-y-0.5
+                            hover:bg-[#1D4533]
+                            hover:text-white
+                        "
+                        aria-label="صفحه بعدی"
+                        title="صفحه بعدی"
+                    >
+                        ←
+                    </a>
+
+                {% else %}
+
+                    <span
+                        class="
+                            grid h-10 min-w-10
+                            place-items-center
+                            rounded-xl
+                            border border-[#1D4533]/5
+                            bg-white
+                            px-3
+                            text-sm font-black
+                            text-[#1D4533]/25
+                        "
+                    >
+                        ←
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- Pagination Info -->
+
+            <div class="mt-4 text-center">
+
+                <span class="text-xs font-bold text-[#5E3122]/40">
+                    صفحه
+                    {{ page_obj.number }}
+                    از
+                    {{ page_obj.paginator.num_pages }}
+                </span>
+
+            </div>
+
+        {% endif %}
 
     </div>
 

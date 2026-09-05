@@ -1,71 +1,227 @@
-{% extends "base.html" %} {% block title %}پزشکان | Nobatify{% endblock %}
-{%block content %}
+{% extends "base.html" %}
+
+{% block title %}پزشکان | Nobatify{% endblock %}
+
+{% block content %}
+
 <section class="page-shell">
   <div class="mx-auto max-w-7xl">
-    <div class="grid items-end gap-8 lg:grid-cols-[1fr_.75fr]">
-      <div class="reveal-up">
-        <span class="eyebrow">شبکه پزشکان</span>
-        <h1 class="page-title">پزشک مناسب را پیدا کن.</h1>
-        <p class="mt-4 max-w-xl text-sm leading-8 text-[#5E3122]/55">
-          نام پزشک یا تخصص را جست‌وجو کن و برای دیدن جزئیات وارد پروفایل شو.
-        </p>
+
+<!-- Header -->
+<div class="grid items-end gap-8 lg:grid-cols-[1fr_.75fr]">
+
+  <div class="reveal-up">
+    <span class="eyebrow">شبکه پزشکان</span>
+
+    <h1 class="page-title">
+      پزشک مناسب را پیدا کن.
+    </h1>
+
+    <p class="mt-4 max-w-xl text-sm leading-8 text-[#5E3122]/55">
+      نام پزشک یا تخصص را جست‌وجو کن و برای دیدن جزئیات وارد پروفایل شو.
+    </p>
+  </div>
+
+
+  <!-- Search -->
+  <form
+    method="get"
+    action="{% url 'search' %}"
+    class="search-box reveal-up"
+  >
+    <span>⌕</span>
+
+    <input
+      type="search"
+      name="q"
+      value="{{ request.GET.q }}"
+      placeholder="مثلاً: احمدی، قلب، پوست..."
+      aria-label="جست‌وجوی پزشک"
+    />
+
+    <button
+      class="btn btn-primary"
+      type="submit"
+    >
+      جست‌وجو
+    </button>
+  </form>
+
+</div>
+
+
+<!-- Doctors -->
+<div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+
+  {% for doctor in doctors %}
+
+    <article class="doctor-card reveal-up">
+
+      <div class="flex items-start justify-between">
+
+        <div class="doctor-avatar">
+          {{ doctor.first_name|first }}{{ doctor.last_name|first }}
+        </div>
+
+        <span
+          class="grid h-10 w-10 place-items-center rounded-xl bg-[#F7EAE0] text-[#1D4533]"
+        >
+          ✦
+        </span>
+
       </div>
-      <form
-        method="get"
-        action="{% url 'search' %}"
-        class="search-box reveal-up"
+
+
+      <!-- Doctor name -->
+      <h2 class="mt-6 text-xl font-black text-[#1D4533]">
+        {{ doctor.first_name }} {{ doctor.last_name }}
+      </h2>
+
+
+      <!-- Email -->
+      <p class="mt-2 text-sm text-[#5E3122]/50">
+        {{ doctor.email }}
+      </p>
+
+
+      <!-- Specialities -->
+      <div class="mt-5 flex flex-wrap gap-2">
+
+        {% for speciality in doctor.specialities.all %}
+
+          <span class="tag">
+            {{ speciality.name }}
+          </span>
+
+        {% empty %}
+
+          <span class="tag">
+            پزشک
+          </span>
+
+        {% endfor %}
+
+      </div>
+
+
+      <!-- Rating -->
+      <div class="mt-4 flex items-center gap-2 text-sm">
+
+        <span class="text-[#5E3122]">
+          ★
+        </span>
+
+        <span class="font-bold text-[#1D4533]">
+          {{ doctor.avg_rating|default:"0"|floatformat:1 }}
+        </span>
+
+        <span class="text-[#5E3122]/40">
+          ({{ doctor.total_comments }} نظر)
+        </span>
+
+      </div>
+
+
+      <!-- Detail -->
+      <a
+        href="{% url 'doctor_detail' doctor.pk %}"
+        class="btn btn-outline mt-7 w-full justify-center"
       >
-        <span>⌕</span>
-        <input
-          type="search"
-          name="q"
-          value="{{ request.GET.q }}"
-          placeholder="مثلاً: احمدی، قلب، پوست..."
-          aria-label="جست‌وجوی پزشک"
-        />
-        <button class="btn btn-primary" type="submit">جست‌وجو</button>
-      </form>
+        مشاهده پروفایل
+
+        <span>
+          ←
+        </span>
+      </a>
+
+    </article>
+
+  {% empty %}
+
+    <!-- Empty -->
+    <div class="empty-state sm:col-span-2 lg:col-span-3">
+
+      <span class="text-4xl">
+        ⌕
+      </span>
+
+      <h2 class="mt-4 text-2xl font-black text-[#1D4533]">
+        نتیجه‌ای پیدا نشد
+      </h2>
+
+      <p class="mt-2 text-sm text-[#5E3122]/55">
+        عبارت دیگری را امتحان کن.
+      </p>
+
     </div>
 
-    <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {% for doctor in doctors %}
-      <article class="doctor-card reveal-up">
-        <div class="flex items-start justify-between">
-          <div class="doctor-avatar">
-            {{ doctor.first_name|first }}{{ doctor.last_name|first }}
-          </div>
-          <span
-            class="grid h-10 w-10 place-items-center rounded-xl bg-[#F7EAE0] text-[#1D4533]"
-            >✦</span
-          >
-        </div>
-        <h2 class="mt-6 text-xl font-black text-[#1D4533]">
-          {{ doctor.first_name }} {{ doctor.last_name }}
-        </h2>
-        <p class="mt-2 text-sm text-[#5E3122]/50">{{ doctor.email }}</p>
-        <div class="mt-5 flex flex-wrap gap-2">
-          {% for speciality in doctor.specialities.all %}
-          <span class="tag">{{ speciality.name }}</span>
-          {% empty %}
-          <span class="tag">پزشک</span>
-          {% endfor %}
-        </div>
-        <a
-          href="{% url 'doctor_detail' doctor.pk %}"
-          class="btn btn-outline mt-7 w-full justify-center"
-          >مشاهده پروفایل <span>←</span></a
+  {% endfor %}
+
+</div>
+
+
+<!-- Pagination -->
+{% if is_paginated %}
+
+  <div class="mt-12 flex items-center justify-center gap-2">
+
+    <!-- Previous -->
+    {% if page_obj.has_previous %}
+
+      <a
+        href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
+        class="grid h-10 min-w-10 place-items-center rounded-xl border border-[#1D4533]/10 bg-white px-3 text-sm font-bold text-[#1D4533] transition hover:bg-[#F7EAE0]"
+        aria-label="صفحه قبل"
+      >
+        →
+      </a>
+
+    {% endif %}
+
+
+    <!-- Page numbers -->
+    {% for num in page_obj.paginator.page_range %}
+
+      {% if page_obj.number == num %}
+
+        <span
+          class="grid h-10 min-w-10 place-items-center rounded-xl bg-[#1D4533] px-3 text-sm font-bold text-white"
         >
-      </article>
-      {% empty %}
-      <div class="empty-state sm:col-span-2 lg:col-span-3">
-        <span class="text-4xl">⌕</span>
-        <h2 class="mt-4 text-2xl font-black text-[#1D4533]">
-          نتیجه‌ای پیدا نشد
-        </h2>
-        <p class="mt-2 text-sm text-[#5E3122]/55">عبارت دیگری را امتحان کن.</p>
-      </div>
-      {% endfor %}
-    </div>
+          {{ num }}
+        </span>
+
+      {% else %}
+
+        <a
+          href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
+          class="grid h-10 min-w-10 place-items-center rounded-xl border border-[#1D4533]/10 bg-white px-3 text-sm font-bold text-[#1D4533] transition hover:bg-[#F7EAE0]"
+        >
+          {{ num }}
+        </a>
+
+      {% endif %}
+
+    {% endfor %}
+
+
+    <!-- Next -->
+    {% if page_obj.has_next %}
+
+      <a
+        href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
+        class="grid h-10 min-w-10 place-items-center rounded-xl border border-[#1D4533]/10 bg-white px-3 text-sm font-bold text-[#1D4533] transition hover:bg-[#F7EAE0]"
+        aria-label="صفحه بعد"
+      >
+        ←
+      </a>
+
+    {% endif %}
+
+  </div>
+
+{% endif %}
+
   </div>
 </section>
+
 {% endblock %}
