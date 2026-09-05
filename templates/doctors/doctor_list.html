@@ -43,71 +43,11 @@
 
     </div>
 
-  {% endfor %}
 
 </div>
 
 
 <!-- Pagination -->
-{% if is_paginated %}
-
-  <div class="mt-12 flex items-center justify-center gap-2">
-
-    <!-- Previous -->
-    {% if page_obj.has_previous %}
-
-      <a
-        href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
-        class="grid h-10 min-w-10 place-items-center rounded-xl border border-[#1D4533]/10 bg-white px-3 text-sm font-bold text-[#1D4533] transition hover:bg-[#F7EAE0]"
-        aria-label="صفحه قبل"
-      >
-        →
-      </a>
-
-    {% endif %}
-
-
-    <!-- Page numbers -->
-    {% for num in page_obj.paginator.page_range %}
-
-      {% if page_obj.number == num %}
-
-        <span
-          class="grid h-10 min-w-10 place-items-center rounded-xl bg-[#1D4533] px-3 text-sm font-bold text-white"
-        >
-          {{ num }}
-        </span>
-
-      {% else %}
-
-        <a
-          href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
-          class="grid h-10 min-w-10 place-items-center rounded-xl border border-[#1D4533]/10 bg-white px-3 text-sm font-bold text-[#1D4533] transition hover:bg-[#F7EAE0]"
-        >
-          {{ num }}
-        </a>
-
-      {% endif %}
-
-    {% endfor %}
-
-
-    <!-- Next -->
-    {% if page_obj.has_next %}
-
-      <a
-        href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
-        class="grid h-10 min-w-10 place-items-center rounded-xl border border-[#1D4533]/10 bg-white px-3 text-sm font-bold text-[#1D4533] transition hover:bg-[#F7EAE0]"
-        aria-label="صفحه بعد"
-      >
-        ←
-      </a>
-
-    {% endif %}
-
-  </div>
-
-{% endif %}
     <!-- لیست پزشکان -->
     <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
 
@@ -185,6 +125,65 @@
     </div>
 
   </div>
+{% if is_paginated %}
+
+  <div class="mt-12 flex items-center justify-center gap-2">
+
+    <!-- Previous -->
+    {% if page_obj.has_previous %}
+
+      <a
+        href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
+        class="grid h-10 min-w-10 place-items-center rounded-xl border border-[#1D4533]/10 bg-white px-3 text-sm font-bold text-[#1D4533] transition hover:bg-[#F7EAE0]"
+        aria-label="صفحه قبل"
+      >
+        →
+      </a>
+
+    {% endif %}
+
+
+    <!-- Page numbers -->
+    {% for num in page_obj.paginator.page_range %}
+
+      {% if page_obj.number == num %}
+
+        <span
+          class="grid h-10 min-w-10 place-items-center rounded-xl bg-[#1D4533] px-3 text-sm font-bold text-white"
+        >
+          {{ num }}
+        </span>
+
+      {% else %}
+
+        <a
+          href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
+          class="grid h-10 min-w-10 place-items-center rounded-xl border border-[#1D4533]/10 bg-white px-3 text-sm font-bold text-[#1D4533] transition hover:bg-[#F7EAE0]"
+        >
+          {{ num }}
+        </a>
+
+      {% endif %}
+
+    {% endfor %}
+
+
+    <!-- Next -->
+    {% if page_obj.has_next %}
+
+      <a
+        href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
+        class="grid h-10 min-w-10 place-items-center rounded-xl border border-[#1D4533]/10 bg-white px-3 text-sm font-bold text-[#1D4533] transition hover:bg-[#F7EAE0]"
+        aria-label="صفحه بعد"
+      >
+        ←
+      </a>
+
+    {% endif %}
+
+  </div>
+
+{% endif %}
 </section>
 
 {% endblock %}
