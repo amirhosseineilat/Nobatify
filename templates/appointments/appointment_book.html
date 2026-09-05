@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}جزئیات نوبت | Nobatify{% endblock %}
+{% block content %}
+<section class="page-shell">
+    <div class="mx-auto max-w-4xl">
+        <a href="{% url 'appointment' %}" class="back-link reveal-up">→ بازگشت به نوبت‌ها</a>
+        <div class="mt-7 overflow-hidden rounded-[36px] border border-[#5E3122]/10 bg-white shadow-soft reveal-scale">
+            <div class="bg-[#1D4533] p-7 text-[#F7EAE0] md:p-10">
+                <span class="text-xs text-[#F7EAE0]/45">جزئیات نوبت</span>
+                <h1 class="mt-3 text-3xl font-black">{{ appointment.doctor.first_name }} {{ appointment.doctor.last_name }}</h1>
+                <p class="mt-2 text-sm text-[#F7EAE0]/55">{{ appointment.doctor.email }}</p>
+            </div>
+            <div class="p-7 md:p-10">
+                <div class="grid gap-4 sm:grid-cols-2">
+                    <div class="detail-box"><span>تاریخ</span><strong>{{ appointment.date }}</strong></div>
+                    <div class="detail-box"><span>ساعت</span><strong>{{ appointment.start_time }}- {{ appointment.end_time }}</strong></div>
+                    <div class="detail-box"><span>وضعیت</span><strong>{% if appointment.user %}رزرو شده{% else %}آزاد{% endif %}</strong></div>
+                    <div class="detail-box"><span>ثبت شده در</span><strong>{{ appointment.created_at|date:"Y/m/d H:i" }}</strong></div>
+                </div>
+
+                {% if appointment.patient == user %}
+                    <form method="post" action="{% url 'appointment_cancel' appointment.pk %}" class="mt-7">
+                        {% csrf_token %}
+                        
+                        <button class="btn btn-danger btn-lg w-full justify-center">لغو نوبت <span>×</span></button>
+                    </form>
+                {% elif not user.is_authenticated %}
+                    <a href="{% url 'login' %}" class="btn btn-primary btn-lg mt-7 w-full justify-center">برای رزرو وارد شو <span>→</span></a>
+                {% else %}
+                    <div class="mt-7 rounded-2xl bg-[#F7EAE0] p-4 text-center text-sm font-bold text-[#5E3122]">این نوبت قبلاً رزرو شده است.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

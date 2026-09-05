@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}ورود با Google | Nobatify{% endblock %}
+
+{% block content %}
+
+<section class="auth-page">
+    <div class="auth-card reveal-scale">
+
+    <div class="mb-8 text-center">
+        <span class="eyebrow">ورود با حساب گوگل</span>
+
+        <h1 class="mt-3 text-3xl font-black text-[#1D4533]">
+            ورود با Google
+        </h1>
+
+        <p class="mt-3 text-sm leading-7 text-[#5E3122]/55">
+            شما در حال ورود به حساب Nobatify با استفاده از حساب Google خود هستید.
+        </p>
+    </div>
+
+    <div class="rounded-2xl border border-[#5E3122]/10 bg-[#F8F6F1] px-5 py-4">
+        <div class="flex items-center gap-4">
+
+            <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white shadow-sm">
+                <svg
+                    class="h-6 w-6"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                >
+                    <path
+                        fill="#4285F4"
+                        d="M21.35 12.23c0-.79-.07-1.55-.23-2.23H12v4.22h5.23a4.47 4.47 0 0 1-1.94 2.93v2.44h3.14c1.84-1.69 2.92-4.18 2.92-7.36z"
+                    />
+                    <path
+                        fill="#34A853"
+                        d="M12 21.75c2.63 0 4.84-.87 6.45-2.36l-3.14-2.44c-.87.58-1.98.92-3.31.92-2.55 0-4.71-1.72-5.49-4.04H3.27v2.52A9.75 9.75 0 0 0 12 21.75z"
+                    />
+                    <path
+                        fill="#FBBC05"
+                        d="M6.51 13.83A5.86 5.86 0 0 1 6.2 12c0-.64.11-1.26.31-1.83V7.65H3.27A9.75 9.75 0 0 0 2.25 12c0 1.57.38 3.06 1.02 4.35l3.24-2.52z"
+                    />
+                    <path
+                        fill="#EA4335"
+                        d="M12 6.13c1.43 0 2.72.49 3.74 1.45l2.8-2.8C16.84 3.17 14.63 2.25 12 2.25a9.75 9.75 0 0 0-8.73 5.4l3.24 2.52C7.29 7.85 9.45 6.13 12 6.13z"
+                    />
+                </svg>
+            </div>
+
+            <div>
+                <p class="text-sm font-bold text-[#1D4533]">
+                    حساب Google
+                </p>
+
+                <p class="mt-1 text-xs text-[#5E3122]/50">
+                    اتصال امن از طریق Google
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <form method="post" class="mt-6">
+        {% csrf_token %}
+
+        <button
+            type="submit"
+            class="btn btn-primary btn-lg w-full"
+        >
+            ادامه با Google
+            <span>←</span>
+        </button>
+    </form>
+
+    <div class="my-6 flex items-center gap-4">
+        <div class="h-px flex-1 bg-[#5E3122]/10"></div>
+
+        <span class="text-xs font-bold text-[#5E3122]/40">
+            یا
+        </span>
+
+        <div class="h-px flex-1 bg-[#5E3122]/10"></div>
+    </div>
+
+    <a
+        href="{% url 'account_login' %}"
+        class="flex w-full items-center justify-center rounded-2xl border border-[#5E3122]/10 bg-white px-5 py-4 text-sm font-bold text-[#1D4533] transition hover:border-[#1D4533]/20 hover:bg-[#F8F6F1]"
+    >
+        بازگشت به ورود
+    </a>
+
+    <p class="mt-6 text-center text-xs leading-6 text-[#5E3122]/40">
+        با ادامه دادن، برای احراز هویت به Google منتقل خواهید شد.
+    </p>
+
+</div>
+
+</section>
+
+{% endblock %}

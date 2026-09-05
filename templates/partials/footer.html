@@ -1,0 +1,30 @@
+<footer class="border-t border-[#5E3122]/10 bg-[#1D4533] text-[#F7EAE0]">
+    <div class="mx-auto max-w-7xl px-5 py-16 md:px-8">
+        <div class="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr]">
+            <div>
+                <div class="mb-5 flex items-center gap-3">
+                    <span class="grid h-11 w-11 place-items-center rounded-2xl bg-[#F9D2BA] font-black text-[#1D4533]">N</span>
+                    <span class="text-xl font-black">Nobatify</span>
+                </div>
+                <p class="max-w-md text-sm leading-8 text-[#F7EAE0]/65">
+                    تجربه‌ای ساده برای پیدا کردن پزشک و رزرو نوبت؛ بدون تماس‌های اضافه، بدون صف‌های بی‌پایان.
+                </p>
+            </div>
+            <div>
+                <h3 class="mb-5 font-bold">دسترسی سریع</h3>
+                <div class="grid gap-3 text-sm text-[#F7EAE0]/65">
+                    <a class="footer-link" href="{% url 'doctors' %}">پیدا کردن پزشک</a>
+                    <a class="footer-link" href="{% url 'appointment' %}">مشاهده نوبت‌ها</a>
+                    <a class="footer-link" href="{% url 'register' %}">ثبت‌نام</a>
+                </div>
+            </div>
+            <div>
+                <h3 class="mb-5 font-bold">Nobatify</h3>
+                <p class="text-sm leading-7 text-[#F7EAE0]/65">ساخته شده برای یک کار مشخص: رزرو نوبت، با کمترین اصطکاک.</p>
+            </div>
+        </div>
+        <div class="mt-14 border-t border-[#F7EAE0]/10 pt-6 text-xs text-[#F7EAE0]/40">
+            © {% now "Y" %} Nobatify — All rights reserved.
+        </div>
+    </div>
+</footer>
