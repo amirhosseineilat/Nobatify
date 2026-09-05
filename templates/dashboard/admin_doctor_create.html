@@ -1,58 +1,439 @@
 {% extends "dashboard/base_admin.html" %}
 
-{% block title %}افزودن پزشک | Nobatify{% endblock %}
+{% block title %}
+افزودن پزشک | Nobatify
+{% endblock %}
+
 
 {% block extra_head %}
+
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css"
+>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/persian-date@1.1.0/dist/persian-date.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
+
+
 <style>
+
+    /* =========================================================
+       PAGE
+    ========================================================= */
+
+    .doctor-page {
+        width: 100%;
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+
+    .doctor-container {
+        width: 100%;
+        max-width: 920px;
+        margin: 0 auto;
+    }
+
+
+    /* =========================================================
+       INPUTS
+    ========================================================= */
+
     .doctor-input {
         width: 100%;
-        height: 52px;
-        padding: 0 16px;
+        min-height: 46px;
+        padding: 11px 14px;
 
-        border: 1px solid #d6cec7 !important;
-        border-radius: 14px;
+        border: 1px solid #ddd6d0;
+        border-radius: 12px;
 
-        background: #ffffff !important;
-        color: #1D4533 !important;
+        background: #ffffff;
+        color: #3f2a22;
 
-        font-size: 14px;
-        font-weight: 500;
-
-        outline: none !important;
+        font-size: 13px;
+        outline: none;
 
         transition:
-            border-color 0.2s ease,
-            box-shadow 0.2s ease,
-            background-color 0.2s ease;
-    }
-
-    .doctor-input::placeholder {
-        color: #a99d94;
-    }
-
-    .doctor-input:hover {
-        border-color: #b8aaa0 !important;
+            border-color .18s ease,
+            box-shadow .18s ease;
     }
 
     .doctor-input:focus {
-        border-color: #1D4533 !important;
-        box-shadow: 0 0 0 4px rgba(29, 69, 51, 0.08) !important;
-        background: #ffffff !important;
+        border-color: #1D4533;
+
+        box-shadow:
+            0 0 0 3px rgba(29, 69, 51, .08);
     }
 
-    /* خطاهای فرم */
+    textarea.doctor-input {
+        min-height: 110px;
+        resize: vertical;
+        line-height: 1.9;
+    }
+
+    .doctor-label {
+        display: block;
+
+        margin-bottom: 8px;
+
+        color: #5E3122;
+
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .doctor-help {
+        color: #8d817a;
+        font-size: 11px;
+        line-height: 1.8;
+    }
+
     .doctor-error {
         margin-top: 7px;
-        font-size: 12px;
-        font-weight: 700;
+
         color: #dc2626;
+
+        font-size: 11px;
+        font-weight: 700;
     }
 
-    /* بخش تخصص‌ها */
-    .doctor-specialities {
-        display: grid;
-        grid-template-columns: repeat(1, minmax(0, 1fr));
-        gap: 10px;
+
+    /* =========================================================
+       SPECIALITIES BOX
+    ========================================================= */
+
+    .speciality-selector {
+        width: 100%;
+
+        padding: 14px;
+
+        border: 1px solid #ddd6d0;
+        border-radius: 16px;
+
+        background: #fff;
+
+        transition:
+            border-color .18s ease,
+            box-shadow .18s ease;
+    }
+
+    .speciality-selector:hover {
+        border-color: rgba(29, 69, 51, .35);
+    }
+
+    .speciality-selector:focus-within {
+        border-color: #1D4533;
+
+        box-shadow:
+            0 0 0 3px rgba(29, 69, 51, .07);
+    }
+
+    .speciality-selector-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .speciality-counter {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        min-width: 30px;
+        height: 30px;
+
+        padding: 0 9px;
+
+        border-radius: 999px;
+
+        background: #eef5f1;
+        color: #1D4533;
+
+        font-size: 11px;
+        font-weight: 900;
+    }
+
+    .speciality-open-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+
+        min-height: 40px;
+
+        padding: 0 15px;
+
+        border: 0;
+        border-radius: 11px;
+
+        background: #1D4533;
+        color: #fff;
+
+        font-size: 12px;
+        font-weight: 800;
+
+        cursor: pointer;
+
+        transition:
+            transform .15s ease,
+            box-shadow .15s ease;
+    }
+
+    .speciality-open-btn:hover {
+        box-shadow:
+            0 5px 15px rgba(29, 69, 51, .16);
+
+        transform: translateY(-1px);
+    }
+
+    .speciality-open-btn:active {
+        transform: scale(.97);
+    }
+
+
+    /* =========================================================
+       SELECTED SPECIALITIES
+    ========================================================= */
+
+    .selected-specialities {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+
+        margin-top: 13px;
+    }
+
+    .selected-speciality {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+
+        min-height: 31px;
+
+        padding: 0 10px;
+
+        border-radius: 999px;
+
+        background: #f2f7f4;
+        color: #1D4533;
+
+        font-size: 10px;
+        font-weight: 800;
+    }
+
+    .selected-speciality-empty {
+        color: #a49a94;
+        font-size: 11px;
+    }
+
+
+    /* =========================================================
+       HIDDEN DJANGO SPECIALITIES
+    ========================================================= */
+
+    .django-specialities-source {
+        display: none;
+    }
+
+
+    /* =========================================================
+       MODAL
+    ========================================================= */
+
+    .speciality-modal {
+        position: fixed;
+
+        inset: 0;
+
+        z-index: 9999;
+
+        display: none;
+
+        align-items: center;
+        justify-content: center;
+
+        padding: 20px;
+
+        background: rgba(24, 34, 29, .52);
+
+        backdrop-filter: blur(5px);
+    }
+
+    .speciality-modal.is-open {
+        display: flex;
+    }
+
+    .speciality-modal-content {
+        width: 100%;
+        max-width: 680px;
+        max-height: min(720px, calc(100vh - 40px));
+
+        display: flex;
+        flex-direction: column;
+
+        overflow: hidden;
+
+        border-radius: 24px;
+
+        background: #ffffff;
+
+        box-shadow:
+            0 25px 80px rgba(0, 0, 0, .20);
+
+        animation: specialityModalIn .2s ease;
+    }
+
+    @keyframes specialityModalIn {
+        from {
+            opacity: 0;
+            transform: translateY(12px) scale(.98);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+
+    /* =========================================================
+       MODAL HEADER
+    ========================================================= */
+
+    .speciality-modal-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+
+        gap: 15px;
+
+        padding: 22px 22px 16px;
+
+        border-bottom: 1px solid #eee8e3;
+    }
+
+    .speciality-modal-title {
+        margin: 0;
+
+        color: #3f2a22;
+
+        font-size: 17px;
+        font-weight: 900;
+    }
+
+    .speciality-modal-description {
+        margin-top: 5px;
+
+        color: #91857e;
+
+        font-size: 11px;
+        line-height: 1.8;
+    }
+
+    .speciality-modal-close {
+        flex-shrink: 0;
+
+        width: 34px;
+        height: 34px;
+
+        border: 0;
+        border-radius: 10px;
+
+        background: #f5f2ef;
+        color: #6f625b;
+
+        font-size: 18px;
+        line-height: 1;
+
+        cursor: pointer;
+
+        transition:
+            background .15s ease,
+            transform .15s ease;
+    }
+
+    .speciality-modal-close:hover {
+        background: #eee9e5;
+        transform: rotate(3deg);
+    }
+
+
+    /* =========================================================
+       SEARCH
+    ========================================================= */
+
+    .speciality-search-wrapper {
+        padding: 16px 22px 10px;
+    }
+
+    .speciality-search {
+        position: relative;
+    }
+
+    .speciality-search input {
+        width: 100%;
+
+        min-height: 45px;
+
+        padding: 10px 42px 10px 13px;
+
+        border: 1px solid #ddd6d0;
+        border-radius: 12px;
+
+        outline: none;
+
+        background: #faf9f8;
+        color: #3f2a22;
+
+        font-size: 12px;
+
+        transition:
+            border-color .18s ease,
+            box-shadow .18s ease;
+    }
+
+    .speciality-search input:focus {
+        border-color: #1D4533;
+
+        box-shadow:
+            0 0 0 3px rgba(29, 69, 51, .07);
+    }
+
+    .speciality-search-icon {
+        position: absolute;
+
+        right: 14px;
+        top: 50%;
+
+        transform: translateY(-50%);
+
+        color: #91857e;
+
+        pointer-events: none;
+    }
+
+
+    /* =========================================================
+       MODAL LIST
+    ========================================================= */
+
+    .speciality-modal-body {
+        flex: 1;
+
+        overflow-y: auto;
+
+        padding: 12px 22px 20px;
+    }
+
+    .speciality-list {
+        display: flex;
+        flex-wrap: wrap;
+
+        gap: 9px;
 
         margin: 0;
         padding: 0;
@@ -60,288 +441,1676 @@
         list-style: none;
     }
 
-    @media (min-width: 640px) {
-        .doctor-specialities {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-    }
-
-    .doctor-specialities li {
+    .speciality-item {
         list-style: none;
+        margin: 0;
+        padding: 0;
     }
 
-    .doctor-specialities label {
-        display: flex;
+    .speciality-item label {
+        position: relative;
+
+        display: inline-flex;
         align-items: center;
-        gap: 10px;
+        justify-content: center;
 
-        min-height: 52px;
-        padding: 0 14px;
+        min-height: 42px;
 
-        border: 1px solid #d6cec7;
-        border-radius: 14px;
+        padding: 0 15px;
+
+        border: 1px solid #ddd6d0;
+        border-radius: 12px;
 
         background: #ffffff;
-
         color: #5E3122;
-        font-size: 14px;
-        font-weight: 600;
+
+        font-size: 11px;
+        font-weight: 800;
 
         cursor: pointer;
+        user-select: none;
 
         transition:
-            border-color 0.2s ease,
-            background-color 0.2s ease,
-            box-shadow 0.2s ease;
+            border-color .18s ease,
+            background-color .18s ease,
+            color .18s ease,
+            box-shadow .18s ease,
+            transform .12s ease;
     }
 
-    .doctor-specialities label:hover {
-        border-color: rgba(29, 69, 51, 0.35);
-        background: #fbfdfb;
+    .speciality-item label:hover {
+        border-color: rgba(29, 69, 51, .35);
+        background: #f8fbf9;
+
+        transform: translateY(-1px);
     }
 
-    .doctor-specialities input[type="checkbox"] {
+    .speciality-item input[type="checkbox"] {
+        position: absolute;
+
+        opacity: 0;
+
+        pointer-events: none;
+    }
+
+    .speciality-item label.is-selected {
+        border-color: #1D4533;
+
+        background: #1D4533;
+        color: #ffffff;
+
+        box-shadow:
+            0 4px 12px rgba(29, 69, 51, .14);
+    }
+
+    .speciality-item label.is-selected::before {
+        content: "✓";
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
         width: 18px;
         height: 18px;
 
-        margin: 0;
+        margin-left: 7px;
 
-        accent-color: #1D4533;
+        border-radius: 50%;
+
+        background: rgba(255, 255, 255, .18);
+
+        font-size: 10px;
+        font-weight: 900;
+    }
+
+    .speciality-item label:active {
+        transform: scale(.97);
+    }
+
+    .speciality-no-result {
+        display: none;
+
+        padding: 35px 10px;
+
+        text-align: center;
+
+        color: #978c85;
+
+        font-size: 12px;
+    }
+
+
+    /* =========================================================
+       MODAL FOOTER
+    ========================================================= */
+
+    .speciality-modal-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 12px;
+
+        padding: 15px 22px;
+
+        border-top: 1px solid #eee8e3;
+
+        background: #fcfbfa;
+    }
+
+    .speciality-selected-count {
+        color: #756960;
+
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .speciality-selected-count strong {
+        color: #1D4533;
+        font-weight: 900;
+    }
+
+    .speciality-modal-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .speciality-cancel-btn,
+    .speciality-confirm-btn {
+        min-height: 40px;
+
+        padding: 0 15px;
+
+        border-radius: 10px;
+
+        font-size: 11px;
+        font-weight: 800;
 
         cursor: pointer;
     }
 
-    .doctor-specialities input[type="checkbox"]:checked {
-        accent-color: #1D4533;
+    .speciality-cancel-btn {
+        border: 1px solid #ddd6d0;
+
+        background: #ffffff;
+        color: #6e625b;
     }
+
+    .speciality-confirm-btn {
+        border: 0;
+
+        background: #1D4533;
+        color: #ffffff;
+    }
+
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+
+    @media (max-width: 640px) {
+
+        .speciality-modal {
+            align-items: flex-end;
+
+            padding: 0;
+        }
+
+        .speciality-modal-content {
+            max-height: 88vh;
+
+            border-radius: 24px 24px 0 0;
+        }
+
+        .speciality-modal-header {
+            padding: 18px 16px 14px;
+        }
+
+        .speciality-search-wrapper {
+            padding: 13px 16px 8px;
+        }
+
+        .speciality-modal-body {
+            padding: 10px 16px 16px;
+        }
+
+        .speciality-modal-footer {
+            padding: 13px 16px;
+
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .speciality-modal-actions {
+            width: 100%;
+        }
+
+        .speciality-cancel-btn,
+        .speciality-confirm-btn {
+            flex: 1;
+        }
+
+        .speciality-selector-top {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .speciality-open-btn {
+            width: 100%;
+        }
+    }
+
 </style>
+
 {% endblock %}
+
+
 
 {% block content %}
 
-<div class="mx-auto max-w-4xl">
+<section class="doctor-page">
 
-    <div class="mb-8">
-        <div class="mb-3 flex items-center gap-2 text-xs font-bold text-[#5E3122]/40">
-            <a
-                href="{% url 'admin_doctor_list' %}"
-                class="transition hover:text-[#1D4533]"
+    <div class="doctor-container">
+
+        <!-- =====================================================
+             HEADER
+        ====================================================== -->
+
+        <div class="mb-5">
+
+            <span
+                class="inline-flex rounded-full bg-[#eef5f1] px-3 py-1 text-[10px] font-bold text-[#1D4533]"
             >
-                پزشکان
-            </a>
+                مدیریت پزشکان
+            </span>
 
-            <span>←</span>
+            <h1 class="mt-2 text-2xl font-black text-[#3f2a22]">
+                افزودن پزشک
+            </h1>
 
-            <span>افزودن پزشک</span>
+            <p class="mt-1 text-xs text-[#91857e]">
+                اطلاعات پزشک جدید را وارد کنید.
+            </p>
+
         </div>
 
-        <h1 class="text-3xl font-black text-[#1D4533]">
-            افزودن پزشک جدید
-        </h1>
 
-        <p class="mt-2 text-sm leading-7 text-[#5E3122]/55">
-            اطلاعات پزشک را وارد کن تا در Nobatify ثبت شود.
-        </p>
+        <!-- =====================================================
+             CARD
+        ====================================================== -->
+
+        <div
+            class="doctor-card overflow-hidden rounded-3xl border border-[#eee8e3] bg-white shadow-sm"
+        >
+
+            <!-- Card Header -->
+
+            <div
+                class="border-b border-[#eee8e3] bg-[#fcfbfa] px-6 py-5 sm:px-8"
+            >
+
+                <div class="flex items-center gap-3">
+
+                    <div
+                        class="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#eef5f1] text-lg"
+                    >
+                        🩺
+                    </div>
+
+                    <div>
+
+                        <h2 class="text-sm font-black text-[#3f2a22]">
+                            اطلاعات پزشک
+                        </h2>
+
+                        <p class="mt-1 text-[10px] text-[#91857e]">
+                            اطلاعات شخصی و حرفه‌ای پزشک را تکمیل کنید.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Form -->
+
+            <form
+                method="post"
+                class="p-6 sm:p-8"
+            >
+
+                {% csrf_token %}
+
+
+                <!-- =================================================
+                     NON FIELD ERRORS
+                ================================================== -->
+
+                {% if form.non_field_errors %}
+
+                    <div
+                        class="mb-6 rounded-2xl border border-red-100 bg-red-50 px-4 py-3"
+                    >
+
+                        {% for error in form.non_field_errors %}
+
+                            <p class="text-xs font-bold text-red-600">
+                                {{ error }}
+                            </p>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- =================================================
+                     BASIC INFORMATION
+                ================================================== -->
+
+                <div class="mb-8">
+
+                    <div class="mb-5">
+
+                        <h3 class="text-sm font-black text-[#3f2a22]">
+                            اطلاعات پایه
+                        </h3>
+
+                        <p class="mt-1 text-[10px] text-[#91857e]">
+                            اطلاعات شناسایی و ارتباطی پزشک
+                        </p>
+
+                    </div>
+
+
+                    <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+
+
+                        <!-- First Name -->
+
+                        <div>
+
+                            <label
+                                for="{{ form.first_name.id_for_label }}"
+                                class="doctor-label"
+                            >
+                                نام
+                            </label>
+
+                            {{ form.first_name }}
+
+                            {% for error in form.first_name.errors %}
+
+                                <p class="doctor-error">
+                                    {{ error }}
+                                </p>
+
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- Last Name -->
+
+                        <div>
+
+                            <label
+                                for="{{ form.last_name.id_for_label }}"
+                                class="doctor-label"
+                            >
+                                نام خانوادگی
+                            </label>
+
+                            {{ form.last_name }}
+
+                            {% for error in form.last_name.errors %}
+
+                                <p class="doctor-error">
+                                    {{ error }}
+                                </p>
+
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- Email -->
+
+                        <div>
+
+                            <label
+                                for="{{ form.email.id_for_label }}"
+                                class="doctor-label"
+                            >
+                                ایمیل
+                            </label>
+
+                            {{ form.email }}
+
+                            {% for error in form.email.errors %}
+
+                                <p class="doctor-error">
+                                    {{ error }}
+                                </p>
+
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- Phone -->
+
+                        <div>
+
+                            <label
+                                for="{{ form.phone.id_for_label }}"
+                                class="doctor-label"
+                            >
+                                شماره موبایل
+                            </label>
+
+                            {{ form.phone }}
+
+                            {% for error in form.phone.errors %}
+
+                                <p class="doctor-error">
+                                    {{ error }}
+                                </p>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     PROFESSIONAL INFORMATION
+                ================================================== -->
+
+                <div class="mb-8">
+
+                    <div class="mb-5">
+
+                        <h3 class="text-sm font-black text-[#3f2a22]">
+                            اطلاعات حرفه‌ای
+                        </h3>
+
+                        <p class="mt-1 text-[10px] text-[#91857e]">
+                            اطلاعات تخصصی و شغلی پزشک
+                        </p>
+
+                    </div>
+
+
+                    <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+
+
+                        <!-- Medical License -->
+
+                        <div>
+
+                            <label
+                                for="{{ form.medical_license_number.id_for_label }}"
+                                class="doctor-label"
+                            >
+                                شماره نظام پزشکی
+                            </label>
+
+                            {{ form.medical_license_number }}
+
+                            {% for error in form.medical_license_number.errors %}
+
+                                <p class="doctor-error">
+                                    {{ error }}
+                                </p>
+
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- Birth Date -->
+
+                        <div>
+
+                            <label
+                                for="jalali-birth-date"
+                                class="doctor-label"
+                            >
+                                تاریخ تولد
+                            </label>
+
+                            <input
+                                type="text"
+                                id="jalali-birth-date"
+                                class="doctor-input"
+                                placeholder="مثلاً ۱۳۷۵/۰۵/۲۰"
+                                autocomplete="off"
+                                readonly
+                            >
+
+                            <div class="hidden">
+                                {{ form.birth_date }}
+                            </div>
+
+                            {% for error in form.birth_date.errors %}
+
+                                <p class="doctor-error">
+                                    {{ error }}
+                                </p>
+
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- =================================================
+                             SPECIALITIES
+                        ================================================== -->
+
+                        <div class="md:col-span-2">
+
+                            <div class="mb-3">
+
+                                <label class="doctor-label mb-0">
+                                    تخصص‌ها
+                                </label>
+
+                                <p class="doctor-help mt-1">
+                                    یک یا چند تخصص را برای پزشک انتخاب کنید.
+                                </p>
+
+                            </div>
+
+
+                            <div class="speciality-selector">
+
+                                <div class="speciality-selector-top">
+
+                                    <div>
+
+                                        <div
+                                            class="text-[11px] font-bold text-[#756960]"
+                                        >
+                                            تخصص‌های انتخاب‌شده
+                                        </div>
+
+                                        <div
+                                            id="selected-specialities"
+                                            class="selected-specialities"
+                                        >
+                                            <span
+                                                class="selected-speciality-empty"
+                                            >
+                                                هنوز تخصصی انتخاب نشده است.
+                                            </span>
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="flex items-center gap-2">
+
+                                        <span
+                                            id="speciality-counter"
+                                            class="speciality-counter"
+                                        >
+                                            ۰
+                                        </span>
+
+                                        <button
+                                            type="button"
+                                            id="open-speciality-modal"
+                                            class="speciality-open-btn"
+                                        >
+                                            <span>+</span>
+                                            انتخاب تخصص‌ها
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!--
+                                Django's real checkboxes.
+                                They remain inside the form so Django
+                                receives the selected values normally.
+                            -->
+
+                            <div class="django-specialities-source">
+
+                                {{ form.specialities }}
+
+                            </div>
+
+
+                            {% for error in form.specialities.errors %}
+
+                                <p class="doctor-error">
+                                    {{ error }}
+                                </p>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     ADDRESS
+                ================================================== -->
+
+                <div class="mb-8">
+
+                    <div class="mb-5">
+
+                        <h3 class="text-sm font-black text-[#3f2a22]">
+                            اطلاعات محل فعالیت
+                        </h3>
+
+                        <p class="mt-1 text-[10px] text-[#91857e]">
+                            آدرس محل فعالیت یا مطب پزشک
+                        </p>
+
+                    </div>
+
+
+                    <div>
+
+                        <label
+                            for="{{ form.address.id_for_label }}"
+                            class="doctor-label"
+                        >
+                            آدرس
+                        </label>
+
+                        {{ form.address }}
+
+                        {% for error in form.address.errors %}
+
+                            <p class="doctor-error">
+                                {{ error }}
+                            </p>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     BIO
+                ================================================== -->
+
+                <div class="mb-8">
+
+                    <div class="mb-5">
+
+                        <h3 class="text-sm font-black text-[#3f2a22]">
+                            درباره پزشک
+                        </h3>
+
+                        <p class="mt-1 text-[10px] text-[#91857e]">
+                            معرفی کوتاهی از پزشک و سابقه فعالیت او
+                        </p>
+
+                    </div>
+
+
+                    <div>
+
+                        <label
+                            for="{{ form.bio.id_for_label }}"
+                            class="doctor-label"
+                        >
+                            بیوگرافی
+                        </label>
+
+                        {{ form.bio }}
+
+                        {% for error in form.bio.errors %}
+
+                            <p class="doctor-error">
+                                {{ error }}
+                            </p>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     BUTTONS
+                ================================================== -->
+
+                <div
+                    class="flex flex-col-reverse gap-3 border-t border-[#eee8e3] pt-6 sm:flex-row sm:justify-end"
+                >
+                    <a
+                        href="{% url 'admin_doctor_list' %}"
+                        class="inline-flex min-h-[44px] items-center justify-center rounded-xl border border-[#ddd6d0] bg-white px-5 text-xs font-bold text-[#6e625b] transition hover:bg-[#faf9f8]"
+                    >
+                        انصراف
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="inline-flex min-h-[44px] items-center justify-center rounded-xl bg-[#1D4533] px-6 text-xs font-black text-white shadow-sm transition hover:-translate-y-[1px] hover:shadow-md"
+                    >
+                        ثبت پزشک
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <!-- Footer -->
+
+        <div class="mt-4 text-center">
+
+            <p class="text-[10px] text-[#a49a94]">
+                اطلاعات واردشده پس از ثبت در پروفایل پزشک ذخیره خواهد شد.
+            </p>
+
+        </div>
+
     </div>
 
+</section>
 
-    <div class="overflow-hidden rounded-3xl border border-[#5E3122]/10 bg-white shadow-sm">
 
-        <div class="border-b border-[#5E3122]/8 bg-[#FDFCFA] px-6 py-5 sm:px-8">
 
-            <div class="flex items-center gap-4">
+<!-- =============================================================
+     SPECIALITY MODAL
+============================================================== -->
 
-                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#1D4533]/8 text-xl">
-                    🩺
-                </div>
+<div
+    id="speciality-modal"
+    class="speciality-modal"
+    aria-hidden="true"
+>
 
-                <div>
-                    <h2 class="text-base font-black text-[#1D4533]">
-                        اطلاعات پزشک
-                    </h2>
+    <div
+        class="speciality-modal-content"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="speciality-modal-title"
+    >
 
-                    <p class="mt-1 text-xs text-[#5E3122]/45">
-                        مشخصات اصلی پزشک را وارد کنید.
-                    </p>
-                </div>
+
+        <!-- Modal Header -->
+
+        <div class="speciality-modal-header">
+
+            <div>
+
+                <h2
+                    id="speciality-modal-title"
+                    class="speciality-modal-title"
+                >
+                    انتخاب تخصص‌ها
+                </h2>
+
+                <p class="speciality-modal-description">
+                    می‌توانید یک یا چند تخصص را انتخاب کنید.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="close-speciality-modal"
+                class="speciality-modal-close"
+                aria-label="بستن"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+
+        <!-- Search -->
+
+        <div class="speciality-search-wrapper">
+
+            <div class="speciality-search">
+
+                <span class="speciality-search-icon">
+                    🔍
+                </span>
+
+                <input
+                    type="text"
+                    id="speciality-search"
+                    placeholder="جستجوی تخصص..."
+                    autocomplete="off"
+                >
 
             </div>
 
         </div>
 
 
-        <form method="post" class="p-6 sm:p-8">
 
-            {% csrf_token %}
+        <!-- List -->
 
-            {% if form.non_field_errors %}
-                <div class="mb-6 rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-600">
-                    {% for error in form.non_field_errors %}
-                        <p>{{ error }}</p>
-                    {% endfor %}
-                </div>
-            {% endif %}
+        <div class="speciality-modal-body">
 
-
-            <!-- نام و نام خانوادگی -->
-            <div class="grid gap-5 sm:grid-cols-2">
-
-                <div>
-                    <label
-                        for="{{ form.first_name.id_for_label }}"
-                        class="mb-2 block text-sm font-bold text-[#5E3122]/75"
-                    >
-                        نام
-                    </label>
-
-                    <input
-                        type="text"
-                        name="{{ form.first_name.name }}"
-                        id="{{ form.first_name.id_for_label }}"
-                        value="{{ form.first_name.value|default:'' }}"
-                        placeholder="مثلاً علی"
-                        autocomplete="given-name"
-                        class="doctor-input"
-                    >
-
-                    {% for error in form.first_name.errors %}
-                        <p class="doctor-error">{{ error }}</p>
-                    {% endfor %}
-                </div>
+            <div
+                id="speciality-list"
+                class="speciality-list"
+            >
+                <!--
+                    JavaScript will move/copy Django checkbox
+                    items here.
+                -->
+            </div>
 
 
-                <div>
-                    <label
-                        for="{{ form.last_name.id_for_label }}"
-                        class="mb-2 block text-sm font-bold text-[#5E3122]/75"
-                    >
-                        نام خانوادگی
-                    </label>
+            <div
+                id="speciality-no-result"
+                class="speciality-no-result"
+            >
+                تخصصی با این نام پیدا نشد.
+            </div>
 
-                    <input
-                        type="text"
-                        name="{{ form.last_name.name }}"
-                        id="{{ form.last_name.id_for_label }}"
-                        value="{{ form.last_name.value|default:'' }}"
-                        placeholder="مثلاً احمدی"
-                        autocomplete="family-name"
-                        class="doctor-input"
-                    >
+        </div>
 
-                    {% for error in form.last_name.errors %}
-                        <p class="doctor-error">{{ error }}</p>
-                    {% endfor %}
-                </div>
+
+
+        <!-- Footer -->
+
+        <div class="speciality-modal-footer">
+
+            <div class="speciality-selected-count">
+
+                انتخاب شده:
+
+                <strong id="modal-selected-count">
+                    ۰
+                </strong>
+
+                تخصص
 
             </div>
 
 
-            <!-- ایمیل -->
-            <div class="mt-5">
-
-                <label
-                    for="{{ form.email.id_for_label }}"
-                    class="mb-2 block text-sm font-bold text-[#5E3122]/75"
-                >
-                    ایمیل
-                </label>
-
-                <input
-                    type="email"
-                    name="{{ form.email.name }}"
-                    id="{{ form.email.id_for_label }}"
-                    value="{{ form.email.value|default:'' }}"
-                    placeholder="doctor@example.com"
-                    autocomplete="email"
-                    dir="ltr"
-                    class="doctor-input text-left"
-                >
-
-                <p class="mt-2 text-xs text-[#5E3122]/35">
-                    ایمیل برای شناسایی و ارتباط با پزشک استفاده می‌شود.
-                </p>
-
-                {% for error in form.email.errors %}
-                    <p class="doctor-error">{{ error }}</p>
-                {% endfor %}
-
-            </div>
-
-
-            <!-- تخصص‌ها -->
-            <div class="mt-7">
-
-                <div class="mb-3">
-
-                    <label class="block text-sm font-bold text-[#5E3122]/75">
-                        تخصص‌ها
-                    </label>
-
-                    <p class="mt-1 text-xs text-[#5E3122]/40">
-                        یک یا چند تخصص را برای پزشک انتخاب کن.
-                    </p>
-
-                </div>
-
-
-                <div class="doctor-specialities">
-                    {{ form.specialities }}
-                </div>
-
-                {% for error in form.specialities.errors %}
-                    <p class="doctor-error">
-                        {{ error }}
-                    </p>
-                {% endfor %}
-
-            </div>
-
-
-            <!-- دکمه‌ها -->
-            <div class="mt-8 flex flex-col-reverse gap-3 border-t border-[#5E3122]/8 pt-6 sm:flex-row sm:justify-end">
-
-                <a
-                    href="{% url 'admin_doctor_list' %}"
-                    class="inline-flex items-center justify-center rounded-2xl border border-[#5E3122]/15 bg-white px-6 py-3 text-sm font-bold text-[#5E3122]/65 transition hover:border-[#5E3122]/25 hover:bg-[#F8F6F1]"
-                >
-                    انصراف
-                </a>
+            <div class="speciality-modal-actions">
 
                 <button
-                    type="submit"
-                    class="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#1D4533] px-6 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-[#163a2b]"
+                    type="button"
+                    id="cancel-speciality-modal"
+                    class="speciality-cancel-btn"
                 >
-                    <span>✓</span>
-                    ثبت پزشک
+                    لغو
+                </button>
+
+                <button
+                    type="button"
+                    id="confirm-speciality-modal"
+                    class="speciality-confirm-btn"
+                >
+                    تأیید انتخاب‌ها
                 </button>
 
             </div>
 
-        </form>
-
-    </div>
-
-
-    <!-- نکته -->
-    <div class="mt-5 flex gap-3 rounded-2xl border border-[#1D4533]/10 bg-[#1D4533]/5 p-4">
-
-        <div class="mt-0.5 shrink-0 text-sm">
-            💡
-        </div>
-
-        <div>
-            <p class="text-xs font-bold text-[#1D4533]">
-                نکته
-            </p>
-
-            <p class="mt-1 text-xs leading-6 text-[#5E3122]/55">
-                بعد از ثبت پزشک، می‌توانی از صفحه پزشکان اطلاعات او را
-                ویرایش کنی یا برایش زمان‌های قابل رزرو ایجاد کنی.
-            </p>
         </div>
 
     </div>
 
 </div>
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* =========================================================
+       ELEMENTS
+    ========================================================= */
+
+    const modal =
+        document.getElementById("speciality-modal");
+
+    const openModalButton =
+        document.getElementById("open-speciality-modal");
+
+    const closeModalButton =
+        document.getElementById("close-speciality-modal");
+
+    const cancelModalButton =
+        document.getElementById("cancel-speciality-modal");
+
+    const confirmModalButton =
+        document.getElementById("confirm-speciality-modal");
+
+    const searchInput =
+        document.getElementById("speciality-search");
+
+    const specialityList =
+        document.getElementById("speciality-list");
+
+    const noResult =
+        document.getElementById("speciality-no-result");
+
+    const counter =
+        document.getElementById("speciality-counter");
+
+    const modalCounter =
+        document.getElementById("modal-selected-count");
+
+    const selectedContainer =
+        document.getElementById("selected-specialities");
+
+    const source =
+        document.querySelector(
+            ".django-specialities-source"
+        );
+
+
+    /* =========================================================
+       DJANGO CHECKBOXES
+    ========================================================= */
+
+    if (!source) {
+        console.error(
+            "Django specialities source پیدا نشد."
+        );
+
+        return;
+    }
+
+
+    const checkboxes =
+        Array.from(
+            source.querySelectorAll(
+                'input[type="checkbox"]'
+            )
+        );
+
+
+    /*
+        Django normally generates:
+
+        <ul>
+            <li>
+                <label>
+                    <input type="checkbox">
+                    قلب و عروق
+                </label>
+            </li>
+        </ul>
+    */
+
+
+    /* =========================================================
+       CREATE MODAL ITEMS
+    ========================================================= */
+
+    checkboxes.forEach(function (checkbox) {
+
+        const originalLabel =
+            checkbox.closest("label");
+
+        const originalLi =
+            checkbox.closest("li");
+
+
+        if (!originalLabel) {
+            return;
+        }
+
+
+        const item =
+            document.createElement("div");
+
+        item.className =
+            "speciality-item";
+
+
+        const label =
+            document.createElement("label");
+
+
+        /*
+            Use original label text.
+
+            Clone text instead of moving the original
+            Django label.
+        */
+
+        const labelText =
+            Array.from(originalLabel.childNodes)
+                .filter(function (node) {
+                    return node.nodeType === Node.TEXT_NODE;
+                })
+                .map(function (node) {
+                    return node.textContent.trim();
+                })
+                .join(" ");
+
+
+        /*
+            If Django's label structure is slightly different,
+            fallback to its complete text.
+        */
+
+        const finalText =
+            labelText ||
+            originalLabel.textContent.trim();
+
+
+        label.textContent =
+            finalText;
+
+
+        /*
+            Important:
+            Keep the REAL Django checkbox in the form.
+
+            We don't move it into the modal.
+            Instead, clicking this visual label updates
+            the real Django checkbox.
+        */
+
+        label.dataset.checkboxId =
+            checkbox.id;
+
+
+        label.dataset.searchText =
+            finalText.toLocaleLowerCase("fa");
+
+
+        item.appendChild(label);
+
+        specialityList.appendChild(item);
+
+
+        /* =====================================================
+           CLICK
+        ====================================================== */
+
+        label.addEventListener(
+            "click",
+            function () {
+
+                checkbox.checked =
+                    !checkbox.checked;
+
+
+                updateLabelState(
+                    label,
+                    checkbox
+                );
+
+
+                updateModalCounter();
+
+            }
+        );
+
+
+        /*
+            Initial state
+        */
+
+        updateLabelState(
+            label,
+            checkbox
+        );
+
+    });
+
+
+
+    /* =========================================================
+       UPDATE LABEL STATE
+    ========================================================= */
+
+    function updateLabelState(
+        label,
+        checkbox
+    ) {
+
+        if (checkbox.checked) {
+
+            label.classList.add(
+                "is-selected"
+            );
+
+        } else {
+
+            label.classList.remove(
+                "is-selected"
+            );
+
+        }
+
+    }
+
+
+
+    /* =========================================================
+       UPDATE COUNTERS
+    ========================================================= */
+
+    function getSelectedCheckboxes() {
+
+        return checkboxes.filter(
+            function (checkbox) {
+                return checkbox.checked;
+            }
+        );
+
+    }
+
+
+    function toPersianNumber(number) {
+
+        const numbers = [
+            "۰", "۱", "۲", "۳", "۴",
+            "۵", "۶", "۷", "۸", "۹"
+        ];
+
+        return String(number).replace(
+            /\d/g,
+            function (digit) {
+                return numbers[digit];
+            }
+        );
+
+    }
+
+
+    function updateModalCounter() {
+
+        const count =
+            getSelectedCheckboxes().length;
+
+
+        modalCounter.textContent =
+            toPersianNumber(count);
+
+    }
+
+
+    function updateMainCounter() {
+
+        const count =
+            getSelectedCheckboxes().length;
+
+
+        counter.textContent =
+            toPersianNumber(count);
+
+    }
+
+
+
+    /* =========================================================
+       UPDATE SELECTED CHIPS
+    ========================================================= */
+
+    function updateSelectedSpecialities() {
+
+        const selected =
+            getSelectedCheckboxes();
+
+
+        selectedContainer.innerHTML = "";
+
+
+        if (selected.length === 0) {
+
+            const empty =
+                document.createElement("span");
+
+            empty.className =
+                "selected-speciality-empty";
+
+            empty.textContent =
+                "هنوز تخصصی انتخاب نشده است.";
+
+            selectedContainer.appendChild(
+                empty
+            );
+
+            return;
+        }
+
+
+        selected.forEach(
+            function (checkbox) {
+
+                const originalLabel =
+                    checkbox.closest("label");
+
+
+                const text =
+                    originalLabel
+                        ? originalLabel.textContent.trim()
+                        : checkbox.value;
+
+
+                const chip =
+                    document.createElement("span");
+
+                chip.className =
+                    "selected-speciality";
+
+
+                chip.textContent =
+                    "✓ " + text;
+
+
+                selectedContainer.appendChild(
+                    chip
+                );
+
+            }
+        );
+
+    }
+
+
+
+    /* =========================================================
+       OPEN MODAL
+    ========================================================= */
+
+    function openModal() {
+
+        modal.classList.add(
+            "is-open"
+        );
+
+        modal.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+
+        updateModalCounter();
+
+
+        /*
+            Sync visual labels with real checkboxes.
+        */
+
+        const labels =
+            specialityList.querySelectorAll(
+                "label"
+            );
+
+
+        labels.forEach(function (label) {
+
+            const checkbox =
+                document.getElementById(
+                    label.dataset.checkboxId
+                );
+
+
+            if (checkbox) {
+
+                updateLabelState(
+                    label,
+                    checkbox
+                );
+
+            }
+
+        });
+
+
+        searchInput.value = "";
+
+        filterSpecialities();
+
+
+        document.body.style.overflow =
+            "hidden";
+
+
+        setTimeout(function () {
+
+            searchInput.focus();
+
+        }, 100);
+
+    }
+
+
+
+    /* =========================================================
+       CLOSE MODAL
+    ========================================================= */
+
+    function closeModal() {
+
+        modal.classList.remove(
+            "is-open"
+        );
+
+        modal.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+
+        document.body.style.overflow =
+            "";
+
+    }
+
+
+
+    /* =========================================================
+       CONFIRM
+    ========================================================= */
+
+    function confirmModal() {
+
+        updateSelectedSpecialities();
+
+        updateMainCounter();
+
+        closeModal();
+
+    }
+
+
+
+    /* =========================================================
+       CANCEL
+    ========================================================= */
+
+    function cancelModal() {
+
+        closeModal();
+
+    }
+
+
+
+    /* =========================================================
+       SEARCH
+    ========================================================= */
+
+    function filterSpecialities() {
+
+        const query =
+            searchInput.value
+                .trim()
+                .toLocaleLowerCase("fa");
+
+
+        const items =
+            Array.from(
+                specialityList.querySelectorAll(
+                    ".speciality-item"
+                )
+            );
+
+
+        let visibleCount = 0;
+
+
+        items.forEach(function (item) {
+
+            const label =
+                item.querySelector("label");
+
+
+            const text =
+                label.dataset.searchText ||
+                label.textContent
+                    .trim()
+                    .toLocaleLowerCase("fa");
+
+
+            const matches =
+                !query ||
+                text.includes(query);
+
+
+            if (matches) {
+
+                item.style.display =
+                    "";
+
+                visibleCount++;
+
+            } else {
+
+                item.style.display =
+                    "none";
+
+            }
+
+        });
+
+
+        if (visibleCount === 0) {
+
+            noResult.style.display =
+                "block";
+
+        } else {
+
+            noResult.style.display =
+                "none";
+
+        }
+
+    }
+
+
+
+    /* =========================================================
+       EVENTS
+    ========================================================= */
+
+    openModalButton.addEventListener(
+        "click",
+        openModal
+    );
+
+
+    closeModalButton.addEventListener(
+        "click",
+        closeModal
+    );
+
+
+    cancelModalButton.addEventListener(
+        "click",
+        cancelModal
+    );
+
+
+    confirmModalButton.addEventListener(
+        "click",
+        confirmModal
+    );
+
+
+    searchInput.addEventListener(
+        "input",
+        filterSpecialities
+    );
+
+
+    /*
+        Click outside modal
+    */
+
+    modal.addEventListener(
+        "click",
+        function (event) {
+
+            if (
+                event.target === modal
+            ) {
+
+                closeModal();
+
+            }
+
+        }
+    );
+
+
+    /*
+        ESC
+    */
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key === "Escape" &&
+                modal.classList.contains(
+                    "is-open"
+                )
+            ) {
+
+                closeModal();
+
+            }
+
+        }
+    );
+
+
+    /* =========================================================
+       INITIAL STATE
+    ========================================================= */
+
+    updateSelectedSpecialities();
+
+    updateMainCounter();
+
+    updateModalCounter();
+
+
+
+    /* =========================================================
+       JALALI DATEPICKER
+    ========================================================= */
+
+    const birthDateDisplay =
+        document.getElementById(
+            "jalali-birth-date"
+        );
+
+
+    const birthDateInput =
+        document.getElementById(
+            "{{ form.birth_date.id_for_label }}"
+        );
+
+
+    if (
+        birthDateDisplay &&
+        birthDateInput &&
+        typeof window.jQuery !== "undefined" &&
+        typeof jQuery.fn.pDatepicker !== "undefined"
+    ) {
+
+        $(birthDateDisplay).pDatepicker({
+
+            format: "YYYY/MM/DD",
+
+            autoClose: true,
+
+            initialValue: false,
+
+            observer: true,
+
+            calendar: {
+                persian: {
+                    locale: "fa"
+                }
+            },
+
+
+            onSelect: function (unix) {
+
+                if (!unix) {
+                    return;
+                }
+
+
+                const selectedDate =
+                    new persianDate(unix);
+
+
+                const jalaliDate =
+                    selectedDate.format(
+                        "YYYY/MM/DD"
+                    );
+
+
+                const gregorianDate =
+                    selectedDate
+                        .toCalendar("gregorian")
+                        .format("YYYY-MM-DD");
+
+
+                birthDateDisplay.value =
+                    jalaliDate;
+
+
+                birthDateInput.value =
+                    gregorianDate;
+
+            }
+
+        });
+
+
+        /*
+            Existing value
+            useful when editing a doctor.
+        */
+
+        if (birthDateInput.value) {
+
+            try {
+
+                const existingDate =
+                    new persianDate(
+                        birthDateInput.value
+                    );
+
+
+                if (
+                    existingDate &&
+                    existingDate.isValid()
+                ) {
+
+                    birthDateDisplay.value =
+                        existingDate
+                            .toCalendar("persian")
+                            .format(
+                                "YYYY/MM/DD"
+                            );
+
+                }
+
+            } catch (error) {
+
+                console.log(
+                    "Existing birth date could not be converted."
+                );
+
+            }
+
+        }
+
+    } else {
+
+        console.error(
+            "Persian Datepicker لود نشده است!"
+        );
+
+    }
+
+});
+
+</script>
 
 {% endblock %}

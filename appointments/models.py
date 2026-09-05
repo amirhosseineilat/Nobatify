@@ -3,6 +3,7 @@ from doctors.models import Doctor
 from django.contrib.auth import get_user_model
 from decimal import Decimal
 from django.core.validators import MinValueValidator
+from django_jalali.db import models as jmodels
 
 User = get_user_model()
 # Create your models here.
@@ -11,7 +12,7 @@ class TimeSlot(models.Model):
     doctor = models.ForeignKey(
         Doctor, on_delete=models.CASCADE, related_name="time_slots"
     )
-    date = models.DateField()
+    date = jmodels.jDateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
     price = models.DecimalField(max_digits=12, decimal_places=2, default=Decimal("0.00"),

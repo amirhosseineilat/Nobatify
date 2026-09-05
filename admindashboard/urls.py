@@ -13,7 +13,13 @@ from .views import (
     AdminUpdaterTimeslotView,
     AdminTimesLotDeleteView,
     AdminTimeSlotSearchView,
-    AdminLoginView
+    AdminLoginView,
+    #speciality
+    AdminSpecialityListView,
+    AdminUpdateSpecialityView,
+    AdminCreaterSpecialityView,
+    AdminSpecialityDeleteView,
+    AdminSearchSpeciality
 )
 
 urlpatterns = [
@@ -54,4 +60,9 @@ urlpatterns = [
     path("admin_timeslot_delete/<int:pk>/",AdminTimesLotDeleteView.as_view(),name="admin_timeslot_delete"),
     path("admin_timeslot_search/",AdminTimeSlotSearchView.as_view(),name="admin_timeslot_search"),
     path("login/",AdminLoginView.as_view(),name="admin_login"),
+    path("admin_speciality_create/",AdminCreaterSpecialityView.as_view(),name="admin_speciality_create"),
+    path("admin_speciality_list/",AdminSpecialityListView.as_view(),name="admin_speciality_list"),
+    path("admin_speciality_update/<int:pk>/",AdminUpdateSpecialityView.as_view(),name="admin_speciality_update"),
+    path("admin_speciality_delete/<int:pk>/",AdminSpecialityDeleteView.as_view(),name="admin_speciality_delete"),
+    path("admin_speciality_search/",AdminSearchSpeciality.as_view(),name="admin_speciality_search")
 ]

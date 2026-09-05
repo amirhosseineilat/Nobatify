@@ -49,79 +49,93 @@ class SpecialityForm(forms.ModelForm):
             ),
         }
 
-
-# class DoctorForm(forms.ModelForm):
-#     class Meta:
-#         model = Doctor
-#         fields = [
-#             "first_name",
-#             "last_name",
-#             "email",
-#             "specialities",
-#         ]
-
-#         widgets = {
-#             "first_name": forms.TextInput(
-#                 attrs={
-#                     "class": "admin-input",
-#                     "placeholder": "نام پزشک",
-#                 }
-#             ),
-#             "last_name": forms.TextInput(
-#                 attrs={
-#                     "class": "admin-input",
-#                     "placeholder": "نام خانوادگی پزشک",
-#                 }
-#             ),
-#             "email": forms.EmailInput(
-#                 attrs={
-#                     "class": "admin-input",
-#                     "placeholder": "doctor@example.com",
-#                     "dir": "ltr",
-#                 }
-#             ),
-#             "specialities": forms.CheckboxSelectMultiple(
-#                 attrs={
-#                     "class": "admin-specialities",
-#                 }
-#             ),
-#         }
 class DoctorForm(forms.ModelForm):
     class Meta:
         model = Doctor
+
         fields = [
             "first_name",
             "last_name",
             "email",
+            "birth_date",
+            "medical_license_number",
+            "phone",
+            "address",
+            "bio",
             "specialities",
         ]
 
         widgets = {
             "first_name": forms.TextInput(
                 attrs={
-                    "class": "admin-input",
+                    "class": "doctor-input",
                     "placeholder": "مثلاً علی",
                     "autocomplete": "given-name",
                 }
             ),
+
             "last_name": forms.TextInput(
                 attrs={
-                    "class": "admin-input",
+                    "class": "doctor-input",
                     "placeholder": "مثلاً احمدی",
                     "autocomplete": "family-name",
                 }
             ),
+
             "email": forms.EmailInput(
                 attrs={
-                    "class": "admin-input",
+                    "class": "doctor-input",
                     "placeholder": "doctor@example.com",
                     "dir": "ltr",
                     "autocomplete": "email",
                 }
             ),
+
+            "birth_date": forms.DateInput(
+                attrs={
+                    "class": "doctor-input",
+                    "type": "text",
+                    "readonly": "readonly",
+                }
+            ),
+
+            "medical_license_number": forms.TextInput(
+                attrs={
+                    "class": "doctor-input",
+                    "placeholder": "مثلاً 123456789",
+                    "dir": "ltr",
+                }
+            ),
+
+            "phone": forms.TextInput(
+                attrs={
+                    "class": "doctor-input",
+                    "placeholder": "مثلاً 91234567",
+                    "dir": "ltr",
+                    "inputmode": "numeric",
+                    "maxlength": "8",
+                }
+            ),
+
+            "address": forms.Textarea(
+                attrs={
+                    "class": "doctor-input",
+                    "placeholder": "آدرس مطب یا محل فعالیت پزشک...",
+                    "rows": 4,
+                }
+            ),
+
+            "bio": forms.Textarea(
+                attrs={
+                    "class": "doctor-input",
+                    "placeholder": "توضیح کوتاهی درباره پزشک، سابقه و زمینه فعالیت...",
+                    "rows": 5,
+                }
+            ),
+
             "specialities": forms.CheckboxSelectMultiple(
                 attrs={
-                    "class": "admin-specialities",
+                    "class": "doctor-speciality-checkboxes",
                 }
             ),
         }
