@@ -49,9 +49,7 @@ class SpecialityForm(forms.ModelForm):
             ),
         }
 
-
 class DoctorForm(forms.ModelForm):
-
     class Meta:
         model = Doctor
 
@@ -68,10 +66,9 @@ class DoctorForm(forms.ModelForm):
         ]
 
         widgets = {
-
             "first_name": forms.TextInput(
                 attrs={
-                    "class": "admin-input",
+                    "class": "doctor-input",
                     "placeholder": "مثلاً علی",
                     "autocomplete": "given-name",
                 }
@@ -79,7 +76,7 @@ class DoctorForm(forms.ModelForm):
 
             "last_name": forms.TextInput(
                 attrs={
-                    "class": "admin-input",
+                    "class": "doctor-input",
                     "placeholder": "مثلاً احمدی",
                     "autocomplete": "family-name",
                 }
@@ -87,7 +84,7 @@ class DoctorForm(forms.ModelForm):
 
             "email": forms.EmailInput(
                 attrs={
-                    "class": "admin-input",
+                    "class": "doctor-input",
                     "placeholder": "doctor@example.com",
                     "dir": "ltr",
                     "autocomplete": "email",
@@ -96,14 +93,15 @@ class DoctorForm(forms.ModelForm):
 
             "birth_date": forms.DateInput(
                 attrs={
-                    "class": "admin-input",
-                    "type": "date",
+                    "class": "doctor-input",
+                    "type": "text",
+                    "readonly": "readonly",
                 }
             ),
 
             "medical_license_number": forms.TextInput(
                 attrs={
-                    "class": "admin-input",
+                    "class": "doctor-input",
                     "placeholder": "مثلاً 123456789",
                     "dir": "ltr",
                 }
@@ -111,7 +109,7 @@ class DoctorForm(forms.ModelForm):
 
             "phone": forms.TextInput(
                 attrs={
-                    "class": "admin-input",
+                    "class": "doctor-input",
                     "placeholder": "مثلاً 91234567",
                     "dir": "ltr",
                     "inputmode": "numeric",
@@ -121,7 +119,7 @@ class DoctorForm(forms.ModelForm):
 
             "address": forms.Textarea(
                 attrs={
-                    "class": "admin-input",
+                    "class": "doctor-input",
                     "placeholder": "آدرس مطب یا محل فعالیت پزشک...",
                     "rows": 4,
                 }
@@ -129,7 +127,7 @@ class DoctorForm(forms.ModelForm):
 
             "bio": forms.Textarea(
                 attrs={
-                    "class": "admin-input",
+                    "class": "doctor-input",
                     "placeholder": "توضیح کوتاهی درباره پزشک، سابقه و زمینه فعالیت...",
                     "rows": 5,
                 }
@@ -137,8 +135,7 @@ class DoctorForm(forms.ModelForm):
 
             "specialities": forms.CheckboxSelectMultiple(
                 attrs={
-                    "class": "admin-specialities",
+                    "class": "doctor-speciality-checkboxes",
                 }
             ),
         }
-

@@ -1,5 +1,5 @@
-
 from django import forms
+
 from .models import TimeSlot
 
 
@@ -17,36 +17,38 @@ class TimeSlotForm(forms.ModelForm):
         ]
 
         widgets = {
+
             "doctor": forms.Select(
                 attrs={
-                    "class": "admin-input",
+                    "class": "slot-input",
                 }
             ),
 
             "date": forms.DateInput(
+                format="%Y-%m-%d",
                 attrs={
-                    "class": "admin-input",
-                    "type": "date",
+                    "class": "slot-input",
+                    "type": "hidden",
                 }
             ),
 
             "start_time": forms.TimeInput(
+                format="%H:%M",
                 attrs={
-                    "class": "admin-input",
-                    "type": "time",
+                    "class": "slot-input",
                 }
             ),
 
             "end_time": forms.TimeInput(
+                format="%H:%M",
                 attrs={
-                    "class": "admin-input",
-                    "type": "time",
+                    "class": "slot-input",
                 }
             ),
 
             "price": forms.NumberInput(
                 attrs={
-                    "class": "admin-input",
+                    "class": "slot-input",
                     "placeholder": "مثلاً 500000",
                     "min": "0",
                     "step": "1000",
@@ -60,9 +62,12 @@ class TimeSlotForm(forms.ModelForm):
         start_time = cleaned_data.get("start_time")
         end_time = cleaned_data.get("end_time")
 
-        if start_time and end_time and start_time >= end_time:
-            raise forms.ValidationError(
-                "ساعت پایان باید بعد از ساعت شروع باشد."
-            )
+        if start_time and end_time:
+
+            if start_time >= end_time:
+
+                raise forms.ValidationError(
+                    "ساعت پایان باید بعد از ساعت شروع باشد."
+                )
 
         return cleaned_data
