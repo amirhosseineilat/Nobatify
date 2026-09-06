@@ -117,4 +117,6 @@ class DoctorModelTestCase(TestCase):
                 )
             
             comment.full_clean()
+            
+    
                 
