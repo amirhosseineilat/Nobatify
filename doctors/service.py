@@ -20,14 +20,16 @@ class DoctorService:
         return doctors
 
     @staticmethod
-    def filter(mean_rating,spec_pk):
+    def filter(mean_rating, spec_pk):
 
-        doctors = Doctor.objects.prefetch_related("comments").annotate(mean_rate=Avg("comments__rating"))
+        doctors = Doctor.objects.prefetch_related("comments").annotate(
+            mean_rate=Avg("comments__rating")
+        )
 
         if mean_rating:
             doctors = doctors.filter(mean_rate__gte=mean_rating)
 
-        if spec_id:
+        if spec_pk:
             doctors = doctors.filter(specialities__pk=spec_pk)
 
         return doctors

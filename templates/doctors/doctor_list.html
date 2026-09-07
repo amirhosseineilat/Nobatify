@@ -3,188 +3,902 @@
 {% block title %}پزشکان | Nobatify{% endblock %}
 
 {% block content %}
+
 <section class="page-shell">
-  <div class="mx-auto max-w-7xl">
 
-    <!-- عنوان -->
-    <div class="reveal-up text-center">
+    <div class="mx-auto max-w-7xl">
 
-      <h1 class="page-title mt-3">
-        پزشک مناسب را پیدا کن.
-      </h1>
-    </div>
+        <!-- ================================================= -->
+        <!-- HEADER -->
+        <!-- ================================================= -->
 
-    <!-- جستجو + توضیحات -->
-    <div class="mt-10 flex flex-col items-center">
+        <div class="reveal-up">
 
-      <form
-        method="get"
-        action="{% url 'search' %}"
-        class="search-box reveal-up w-full max-w-2xl"
-      >
-        <span>⌕</span>
+            <div class="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
 
-        <input
-          type="search"
-          name="q"
-          value="{{ request.GET.q }}"
-          placeholder="مثلاً: احمدی، قلب، پوست..."
-          aria-label="جست‌وجوی پزشک"
-        />
+                <div>
 
-        <button class="btn btn-primary" type="submit">
-          جست‌وجو
-        </button>
-      </form>
+                    <span class="eyebrow">
+                        پزشکان
+                    </span>
 
-      <p class="mt-4 text-center text-sm leading-8 text-[#5E3122]/55">
-        نام پزشک یا تخصص را جست‌وجو کن و برای دیدن جزئیات وارد پروفایل شو.
-      </p>
+                    <h1 class="page-title mt-3">
+                        پزشک مناسب را پیدا کن.
+                    </h1>
 
-    </div>
+                    <p class="mt-4 max-w-2xl text-sm leading-8 text-[#5E3122]/55">
+                        نام پزشک یا تخصص موردنظرت را جست‌وجو کن یا با استفاده از فیلترها،
+                        پزشک مناسب خودت را سریع‌تر پیدا کن.
+                    </p>
 
+                </div>
 
-</div>
+                <div
+                    class="
+                        hidden
+                        rounded-2xl
+                        border border-[#1D4533]/10
+                        bg-white
+                        px-5 py-3
+                        text-sm
+                        text-[#5E3122]/55
+                        shadow-sm
+                        sm:block
+                    "
+                >
+                    <span class="font-black text-[#1D4533]">
+                        {{ doctors|length }}
+                    </span>
+                    پزشک
+                </div>
 
-
-<!-- Pagination -->
-    <!-- لیست پزشکان -->
-    <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-
-      {% for doctor in doctors %}
-
-      <article class="doctor-card reveal-up">
-
-        <div class="flex items-start justify-between">
-
-          <div class="doctor-avatar">
-            {{ doctor.first_name|first }}{{ doctor.last_name|first }}
-          </div>
-
-          <span
-            class="grid h-10 w-10 place-items-center rounded-xl bg-[#F7EAE0] text-[#1D4533]"
-          >
-            ✦
-          </span>
+            </div>
 
         </div>
 
-        <h2 class="mt-6 text-xl font-black text-[#1D4533]">
-          {{ doctor.first_name }} {{ doctor.last_name }}
-        </h2>
 
-        <p class="mt-2 text-sm text-[#5E3122]/50">
-          {{ doctor.email }}
-        </p>
+        <!-- ================================================= -->
+        <!-- SEARCH -->
+        <!-- ================================================= -->
 
-        <div class="mt-5 flex flex-wrap gap-2">
+        <div class="mt-10 flex flex-col items-center">
 
-          {% for speciality in doctor.specialities.all %}
+            <form
+                method="get"
+                action="{% url 'search' %}"
+                class="
+                    search-box
+                    reveal-up
+                    w-full
+                    max-w-3xl
+                "
+            >
 
-            <span class="tag">
-              {{ speciality.name }}
-            </span>
+                <span class="text-xl">
+                    ⌕
+                </span>
 
-          {% empty %}
+                <input
+                    type="search"
+                    name="q"
+                    value="{{ request.GET.q }}"
+                    placeholder="مثلاً: احمدی، قلب، پوست..."
+                    aria-label="جست‌وجوی پزشک"
+                />
 
-            <span class="tag">
-              پزشک
-            </span>
+                <button
+                    class="btn btn-primary"
+                    type="submit"
+                >
+                    جست‌وجو
+                </button>
 
-          {% endfor %}
+            </form>
 
         </div>
 
-        <a
-          href="{% url 'doctor_detail' doctor.pk %}"
-          class="btn btn-outline mt-7 w-full justify-center"
+
+        <!-- ================================================= -->
+        <!-- FILTER PANEL -->
+        <!-- ================================================= -->
+
+        <div
+            class="
+                mt-6
+                overflow-hidden
+                rounded-[28px]
+                border border-[#1D4533]/10
+                bg-white
+                shadow-[0_8px_35px_rgba(29,69,51,0.05)]
+                reveal-up
+            "
         >
-          مشاهده پروفایل <span>←</span>
-        </a>
 
-      </article>
+            <!-- Filter header -->
 
-      {% empty %}
+            <div
+                class="
+                    flex
+                    flex-col
+                    gap-3
+                    border-b border-[#1D4533]/[0.07]
+                    px-6 py-5
+                    sm:flex-row
+                    sm:items-center
+                    sm:justify-between
+                    sm:px-7
+                "
+            >
 
-      <div class="empty-state sm:col-span-2 lg:col-span-3">
+                <div class="flex items-center gap-3">
 
-        <span class="text-4xl">⌕</span>
+                    <span
+                        class="
+                            grid
+                            h-10
+                            w-10
+                            place-items-center
+                            rounded-xl
+                            bg-[#F7EAE0]
+                            text-[#1D4533]
+                        "
+                    >
+                        ⚙
+                    </span>
 
-        <h2 class="mt-4 text-2xl font-black text-[#1D4533]">
-          نتیجه‌ای پیدا نشد
-        </h2>
+                    <div>
 
-        <p class="mt-2 text-sm text-[#5E3122]/55">
-          عبارت دیگری را امتحان کن.
-        </p>
+                        <h2 class="font-black text-[#1D4533]">
+                            فیلتر پزشکان
+                        </h2>
 
-      </div>
+                        <p class="mt-1 text-xs text-[#5E3122]/45">
+                            نتایج را بر اساس تخصص و امتیاز محدود کن.
+                        </p>
 
-      {% endfor %}
+                    </div>
+
+                </div>
+
+
+                <!-- Reset -->
+
+                {% if request.GET.speciality or request.GET.avg_rate %}
+
+                    <a
+                        href="{% url 'doctors' %}"
+                        class="
+                            group
+                            inline-flex
+                            w-fit
+                            items-center
+                            gap-2
+                            rounded-xl
+                            px-3
+                            py-2
+                            text-xs
+                            font-bold
+                            text-[#5E3122]/55
+                            transition-all
+                            duration-300
+                            hover:bg-[#F7EAE0]
+                            hover:text-[#1D4533]
+                        "
+                    >
+                        <span>
+                            ×
+                        </span>
+
+                        حذف فیلترها
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- Filter form -->
+
+            <form
+                method="get"
+                action="{% url 'doctor_filter' %}"
+                class="p-6 sm:p-7"
+            >
+
+                <div class="grid gap-5 md:grid-cols-3">
+
+                    <!-- ================================================= -->
+                    <!-- SPECIALITY -->
+                    <!-- ================================================= -->
+
+                    <div>
+
+                        <label
+                            for="speciality"
+                            class="
+                                mb-2
+                                block
+                                text-xs
+                                font-bold
+                                text-[#5E3122]/60
+                            "
+                        >
+                            تخصص
+                        </label>
+
+                        <div class="relative">
+
+                            <select
+                                id="speciality"
+                                name="speciality"
+                                class="
+                                    w-full
+                                    appearance-none
+                                    rounded-2xl
+                                    border
+                                    border-[#1D4533]/10
+                                    bg-[#FBF8F5]
+                                    px-4
+                                    py-3.5
+                                    text-sm
+                                    font-medium
+                                    text-[#1D4533]
+                                    outline-none
+                                    transition-all
+                                    duration-300
+                                    focus:border-[#1D4533]/30
+                                    focus:bg-white
+                                    focus:ring-4
+                                    focus:ring-[#1D4533]/5
+                                "
+                            >
+
+                                <option value="">
+                                    همه تخصص‌ها
+                                </option>
+
+                                {% for speciality in specialities %}
+
+                                    <option
+                                        value="{{ speciality.pk }}"
+                                        {% if request.GET.speciality == speciality.pk|stringformat:"s" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        {{ speciality.name }}
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                            <span
+                                class="
+                                    pointer-events-none
+                                    absolute
+                                    left-4
+                                    top-1/2
+                                    -translate-y-1/2
+                                    text-xs
+                                    text-[#5E3122]/40
+                                "
+                            >
+                                ▼
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ================================================= -->
+                    <!-- RATING -->
+                    <!-- ================================================= -->
+
+                    <div>
+
+                        <label
+                            for="avg_rate"
+                            class="
+                                mb-2
+                                block
+                                text-xs
+                                font-bold
+                                text-[#5E3122]/60
+                            "
+                        >
+                            حداقل امتیاز
+                        </label>
+
+                        <div class="relative">
+
+                            <select
+                                id="avg_rate"
+                                name="avg_rate"
+                                class="
+                                    w-full
+                                    appearance-none
+                                    rounded-2xl
+                                    border
+                                    border-[#1D4533]/10
+                                    bg-[#FBF8F5]
+                                    px-4
+                                    py-3.5
+                                    text-sm
+                                    font-medium
+                                    text-[#1D4533]
+                                    outline-none
+                                    transition-all
+                                    duration-300
+                                    focus:border-[#1D4533]/30
+                                    focus:bg-white
+                                    focus:ring-4
+                                    focus:ring-[#1D4533]/5
+                                "
+                            >
+
+                                <option value="">
+                                    همه امتیازها
+                                </option>
+
+                                <option
+                                    value="4"
+                                    {% if request.GET.avg_rate == "4" %}selected{% endif %}
+                                >
+                                    ★ ۴ و بالاتر
+                                </option>
+
+                                <option
+                                    value="3"
+                                    {% if request.GET.avg_rate == "3" %}selected{% endif %}
+                                >
+                                    ★ ۳ و بالاتر
+                                </option>
+
+                                <option
+                                    value="2"
+                                    {% if request.GET.avg_rate == "2" %}selected{% endif %}
+                                >
+                                    ★ ۲ و بالاتر
+                                </option>
+
+                                <option
+                                    value="1"
+                                    {% if request.GET.avg_rate == "1" %}selected{% endif %}
+                                >
+                                    ★ ۱ و بالاتر
+                                </option>
+
+                            </select>
+
+                            <span
+                                class="
+                                    pointer-events-none
+                                    absolute
+                                    left-4
+                                    top-1/2
+                                    -translate-y-1/2
+                                    text-xs
+                                    text-[#5E3122]/40
+                                "
+                            >
+                                ▼
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ================================================= -->
+                    <!-- BUTTON -->
+                    <!-- ================================================= -->
+
+                    <div class="flex items-end">
+
+                        <button
+                            type="submit"
+                            class="
+                                btn
+                                btn-primary
+                                w-full
+                                justify-center
+                                rounded-2xl
+                                py-3.5
+                                transition-all
+                                duration-300
+                                hover:-translate-y-0.5
+                            "
+                        >
+                            اعمال فیلتر
+
+                            <span>
+                                ✦
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Active filters -->
+
+                {% if request.GET.speciality or request.GET.avg_rate %}
+
+                    <div
+                        class="
+                            mt-5
+                            flex
+                            flex-wrap
+                            items-center
+                            gap-2
+                            border-t
+                            border-[#1D4533]/[0.07]
+                            pt-5
+                        "
+                    >
+
+                        <span class="text-xs font-bold text-[#5E3122]/45">
+                            فیلترهای فعال:
+                        </span>
+
+
+                        {% if request.GET.speciality %}
+
+                            <span
+                                class="
+                                    rounded-full
+                                    bg-[#F7EAE0]
+                                    px-3
+                                    py-1.5
+                                    text-xs
+                                    font-bold
+                                    text-[#1D4533]
+                                "
+                            >
+                                تخصص انتخاب شده
+                            </span>
+
+                        {% endif %}
+
+
+                        {% if request.GET.avg_rate %}
+
+                            <span
+                                class="
+                                    rounded-full
+                                    bg-[#F9D2BA]/50
+                                    px-3
+                                    py-1.5
+                                    text-xs
+                                    font-bold
+                                    text-[#5E3122]
+                                "
+                            >
+                                امتیاز {{ request.GET.avg_rate }}+
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                {% endif %}
+
+            </form>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- RESULTS HEADER -->
+        <!-- ================================================= -->
+
+        <div
+            class="
+                mt-12
+                flex
+                flex-col
+                gap-3
+                sm:flex-row
+                sm:items-center
+                sm:justify-between
+                reveal-up
+            "
+        >
+
+            <div>
+
+                <h2 class="text-xl font-black text-[#1D4533]">
+                    پزشکان
+                </h2>
+
+                <p class="mt-1 text-xs text-[#5E3122]/45">
+                    پزشک موردنظر خودت را انتخاب کن و جزئیات پروفایل را ببین.
+                </p>
+
+            </div>
+
+
+            {% if request.GET.speciality or request.GET.avg_rate %}
+
+                <span
+                    class="
+                        w-fit
+                        rounded-full
+                        bg-[#F7EAE0]
+                        px-4
+                        py-2
+                        text-xs
+                        font-bold
+                        text-[#1D4533]
+                    "
+                >
+                    نتایج فیلتر شده
+                </span>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- DOCTORS -->
+        <!-- ================================================= -->
+
+        <div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+
+            {% for doctor in doctors %}
+
+                <article
+                    class="
+                        doctor-card
+                        reveal-up
+                        group
+                        transition-all
+                        duration-500
+                        hover:-translate-y-1
+                    "
+                >
+
+                    <!-- Card top -->
+
+                    <div class="flex items-start justify-between">
+
+                        <div class="doctor-avatar">
+                            {{ doctor.first_name|first }}{{ doctor.last_name|first }}
+                        </div>
+
+                        <span
+                            class="
+                                grid
+                                h-10
+                                w-10
+                                place-items-center
+                                rounded-xl
+                                bg-[#F7EAE0]
+                                text-[#1D4533]
+                                transition-all
+                                duration-300
+                                group-hover:rotate-6
+                            "
+                        >
+                            ✦
+                        </span>
+
+                    </div>
+
+
+                    <!-- Doctor name -->
+
+                    <h2
+                        class="
+                            mt-6
+                            text-xl
+                            font-black
+                            text-[#1D4533]
+                        "
+                    >
+                        {{ doctor.first_name }}
+                        {{ doctor.last_name }}
+                    </h2>
+
+
+                    <!-- Email -->
+
+                    <p
+                        class="
+                            mt-2
+                            truncate
+                            text-sm
+                            text-[#5E3122]/50
+                        "
+                    >
+                        {{ doctor.email }}
+                    </p>
+
+
+                    <!-- Rating -->
+
+                    {% if doctor.mean_rate %}
+
+                        <div
+                            class="
+                                mt-4
+                                flex
+                                items-center
+                                gap-2
+                            "
+                        >
+
+                            <span
+                                class="
+                                    rounded-full
+                                    bg-[#F9D2BA]/50
+                                    px-2.5
+                                    py-1
+                                    text-xs
+                                    font-black
+                                    text-[#5E3122]
+                                "
+                            >
+                                ★ {{ doctor.mean_rate|floatformat:1 }}
+                            </span>
+
+                            <span class="text-[11px] text-[#5E3122]/40">
+                                امتیاز کاربران
+                            </span>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- Specialities -->
+
+                    <div class="mt-5 flex flex-wrap gap-2">
+
+                        {% for speciality in doctor.specialities.all %}
+
+                            <span class="tag">
+                                {{ speciality.name }}
+                            </span>
+
+                        {% empty %}
+
+                            <span class="tag">
+                                پزشک
+                            </span>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- CTA -->
+
+                    <a
+                        href="{% url 'doctor_detail' doctor.pk %}"
+                        class="
+                            btn
+                            btn-outline
+                            mt-7
+                            w-full
+                            justify-center
+                            transition-all
+                            duration-300
+                            group-hover:border-[#1D4533]/20
+                        "
+                    >
+                        مشاهده پروفایل
+
+                        <span>
+                            ←
+                        </span>
+
+                    </a>
+
+                </article>
+
+            {% empty %}
+
+                <!-- Empty state -->
+
+                <div
+                    class="
+                        empty-state
+                        sm:col-span-2
+                        lg:col-span-3
+                        reveal-up
+                    "
+                >
+
+                    <span class="text-4xl">
+                        ⌕
+                    </span>
+
+                    <h2
+                        class="
+                            mt-4
+                            text-2xl
+                            font-black
+                            text-[#1D4533]
+                        "
+                    >
+                        نتیجه‌ای پیدا نشد
+                    </h2>
+
+                    <p
+                        class="
+                            mt-2
+                            text-sm
+                            text-[#5E3122]/55
+                        "
+                    >
+                        فیلترها یا عبارت جست‌وجو را تغییر بده و دوباره امتحان کن.
+                    </p>
+
+
+                    <a
+                        href="{% url 'doctors' %}"
+                        class="
+                            btn
+                            btn-outline
+                            mt-6
+                            inline-flex
+                        "
+                    >
+                        نمایش همه پزشکان
+                    </a>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- PAGINATION -->
+        <!-- ================================================= -->
+
+        {% if is_paginated %}
+
+            <div
+                class="
+                    mt-12
+                    flex
+                    flex-wrap
+                    items-center
+                    justify-center
+                    gap-2
+                "
+            >
+
+                <!-- Previous -->
+
+                {% if page_obj.has_previous %}
+
+                    <a
+                        href="?page={{ page_obj.previous_page_number }}{% if request.GET.speciality %}&speciality={{ request.GET.speciality|urlencode }}{% endif %}{% if request.GET.avg_rate %}&avg_rate={{ request.GET.avg_rate|urlencode }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
+                        class="
+                            grid
+                            h-10
+                            min-w-10
+                            place-items-center
+                            rounded-xl
+                            border
+                            border-[#1D4533]/10
+                            bg-white
+                            px-3
+                            text-sm
+                            font-bold
+                            text-[#1D4533]
+                            transition-all
+                            duration-300
+                            hover:-translate-x-0.5
+                            hover:bg-[#F7EAE0]
+                        "
+                        aria-label="صفحه قبل"
+                    >
+                        →
+                    </a>
+
+                {% endif %}
+
+
+                <!-- Page numbers -->
+
+                {% for num in page_obj.paginator.page_range %}
+
+                    {% if page_obj.number == num %}
+
+                        <span
+                            class="
+                                grid
+                                h-10
+                                min-w-10
+                                place-items-center
+                                rounded-xl
+                                bg-[#1D4533]
+                                px-3
+                                text-sm
+                                font-bold
+                                text-white
+                                shadow-sm
+                            "
+                        >
+                            {{ num }}
+                        </span>
+
+                    {% else %}
+
+                        <a
+                            href="?page={{ num }}{% if request.GET.speciality %}&speciality={{ request.GET.speciality|urlencode }}{% endif %}{% if request.GET.avg_rate %}&avg_rate={{ request.GET.avg_rate|urlencode }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
+                            class="
+                                grid
+                                h-10
+                                min-w-10
+                                place-items-center
+                                rounded-xl
+                                border
+                                border-[#1D4533]/10
+                                bg-white
+                                px-3
+                                text-sm
+                                font-bold
+                                text-[#1D4533]
+                                transition-all
+                                duration-300
+                                hover:bg-[#F7EAE0]
+                            "
+                        >
+                            {{ num }}
+                        </a>
+
+                    {% endif %}
+
+                {% endfor %}
+
+
+                <!-- Next -->
+
+                {% if page_obj.has_next %}
+
+                    <a
+                        href="?page={{ page_obj.next_page_number }}{% if request.GET.speciality %}&speciality={{ request.GET.speciality|urlencode }}{% endif %}{% if request.GET.avg_rate %}&avg_rate={{ request.GET.avg_rate|urlencode }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
+                        class="
+                            grid
+                            h-10
+                            min-w-10
+                            place-items-center
+                            rounded-xl
+                            border
+                            border-[#1D4533]/10
+                            bg-white
+                            px-3
+                            text-sm
+                            font-bold
+                            text-[#1D4533]
+                            transition-all
+                            duration-300
+                            hover:translate-x-0.5
+                            hover:bg-[#F7EAE0]
+                        "
+                        aria-label="صفحه بعد"
+                    >
+                        ←
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        {% endif %}
 
     </div>
 
-  </div>
-{% if is_paginated %}
-
-  <div class="mt-12 flex items-center justify-center gap-2">
-
-    <!-- Previous -->
-    {% if page_obj.has_previous %}
-
-      <a
-        href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
-        class="grid h-10 min-w-10 place-items-center rounded-xl border border-[#1D4533]/10 bg-white px-3 text-sm font-bold text-[#1D4533] transition hover:bg-[#F7EAE0]"
-        aria-label="صفحه قبل"
-      >
-        →
-      </a>
-
-    {% endif %}
-
-
-    <!-- Page numbers -->
-    {% for num in page_obj.paginator.page_range %}
-
-      {% if page_obj.number == num %}
-
-        <span
-          class="grid h-10 min-w-10 place-items-center rounded-xl bg-[#1D4533] px-3 text-sm font-bold text-white"
-        >
-          {{ num }}
-        </span>
-
-      {% else %}
-
-        <a
-          href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
-          class="grid h-10 min-w-10 place-items-center rounded-xl border border-[#1D4533]/10 bg-white px-3 text-sm font-bold text-[#1D4533] transition hover:bg-[#F7EAE0]"
-        >
-          {{ num }}
-        </a>
-
-      {% endif %}
-
-    {% endfor %}
-
-
-    <!-- Next -->
-    {% if page_obj.has_next %}
-
-      <a
-        href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q|urlencode }}{% endif %}"
-        class="grid h-10 min-w-10 place-items-center rounded-xl border border-[#1D4533]/10 bg-white px-3 text-sm font-bold text-[#1D4533] transition hover:bg-[#F7EAE0]"
-        aria-label="صفحه بعد"
-      >
-        ←
-      </a>
-
-    {% endif %}
-
-  </div>
-
-{% endif %}
 </section>
 
 {% endblock %}
-
