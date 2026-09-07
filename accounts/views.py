@@ -48,9 +48,6 @@ class LogingView(LoginView):
     def form_valid(self, form):
         response = super().form_valid(form)
         messages.success(self.request, "ورود با موفقیت انجام شد")
-        if not hasattr(self.request.user, "wallet"):
-            user = self.request.user
-            Wallet.objects.create(user=user)
         return response
 
 
