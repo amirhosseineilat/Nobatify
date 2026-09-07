@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
+
 class DoctorService:
 
     @staticmethod
@@ -21,25 +22,27 @@ class DoctorService:
     def send_reserved_notification(
         user: User, provider_name: str, appointment: Appointment, sender: Sender
     ):
+        jalali_date = appointment.date.strftime("%Y/%m/%d")
         message = f"""
 
-Hello,
+سلام،
 
-Your appointment has been successfully booked. ✅
+نوبت شما با موفقیت رزرو شد. ✅
 
-**Appointment Details:**
+**جزئیات نوبت:**
 
-* 👤 Name: { user.username }
-* 🏥 Service Provider: { provider_name }
-* 📅 Date: { appointment.date }
-* 🕐 Time: { appointment.time }
+* 👤 نام: {user.username}
+* 🏥 آدرس مطب: {appointment.doctor.address}
+* 📅 تاریخ: {jalali_date}
+* 🕐 ساعت: {appointment.start_time}
 
-Please make sure to arrive at the scheduled location on the specified date and time.
+لطفاً در تاریخ و ساعت مشخص‌شده در محل ارائه خدمات حضور داشته باشید.
 
-If you need to cancel or reschedule your appointment, you can do so through your account.
+در صورتی که نیاز به لغو یا تغییر زمان نوبت خود دارید، می‌توانید از طریق حساب کاربری خود اقدام کنید.
 
-Thank you,
-**The Nobatify Team**
+با تشکر،
+**تیم Nobatify**
 
-    """
+"""
+
         sender.send_notification(user, message)

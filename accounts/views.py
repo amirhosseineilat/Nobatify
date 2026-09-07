@@ -46,8 +46,12 @@ class LogingView(LoginView):
     success_url = reverse_lazy("home")
 
     def form_valid(self, form):
+        response = super().form_valid(form)
         messages.success(self.request, "ورود با موفقیت انجام شد")
-        return super().form_valid(form)
+        if not hasattr(self.request.user, "wallet"):
+            user = self.request.user
+            Wallet.objects.create(user=user)
+        return response
 
 
 class LogingoutView(LogoutView):
@@ -165,13 +169,13 @@ class Walletview(LoginRequiredMixin, DetailView):
             return wallet
 
 
-class CardListView(LoginRequiredMixin,ListView):
+class CardListView(LoginRequiredMixin, ListView):
     model = Card
     template_name = "accounts/mycard.html"
     context_object_name = "cards"
 
 
-class CreateCardView(LoginRequiredMixin,CreateView):
+class CreateCardView(LoginRequiredMixin, CreateView):
     model = Card
     template_name = "accounts/createcard.html"
     form_class = CardForm
@@ -185,7 +189,7 @@ class CreateCardView(LoginRequiredMixin,CreateView):
         return super().form_valid(form)
 
 
-class RemoveCardView(LoginRequiredMixin,DeleteView):
+class RemoveCardView(LoginRequiredMixin, DeleteView):
     model = Card
     success_url = reverse_lazy("mycards")
 
@@ -195,7 +199,7 @@ class RemoveCardView(LoginRequiredMixin,DeleteView):
         return redirect(self.success_url)
 
 
-class EditCardView(LoginRequiredMixin,UpdateView):
+class EditCardView(LoginRequiredMixin, UpdateView):
     model = Card
     form_class = CardForm
     template_name = "accounts/createcard.html"
@@ -234,4 +238,3 @@ class ChargeWalletView(View):
 
 class Home(TemplateView):
     template_name = "home.html"
-
