@@ -1,30 +1,402 @@
-<footer class="border-t border-[#5E3122]/10 bg-[#1D4533] text-[#F7EAE0]">
+<footer class="border-t border-[#F7EAE0]/10 bg-[#1D4533] text-[#F7EAE0]">
+
     <div class="mx-auto max-w-7xl px-5 py-16 md:px-8">
-        <div class="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr]">
+
+        <!-- =========================
+             Main Footer
+        ========================== -->
+
+        <div
+            class="
+                grid gap-12
+                sm:grid-cols-2
+                lg:grid-cols-[1.4fr_0.7fr_0.7fr]
+                lg:gap-20
+            "
+        >
+
+            <!-- Brand -->
+
             <div>
-                <div class="mb-5 flex items-center gap-3">
-                    <span class="grid h-11 w-11 place-items-center rounded-2xl bg-[#F9D2BA] font-black text-[#1D4533]">N</span>
-                    <span class="text-xl font-black">Nobatify</span>
+
+                <div class="flex items-center gap-3">
+
+                    <span
+                        class="
+                            grid h-12 w-12
+                            place-items-center
+                            rounded-2xl
+                            bg-[#F9D2BA]
+                            text-lg
+                            font-black
+                            text-[#1D4533]
+                            shadow-[0_8px_25px_rgba(0,0,0,.12)]
+                        "
+                    >
+                        N
+                    </span>
+
+                    <div>
+
+                        <span
+                            class="
+                                block
+                                text-xl
+                                font-black
+                                tracking-tight
+                            "
+                        >
+                            Nobatify
+                        </span>
+
+                        <span
+                            class="
+                                mt-0.5
+                                block
+                                text-[10px]
+                                font-bold
+                                tracking-wider
+                                text-[#F9D2BA]/70
+                            "
+                        >
+                            SMART APPOINTMENT
+                        </span>
+
+                    </div>
+
                 </div>
-                <p class="max-w-md text-sm leading-8 text-[#F7EAE0]/65">
-                    تجربه‌ای ساده برای پیدا کردن پزشک و رزرو نوبت؛ بدون تماس‌های اضافه، بدون صف‌های بی‌پایان.
+
+
+                <p
+                    class="
+                        mt-6
+                        max-w-md
+                        text-sm
+                        leading-8
+                        text-[#F7EAE0]/55
+                    "
+                >
+                    تجربه‌ای ساده برای پیدا کردن پزشک و رزرو نوبت؛
+                    بدون تماس‌های اضافه و بدون صف‌های بی‌پایان.
                 </p>
-            </div>
-            <div>
-                <h3 class="mb-5 font-bold">دسترسی سریع</h3>
-                <div class="grid gap-3 text-sm text-[#F7EAE0]/65">
-                    <a class="footer-link" href="{% url 'doctors' %}">پیدا کردن پزشک</a>
-                    <a class="footer-link" href="{% url 'appointment' %}">مشاهده نوبت‌ها</a>
-                    <a class="footer-link" href="{% url 'register' %}">ثبت‌نام</a>
+
+
+                <!-- Small Trust Badge -->
+
+                <div
+                    class="
+                        mt-6
+                        inline-flex
+                        items-center
+                        gap-2
+                        rounded-full
+                        border
+                        border-[#F7EAE0]/10
+                        bg-white/[0.03]
+                        px-4
+                        py-2
+                    "
+                >
+
+                    <span
+                        class="
+                            h-2
+                            w-2
+                            rounded-full
+                            bg-[#F9D2BA]
+                            shadow-[0_0_0_4px_rgba(249,210,186,.08)]
+                        "
+                    ></span>
+
+                    <span
+                        class="
+                            text-[11px]
+                            font-bold
+                            text-[#F7EAE0]/50
+                        "
+                    >
+                        رزرو آسان، سریع و مطمئن
+                    </span>
+
                 </div>
+
             </div>
+
+
+            <!-- About / Contact -->
+
             <div>
-                <h3 class="mb-5 font-bold">Nobatify</h3>
-                <p class="text-sm leading-7 text-[#F7EAE0]/65">ساخته شده برای یک کار مشخص: رزرو نوبت، با کمترین اصطکاک.</p>
+
+                <h3
+                    class="
+                        mb-6
+                        text-sm
+                        font-black
+                        text-[#F7EAE0]
+                    "
+                >
+                    درباره Nobatify
+                </h3>
+
+
+                <nav
+                    class="flex flex-col gap-4"
+                    aria-label="درباره Nobatify"
+                >
+
+                    <a
+                        href="#"
+                        class="
+                            group
+                            flex
+                            items-center
+                            justify-between
+                            text-sm
+                            text-[#F7EAE0]/55
+                            transition-all
+                            duration-300
+                            hover:text-[#F9D2BA]
+                        "
+                    >
+
+                        <span>
+                            درباره ما
+                        </span>
+
+                        <span
+                            class="
+                                opacity-0
+                                -translate-x-2
+                                text-[#F9D2BA]
+                                transition-all
+                                duration-300
+                                group-hover:translate-x-0
+                                group-hover:opacity-100
+                            "
+                        >
+                            ←
+                        </span>
+
+                    </a>
+
+
+                    <a
+                        href="#"
+                        class="
+                            group
+                            flex
+                            items-center
+                            justify-between
+                            text-sm
+                            text-[#F7EAE0]/55
+                            transition-all
+                            duration-300
+                            hover:text-[#F9D2BA]
+                        "
+                    >
+
+                        <span>
+                            تماس با ما
+                        </span>
+
+                        <span
+                            class="
+                                opacity-0
+                                -translate-x-2
+                                text-[#F9D2BA]
+                                transition-all
+                                duration-300
+                                group-hover:translate-x-0
+                                group-hover:opacity-100
+                            "
+                        >
+                            ←
+                        </span>
+
+                    </a>
+
+                </nav>
+
             </div>
+
+
+            <!-- Quick Access -->
+
+            <div>
+
+                <h3
+                    class="
+                        mb-6
+                        text-sm
+                        font-black
+                        text-[#F7EAE0]
+                    "
+                >
+                    دسترسی سریع
+                </h3>
+
+
+                <nav
+                    class="flex flex-col gap-4"
+                    aria-label="دسترسی سریع"
+                >
+
+                    <a
+                        href="{% url 'doctors' %}"
+                        class="
+                            group
+                            flex
+                            items-center
+                            justify-between
+                            text-sm
+                            text-[#F7EAE0]/55
+                            transition-all
+                            duration-300
+                            hover:text-[#F9D2BA]
+                        "
+                    >
+
+                        <span>
+                            پیدا کردن پزشک
+                        </span>
+
+                        <span
+                            class="
+                                opacity-0
+                                -translate-x-2
+                                text-[#F9D2BA]
+                                transition-all
+                                duration-300
+                                group-hover:translate-x-0
+                                group-hover:opacity-100
+                            "
+                        >
+                            ←
+                        </span>
+
+                    </a>
+
+
+                    <a
+                        href="{% url 'appointment' %}"
+                        class="
+                            group
+                            flex
+                            items-center
+                            justify-between
+                            text-sm
+                            text-[#F7EAE0]/55
+                            transition-all
+                            duration-300
+                            hover:text-[#F9D2BA]
+                        "
+                    >
+
+                        <span>
+                            مشاهده نوبت‌ها
+                        </span>
+
+                        <span
+                            class="
+                                opacity-0
+                                -translate-x-2
+                                text-[#F9D2BA]
+                                transition-all
+                                duration-300
+                                group-hover:translate-x-0
+                                group-hover:opacity-100
+                            "
+                        >
+                            ←
+                        </span>
+
+                    </a>
+
+
+                    <a
+                        href="{% url 'register' %}"
+                        class="
+                            group
+                            flex
+                            items-center
+                            justify-between
+                            text-sm
+                            text-[#F7EAE0]/55
+                            transition-all
+                            duration-300
+                            hover:text-[#F9D2BA]
+                        "
+                    >
+
+                        <span>
+                            ثبت‌نام
+                        </span>
+
+                        <span
+                            class="
+                                opacity-0
+                                -translate-x-2
+                                text-[#F9D2BA]
+                                transition-all
+                                duration-300
+                                group-hover:translate-x-0
+                                group-hover:opacity-100
+                            "
+                        >
+                            ←
+                        </span>
+
+                    </a>
+
+                </nav>
+
+            </div>
+
         </div>
-        <div class="mt-14 border-t border-[#F7EAE0]/10 pt-6 text-xs text-[#F7EAE0]/40">
-            © {% now "Y" %} Nobatify — All rights reserved.
+
+
+        <!-- =========================
+             Bottom
+        ========================== -->
+
+        <div
+            class="
+                mt-14
+                border-t
+                border-[#F7EAE0]/10
+                pt-7
+                text-center
+            "
+        >
+
+            <p
+                class="
+                    text-xs
+                    leading-7
+                    text-[#F7EAE0]/40
+                "
+            >
+                ساخته شده برای یک کار مشخص:
+                <span class="font-bold text-[#F7EAE0]/55">
+                    رزرو نوبت، با کمترین اصطکاک.
+                </span>
+            </p>
+
+
+            <p
+                class="
+                    mt-3
+                    text-[11px]
+                    font-medium
+                    tracking-wide
+                    text-[#F7EAE0]/25
+                "
+            >
+                © {% now "Y" %} Nobatify — All rights reserved.
+            </p>
+
         </div>
+
     </div>
+
 </footer>
