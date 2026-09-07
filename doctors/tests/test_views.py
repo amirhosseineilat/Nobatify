@@ -6,6 +6,9 @@ from appointments.models import TimeSlot, Appointment
 from django_jalali.db import models as jmodels
 from django.contrib.auth import get_user_model
 from doctors.forms import CommentForm
+from datetime import time, timedelta
+import datetime
+
 
 User = get_user_model()
 
@@ -36,37 +39,40 @@ class DoctorDetailViewTestCase(TestCase):
             )
             cls.doctor.specialities.add(cls.speciality)
             
-            now = timezone.now()
+            tomorrow = timezone.localdate() + timedelta(days=1)
         
         
             cls.available_slot_1 = TimeSlot.objects.create(
                 doctor=cls.doctor,
-                start_time=now + timezone.timedelta(days=1, hours=9),
-                end_time=now + timezone.timedelta(days=1, hours=10),
+                date=tomorrow, start_time=time(9, 0),
+                end_time=time(10, 0),
                 is_reserved=False
             )
             
             
             cls.available_slot_2 = TimeSlot.objects.create(
                 doctor=cls.doctor,
-                start_time=now + timezone.timedelta(days=1, hours=10),
-                end_time=now + timezone.timedelta(days=1, hours=11),
+                date=tomorrow, 
+                start_time=time(10, 0),
+                end_time=time(11, 0),
                 is_reserved=False
             )
             
             
             cls.booked_slot = TimeSlot.objects.create(
                 doctor=cls.doctor,
-                start_time=now + timezone.timedelta(days=1, hours=11),
-                end_time=now + timezone.timedelta(days=1, hours=12),
+                date=tomorrow,
+                start_time=time(11, 0),
+                end_time=time(12, 0),
                 is_reserved=False
             )
             
             
             cls.appointment = Appointment.objects.create(
+                doctor=cls.doctor,
                 patient=cls.user,
                 time_slot=cls.booked_slot,
-                status='confirmed'
+                
             )
             
             cls.url = reverse("doctor_detail", kwargs={"pk": cls.doctor.pk})
@@ -119,10 +125,14 @@ class DoctorDetailViewTestCase(TestCase):
     def test_detail_view_contains_doctor_info(self):
         url = reverse("doctor_detail", kwargs={"pk": self.doctor.pk})
         response = self.client.get(url)
+        
+        doctor_from_db = Doctor.objects.get(pk=self.doctor.pk)
+        expected_date = str(doctor_from_db.birth_date)
+
         self.assertContains(response, self.doctor.first_name)
         self.assertContains(response, self.doctor.last_name)
         self.assertContains(response, self.doctor.email)
-        self.assertContains(response, str(self.doctor.birth_date))
+        self.assertContains(response, expected_date)
         self.assertContains(response, self.doctor.medical_license_number)
         self.assertContains(response, self.doctor.phone)
         self.assertContains(response, self.doctor.address)
