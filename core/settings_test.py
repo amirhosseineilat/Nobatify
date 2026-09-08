@@ -1,7 +1,8 @@
+# settings_test.py
 from core.settings import *
 
 # ==========================================
-# Test Database
+# Test Database - override تنظیمات اصلی
 # ==========================================
 
 DATABASES = {

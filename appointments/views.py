@@ -6,7 +6,7 @@ from .forms import TimeSlotForm
 from doctors.models import Doctor
 from .models import Appointment,TimeSlot
 from django.contrib.auth.mixins import LoginRequiredMixin
-from account.models import Wallet
+from accounts.models import Wallet
 from decimal import Decimal
 from django.db import transaction
 
