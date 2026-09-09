@@ -1,17 +1,18 @@
 from django.contrib import messages
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
-from django.views.generic import ListView, DetailView,CreateView
+from django.views.generic import ListView, DetailView, CreateView
 from .forms import TimeSlotForm
 from doctors.models import Doctor
-from .models import Appointment,TimeSlot
+from .models import Appointment, TimeSlot
 from django.contrib.auth.mixins import LoginRequiredMixin
 from accounts.models import Wallet
 from decimal import Decimal
 from django.db import transaction
 
+
 # Create your views here.
-#base view
+# base view
 class BaseTimeSlotListView(ListView):
 
     context_object_name = "timeslots"
@@ -34,13 +35,19 @@ class BaseTimeSlotListView(ListView):
 
         return context
 
+
 class BaseTimeSlotDetailView(DetailView):
     model = TimeSlot
     context_object_name = "timeslot"
+
+
 class BaseTimeSlotCreateView(CreateView):
     model = TimeSlot
     form_class = TimeSlotForm
-#public view
+
+
+# public view
+
 
 class TimeSlotListView(BaseTimeSlotListView):
     template_name = "appointments/timeslot_list.html"
@@ -52,28 +59,33 @@ class MyAppointmentListView(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return Appointment.objects.filter(patient=self.request.user).select_related(
-            "doctor"
-        ).select_related("time_slot")
+        return (
+            Appointment.objects.filter(patient=self.request.user)
+            .select_related("doctor")
+            .select_related("time_slot")
+        )
 
 
 class AppointmentBookView(LoginRequiredMixin, View):
 
     def post(self, request, pk):
-        timeslot = get_object_or_404(TimeSlot,pk=pk,is_reserved=False)
-        wallet = get_object_or_404(Wallet,user=request.user)
+        timeslot = get_object_or_404(TimeSlot, pk=pk, is_reserved=False)
+        wallet = get_object_or_404(Wallet, user=request.user)
 
         if wallet.balance < timeslot.price:
-            return redirect("send_info_payment"), messages.success(request,"کیف دول خود را شار کنید")
+            return redirect("send_info_payment"), messages.success(
+                request, "کیف دول خود را شار کنید"
+            )
 
         with transaction.atomic():
-            appointment = Appointment(doctor=timeslot.doctor,time_slot=timeslot,patient=request.user)
+            appointment = Appointment(
+                doctor=timeslot.doctor, time_slot=timeslot, patient=request.user
+            )
             timeslot.is_reserved = True
             appointment.save()
             wallet.balance = wallet.balance - Decimal(timeslot.price)
             wallet.save()
             timeslot.save()
-            
 
             messages.success(request, "رزرو شما با موفقیت انجاام ")
 
@@ -89,7 +101,7 @@ class AppointmentCancelView(LoginRequiredMixin, View):
             appointment.delete()
             timeslot.is_reserved = False
             timeslot.save()
-        except Exception as e :
+        except Exception as e:
             print(e)
 
         messages.success(request, "Appointment cancelled successfully.")
