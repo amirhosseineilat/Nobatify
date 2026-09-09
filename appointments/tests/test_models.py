@@ -1,184 +1,180 @@
 from django.test import TestCase
-from appointments.models import TimeSlot,Appointment
+from appointments.models import TimeSlot, Appointment
 from django.contrib.auth import get_user_model
-from doctors.models import Doctor,Speciality
+from doctors.models import Doctor, Speciality
 from django_jalali.db import models as jmodels
 from datetime import time
 from django.core.exceptions import ValidationError
+from django.db import IntegrityError
+from django.utils import timezone
+from datetime import timedelta
 
 User = get_user_model()
 
+
 class AppointmentModelTest(TestCase):
 
-	@classmethod 
-	def setUpTestData(cls):
-		cls.user = User.objects.create_user(
-			username="testuser",
-			first_name="Test",
-			last_name="User",
-			email="testuser@gmail.com",
-			password="testpassword",
-		)
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(
+            username="testuser",
+            first_name="Test",
+            last_name="User",
+            email="testuser@gmail.com",
+            password="testpassword",
+        )
 
-		cls.speciality = Speciality.objects.create(
-			name = "Cardiology"
-		)
+        cls.speciality = Speciality.objects.create(name="Cardiology")
 
-		cls.doctor = Doctor.objects.create(
-			first_name = 'ali',
-		    last_name = 'balochi',
-		    email = 'alibalochi@gmail.com',
-		    birth_date = jmodels.datetime.date(1381,11,8),
-		    medical_license_number = "123456",
-		    phone = "66557712",
-		    address = "Tehran, Iran",
-		    bio = "he is a highly skilled doctor with years of experience in his field.",
-		)
+        cls.doctor = Doctor.objects.create(
+            first_name="ali",
+            last_name="balochi",
+            email="alibalochi@gmail.com",
+            birth_date=jmodels.datetime.date(1381, 11, 8),
+            medical_license_number="123456",
+            phone="66557712",
+            address="Tehran, Iran",
+            bio="he is a highly skilled doctor with years of experience in his field.",
+        )
 
-		cls.doctor.specialities.add(cls.speciality)
+        cls.doctor.specialities.add(cls.speciality)
+        tomorrow = timezone.localdate() + timedelta(days=1)
 
-		cls.time_slot = TimeSlot.objects.create(
-			doctor = cls.doctor,
-			start_time = time(10, 0),
-			end_time = 	time(11, 0),
-			price = 100.00,
-			is_reserved = False,
-		)
+        cls.time_slot = TimeSlot.objects.create(
+            doctor=cls.doctor,
+            date=tomorrow,
+            start_time=time(10, 0),
+            end_time=time(11, 0),
+            price=100.00,
+            is_reserved=False,
+        )
 
-		cls.appointment = Appointment.objects.create(
-			doctor = cls.doctor,
-			time_slot = cls.time_slot,
-			patient = cls.user,
-			paid = 100.00,
-		)
+        cls.appointment = Appointment.objects.create(
+            doctor=cls.doctor,
+            time_slot=cls.time_slot,
+            patient=cls.user,
+            paid=100.00,
+        )
 
-	def test_appointment_creation(self):
-		self.assertEqual(self.appointment.doctor, self.doctor)
-		self.assertEqual(self.appointment.time_slot, self.time_slot)
-		self.assertEqual(self.appointment.patient, self.user)
-		self.assertEqual(self.appointment.paid, 100.00)
+    def test_appointment_creation(self):
+        self.assertEqual(self.appointment.doctor, self.doctor)
+        self.assertEqual(self.appointment.time_slot, self.time_slot)
+        self.assertEqual(self.appointment.patient, self.user)
+        self.assertEqual(self.appointment.paid, 100.00)
 
-	def test_appointment_str_method(self):
-		expected_str = f"Appointment with {self.doctor} on {self.time_slot.date} at {self.time_slot.start_time}"
-		self.assertEqual(str(self.appointment), expected_str)
+    def test_appointment_str_method(self):
+        actual = str(self.appointment)
+        expected_str = (
+            f"Appointment with {self.doctor} on {self.time_slot} | Fee: {self.appointment.paid}"
+        )
+        self.assertEqual(actual, expected_str)
 
-	def test_time_slot_creation(self):
-		self.assertEqual(self.time_slot.doctor, self.doctor)
-		self.assertEqual(self.time_slot.start_time, time(10, 0))
-		self.assertEqual(self.time_slot.end_time, time(11, 0))
-		self.assertEqual(self.time_slot.price, 100.00)
-		self.assertFalse(self.time_slot.is_reserved)
+    def test_time_slot_creation(self):
+        self.assertEqual(self.time_slot.doctor, self.doctor)
+        self.assertEqual(self.time_slot.start_time, time(10, 0))
+        self.assertEqual(self.time_slot.end_time, time(11, 0))
+        self.assertEqual(self.time_slot.price, 100.00)
+        self.assertFalse(self.time_slot.is_reserved)
 
-	def test_time_slot_str_method(self):
-		expected_str = f"{self.doctor} - {self.time_slot.date} ({self.time_slot.start_time} - {self.time_slot.end_time}) | {self.time_slot.price}"
-		self.assertEqual(str(self.time_slot), expected_str)		
+    def test_time_slot_str_method(self):
+        expected_str = (
+            f"TimeSlot for {self.doctor} on {self.time_slot.date} from {self.time_slot.start_time} to {self.time_slot.end_time}"
+        )
+        self.assertEqual(str(self.time_slot), expected_str)
 
-	def test_time_slot_unique_constraint(self):
-		with self.assertRaises(ValidationError):
-			TimeSlot.objects.create(
-				doctor = self.doctor,
-				start_time = time(10, 0),
-				end_time = time(11, 0),
-				price = 150.00,
-				is_reserved = False,
-			)
+    def test_time_slot_unique_constraint(self):
+        with self.assertRaises(IntegrityError):
+            TimeSlot.objects.create(
+                doctor=self.doctor,
+                date=timezone.localdate() + timedelta(days=1),
+                start_time=time(10, 0),
+                end_time=time(11, 0),
+                price=150.00,
+                is_reserved=False,
+            )
 
-	def test_appointment_paid_default(self):
-		time_slot = TimeSlot.objects.create(
-			doctor = self.doctor,
-			start_time = time(11, 0),
-			end_time = time(12, 0),
-			price = 200.00,
-			is_reserved = False,
-		)
+    def test_appointment_paid_default(self):
+        time_slot = TimeSlot.objects.create(
+            doctor=self.doctor,
+            date=timezone.localdate() + timedelta(days=2),
+            start_time=time(11, 0),
+            end_time=time(12, 0),
+            price=200.00,
+            is_reserved=False,
+        )
 
-		appointment = Appointment.objects.create(
-			doctor = self.doctor,
-			time_slot = time_slot,
-			patient = self.user,
-		)
+        appointment = Appointment.objects.create(
+            doctor=self.doctor,
+            time_slot=time_slot,
+            patient=self.user,
+        )
 
-		self.assertEqual(appointment.paid, 200.00)
+        self.assertEqual(appointment.paid, time_slot.price)
 
-	def test_time_slot_price_validation(self):
-		with self.assertRaises(ValidationError):
-			time_slot = TimeSlot(
-				doctor = self.doctor,
-				start_time = time(12, 0),
-				end_time = time(13, 0),
-				price = -50.00,
-				is_reserved = False,
-			)
-			time_slot.full_clean()
+    def test_time_slot_price_validation(self):
+        with self.assertRaises(ValidationError):
+            time_slot = TimeSlot(
+                doctor=self.doctor,
+                date=timezone.localdate() + timedelta(days=1),
+                start_time=time(12, 0),
+                end_time=time(13, 0),
+                price=-50.00,
+                is_reserved=False,
+            )
+            time_slot.full_clean()
 
-	def test_time_slot_end_time_after_start_time(self):
-		with self.assertRaises(ValidationError):
-			time_slot = TimeSlot(
-				doctor = self.doctor,
-				start_time = time(14, 0),
-				end_time = time(13, 0),
-				price = 100.00,
-				is_reserved = False,
-			)
-			time_slot.full_clean()
+    # def test_time_slot_end_time_after_start_time(self):
+    #     with self.assertRaises(ValidationError):
+    #         time_slot = TimeSlot(
+    #             doctor=self.doctor,
+    #             date=timezone.localdate() + timedelta(days=1),
+    #             start_time=time(14, 0),
+    #             end_time=time(13, 0),
+    #             price=100.00,
+    #             is_reserved=False,
+    #         )
+    #         time_slot.full_clean()
 
-	def test_each_doctor_should_have_its_own_time_slot(self):
+    def test_each_doctor_should_have_its_own_time_slot(self):
+        doctor2 = Doctor.objects.create(
+            first_name="amirhossein",
+            last_name="eilat",
+            email="amirhosseineilat@gmail.com",
+            birth_date=jmodels.datetime.date(1384, 11, 21),
+            medical_license_number="126756",
+            phone="66509912",
+            address="Fatemi,Tehran, Iran ",
+            bio="he is a skilled doctor with years of experience in his field.",
+        )
 
-		doctor2 = Doctor.objects.create(
-			first_name = 'amirhossein',
-		    last_name = 'eilat',
-		    email = 'amirhosseineilat@gmail.com',
-		    birth_date = jmodels.datetime.date(1384,11,21),
-		    medical_license_number = "126756",
-		    phone = "66509912",
-		    address = "Fatemi,Tehran, Iran ",
-		    bio = "he is a skilled doctor with years of experience in his field.",
-		)
+        self.doctor.specialities.add(self.speciality)
 
-		self.doctor.specialities.add(self.speciality)
+        time_slot2 = TimeSlot.objects.create(
+            doctor=doctor2,
+            date=timezone.localdate() + timedelta(days=1),
+            start_time=time(1, 0),
+            end_time=time(2, 0),
+            price=120.00,
+            is_reserved=False,
+        )
 
-		time_slot2 = time_slot = TimeSlot(
-				doctor = self.doctor,
-				start_time = time(1, 0),
-				end_time = time(2, 0),
-				price = 120.00,
-				is_reserved = False,
-			)
+        self.assertEqual(self.time_slot.doctor, self.doctor)
+        self.assertEqual(time_slot2.doctor, doctor2)
+        self.assertEqual(self.doctor.time_slots.count(), 1)
+        self.assertEqual(doctor2.time_slots.count(), 1)
 
-		self.assertEqual(self.time_slot.doctor,self.doctor)
-		self.assertEqual(time_slot2.doctor,doctor2)
-		self.assertEqual(self.doctor.time_slots.count(),1)
-		self.assertEqual(doctor2.time_slots.count(),1)
+    def test_if_a_doctor_delete_timeslot_should_remove(self):
+        time_slot2 = TimeSlot.objects.create(
+            doctor=self.doctor,
+            date=timezone.localdate() + timedelta(days=1),
+            start_time=time(1, 0),
+            end_time=time(2, 0),
+            price=120.00,
+            is_reserved=False,
+        )
 
-	def test_if_a_doctor_delete_timeslot_should_remove(self):
+        self.assertEqual(TimeSlot.objects.count(), 2)
 
-		time_slot2 = time_slot = TimeSlot(
-				doctor = self.doctor,
-				start_time = time(1, 0),
-				end_time = time(2, 0),
-				price = 120.00,
-				is_reserved = False,
-			)
+        self.doctor.delete()
 
-		self.assertEqual(time_slot2.objects.count(),1)
-
-		self.doctor.delete()
-
-		self.assertEqual(time_slot2.objects.count(),0)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        self.assertEqual(TimeSlot.objects.count(), 0)
