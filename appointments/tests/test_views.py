@@ -113,3 +113,11 @@ class AppointmentViewTest(TestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 404)
+
+    def test_book_appointment_view_invalid_time_slot(self):     
+        self.client.login(username="testuser", password="testpassword")
+        invalid_time_slot_id = 999
+        url = reverse("appointment_book", args=[invalid_time_slot_id])
+        response = self.client.post(url)
+
+        self.assertEqual(response.status_code, 404)
