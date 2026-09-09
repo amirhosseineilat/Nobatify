@@ -59,9 +59,11 @@ class AppointmentViewTest(TestCase):
         url = reverse("appointment") 
         response = self.client.get(url)
         time_slots = response.context['timeslots']
+        selected_doctor = response.context.get('selected_doctor')
 
         self.assertEqual(response.status_code,200)
         self.assertIn('timeslots',response.context)
+        self.assertIsNone(selected_doctor)
         self.assertEqual(time_slots.count(),1)
         self.assertTemplateUsed(response,'appointments/timeslot_list.html')
 
@@ -69,8 +71,20 @@ class AppointmentViewTest(TestCase):
 
         url = reverse("my_appointment")
         response = self.client.get(url)
-        timeslot = response.context['timeslot']
+        appointments = response.context['appointments']
 
         self.assertEqual(response.status_code,200)
-        self.assertIn('timeslot',response.context)
-        self.assertEqual()
+        self.assertIn('appointments',response.context)
+        self.assertEqual(appointments.count(),1)
+        self.assertTemplateUsed(response,'appointments/my_appointment_list.html')
+        self.assertEqual(appointments.first(),self.appointment)
+
+    
+    def test_book_appointment_view(self):
+        self.client.login(username='testuser', password='testpassword')
+        url = reverse("appointment_book", args=[self.time_slot.pk])
+        response = self.client.post(url)
+
+        self.assertEqual(response.status_code, 302) 
+        self.time_slot.refresh_from_db()
+        self.assertTrue(self.time_slot.is_reserved)
