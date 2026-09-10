@@ -1,0 +1,13 @@
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.env
+.venv
+venv/
+.git
+.gitignore
+db.sqlite3
+.pytest_cache
+.coverage
+htmlcov
