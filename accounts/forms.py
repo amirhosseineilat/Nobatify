@@ -7,9 +7,10 @@ from django.contrib.auth.forms import (
     SetPasswordForm,
 )
 from django.contrib.auth import get_user_model
-from .models import Card , Wallet
+from .models import Card, Wallet
 
 User = get_user_model()
+
 
 class RegistrationForm(UserCreationForm):
 
@@ -26,28 +27,38 @@ class RegistrationForm(UserCreationForm):
         ]
 
         widgets = {
-            "username": forms.TextInput(attrs={
-                "placeholder": "نام کاربری",
-            }),
-
-            "email": forms.EmailInput(attrs={
-                "placeholder": "ایمیل",
-            }),
-
-            "first_name": forms.TextInput(attrs={
-                "placeholder": "نام",
-            }),
-
-            "last_name": forms.TextInput(attrs={
-                "placeholder": "نام خانوادگی",
-            }),
+            "username": forms.TextInput(
+                attrs={
+                    "placeholder": "نام کاربری",
+                }
+            ),
+            "email": forms.EmailInput(
+                attrs={
+                    "placeholder": "ایمیل",
+                }
+            ),
+            "first_name": forms.TextInput(
+                attrs={
+                    "placeholder": "نام",
+                }
+            ),
+            "last_name": forms.TextInput(
+                attrs={
+                    "placeholder": "نام خانوادگی",
+                }
+            ),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["password1"].help_text = "Your password can’t be too similar..."
-        self.fields["password2"].help_text = "Your password must contain at least 8 characters..."
+        self.fields["password1"].help_text = (
+            "رمز شما  نباید شبیه به نام کاربری یا ایمیل شما باشد ."
+        )
+        self.fields["password2"].help_text = "رمز شما نباید کمتر از ۸ کاراکتر باشد "
+        self.fields["username"].help_text = (
+            "الزامی است. حداکثر ۱۵۰ کاراکتر. فقط حروف، اعداد و این کاراکترها مجاز هستند: `@` `/` `.` `+` `-` `_`"
+        )
 
 
 class LoginForm(AuthenticationForm):
@@ -73,21 +84,17 @@ class CardForm(forms.ModelForm):
         min_length=16,
         validators=[
             RegexValidator(
-                regex=r'^\d{16}$',
-                message='شماره کارت باید دقیقاً ۱۶ رقم باشد.'
+                regex=r"^\d{16}$", message="شماره کارت باید دقیقاً ۱۶ رقم باشد."
             )
-        ]
+        ],
     )
 
     cvv2 = forms.CharField(
         min_length=3,
         max_length=4,
         validators=[
-            RegexValidator(
-                regex=r'^\d{3,4}$',
-                message='CVV2 باید ۳ یا ۴ رقم باشد.'
-            )
-        ]
+            RegexValidator(regex=r"^\d{3,4}$", message="CVV2 باید ۳ یا ۴ رقم باشد.")
+        ],
     )
 
     month = forms.CharField(
@@ -95,10 +102,9 @@ class CardForm(forms.ModelForm):
         min_length=2,
         validators=[
             RegexValidator(
-                regex=r'^(0[1-9]|1[0-2])$',
-                message='ماه باید بین 01 تا 12 باشد.'
+                regex=r"^(0[1-9]|1[0-2])$", message="ماه باید بین 01 تا 12 باشد."
             )
-        ]
+        ],
     )
 
     day = forms.CharField(
@@ -106,18 +112,17 @@ class CardForm(forms.ModelForm):
         min_length=2,
         validators=[
             RegexValidator(
-                regex=r'^(0[1-9]|[12][0-9]|3[01])$',
-                message='روز باید بین 01 تا 31 باشد.'
+                regex=r"^(0[1-9]|[12][0-9]|3[01])$",
+                message="روز باید بین 01 تا 31 باشد.",
             )
-        ]
+        ],
     )
 
     class Meta:
         model = Card
         fields = [
-            'card_number',
-            'cvv2',
-            'month',
-            'day',
+            "card_number",
+            "cvv2",
+            "month",
+            "day",
         ]
-

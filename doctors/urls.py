@@ -4,6 +4,7 @@ from .views import (
     DoctorDetailView,
     CommentCreateView,
     SearchDoctorView,
+    FilterDoctorView,
 )
 
 urlpatterns = [
@@ -15,4 +16,5 @@ urlpatterns = [
         CommentCreateView.as_view(),
         name="add_comment",
     ),
+    path("filter/", FilterDoctorView.as_view(), name="doctor_filter"),
 ]

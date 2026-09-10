@@ -46,8 +46,9 @@ class LogingView(LoginView):
     success_url = reverse_lazy("home")
 
     def form_valid(self, form):
+        response = super().form_valid(form)
         messages.success(self.request, "ورود با موفقیت انجام شد")
-        return super().form_valid(form)
+        return response
 
 
 class LogingoutView(LogoutView):
@@ -165,46 +166,6 @@ class Walletview(LoginRequiredMixin, DetailView):
             return wallet
 
 
-class CardListView(LoginRequiredMixin,ListView):
-    model = Card
-    template_name = "accounts/mycard.html"
-    context_object_name = "cards"
-
-
-class CreateCardView(LoginRequiredMixin,CreateView):
-    model = Card
-    template_name = "accounts/createcard.html"
-    form_class = CardForm
-    success_url = reverse_lazy("mycards")
-
-    def form_valid(self, form):
-        wallet, created = Wallet.objects.get_or_create(user=self.request.user)
-
-        form.instance.wallet = wallet
-
-        return super().form_valid(form)
-
-
-class RemoveCardView(LoginRequiredMixin,DeleteView):
-    model = Card
-    success_url = reverse_lazy("mycards")
-
-    def post(self, request, *args, **kwargs):
-        card = self.get_object()
-        card.delete()
-        return redirect(self.success_url)
-
-
-class EditCardView(LoginRequiredMixin,UpdateView):
-    model = Card
-    form_class = CardForm
-    template_name = "accounts/createcard.html"
-    success_url = reverse_lazy("mycards")
-
-    def get_queryset(self):
-        return Card.objects.filter(wallet__user=self.request.user)
-
-
 class ChargeWalletView(View):
 
     def get(self, request):
@@ -234,4 +195,3 @@ class ChargeWalletView(View):
 
 class Home(TemplateView):
     template_name = "home.html"
-

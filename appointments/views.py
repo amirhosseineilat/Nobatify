@@ -9,6 +9,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from accounts.models import Wallet
 from decimal import Decimal
 from django.db import transaction
+from doctors.service import DoctorService
+from utils.notifications import Sender, EmailNotification
 
 
 # Create your views here.
@@ -73,9 +75,8 @@ class AppointmentBookView(LoginRequiredMixin, View):
         wallet = get_object_or_404(Wallet, user=request.user)
 
         if wallet.balance < timeslot.price:
-            return redirect("send_info_payment"), messages.success(
-                request, "کیف دول خود را شار کنید"
-            )
+            messages.error(request, "کیف دولت را شارژ کن")
+            return redirect("charge")
 
         with transaction.atomic():
             appointment = Appointment(
@@ -86,8 +87,14 @@ class AppointmentBookView(LoginRequiredMixin, View):
             wallet.balance = wallet.balance - Decimal(timeslot.price)
             wallet.save()
             timeslot.save()
-
             messages.success(request, "رزرو شما با موفقیت انجاام ")
+            sender = Sender(EmailNotification())
+            DoctorService.send_reserved_notification(
+                user=request.user,
+                provider_name="Nobatify",
+                appointment=timeslot,
+                sender=sender,
+            )
 
         return redirect("my_appointment")
 
@@ -96,15 +103,16 @@ class AppointmentCancelView(LoginRequiredMixin, View):
 
     def post(self, request, pk):
         appointment = get_object_or_404(Appointment, pk=pk, patient=request.user)
-        try:
+        wallet = get_object_or_404(Wallet, user=request.user)
+
+        with transaction.atomic():
             timeslot = appointment.time_slot
             appointment.delete()
             timeslot.is_reserved = False
             timeslot.save()
-        except Exception as e:
-            print(e)
-
-        messages.success(request, "Appointment cancelled successfully.")
+            wallet.balance = wallet.balance + Decimal(timeslot.price)
+            wallet.save()
+            messages.success(request, "رزرو شما با موفقیت کنسل شد")
 
         return redirect("my_appointment")
 
