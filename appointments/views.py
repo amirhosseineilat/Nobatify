@@ -103,7 +103,7 @@ class AppointmentCancelView(LoginRequiredMixin, View):
 
     def post(self, request, pk):
         appointment = get_object_or_404(Appointment, pk=pk, patient=request.user)
-        wallet = get_object_or_404(Wallet,user=request.user)
+        wallet = get_object_or_404(Wallet, user=request.user)
 
         with transaction.atomic():
             timeslot = appointment.time_slot
