@@ -1,56 +1,112 @@
 from django.contrib import messages
-from django.shortcuts import render, get_object_or_404,redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
-from django.views.generic import ListView, DetailView
-from .models import Appointment
+from django.views.generic import ListView, DetailView, CreateView
+from .forms import TimeSlotForm
+from doctors.models import Doctor
+from .models import Appointment, TimeSlot
 from django.contrib.auth.mixins import LoginRequiredMixin
+from accounts.models import Wallet
+from decimal import Decimal
+from django.db import transaction
+
 
 # Create your views here.
+# base view
+class BaseTimeSlotListView(ListView):
+
+    context_object_name = "timeslots"
+    paginate_by = 10
+
+    def get_queryset(self):
+        doctor_id = self.request.GET.get("doctor")
+        if doctor_id:
+            queryset = TimeSlot.objects.filter(doctor_id=doctor_id)
+            return queryset
+
+        queryset = TimeSlot.objects.none()
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        doctor_id = self.request.GET.get("doctor")
+        if doctor_id:
+            context["selected_doctor"] = Doctor.objects.filter(pk=doctor_id).first()
+
+        return context
 
 
-class AppointmentListView(ListView):
-    model = Appointment
-    template_name = "appointments/appointment_list.html"
+class BaseTimeSlotDetailView(DetailView):
+    model = TimeSlot
+    context_object_name = "timeslot"
+
+
+class BaseTimeSlotCreateView(CreateView):
+    model = TimeSlot
+    form_class = TimeSlotForm
+
+
+# public view
+
+
+class TimeSlotListView(BaseTimeSlotListView):
+    template_name = "appointments/timeslot_list.html"
+
+
+class MyAppointmentListView(ListView):
+    template_name = "appointments/my_appointment_list.html"
     context_object_name = "appointments"
+    paginate_by = 10
+
+    def get_queryset(self):
+        return (
+            Appointment.objects.filter(patient=self.request.user)
+            .select_related("doctor")
+            .select_related("time_slot")
+        )
 
 
 class AppointmentBookView(LoginRequiredMixin, View):
 
     def post(self, request, pk):
-        appointment = get_object_or_404(
-            Appointment,
-            pk=pk,
-            user__isnull=True
-        )
+        timeslot = get_object_or_404(TimeSlot, pk=pk, is_reserved=False)
+        wallet = get_object_or_404(Wallet, user=request.user)
 
-        appointment.user = request.user
-        appointment.save()
+        if wallet.balance < timeslot.price:
+            return redirect("send_info_payment"), messages.success(
+                request, "کیف دول خود را شار کنید"
+            )
 
-        messages.success(request, "Appointment booked successfully.")
+        with transaction.atomic():
+            appointment = Appointment(
+                doctor=timeslot.doctor, time_slot=timeslot, patient=request.user
+            )
+            timeslot.is_reserved = True
+            appointment.save()
+            wallet.balance = wallet.balance - Decimal(timeslot.price)
+            wallet.save()
+            timeslot.save()
 
-        return redirect(
-            "appointment_detail",
-            pk=appointment.pk
-        )
+            messages.success(request, "رزرو شما با موفقیت انجاام ")
+
+        return redirect("my_appointment")
 
 
 class AppointmentCancelView(LoginRequiredMixin, View):
 
     def post(self, request, pk):
-        appointment = get_object_or_404(
-            Appointment,
-            pk=pk,
-            user=request.user
-        )
-
-        appointment.user = None
-        appointment.save()
+        appointment = get_object_or_404(Appointment, pk=pk, patient=request.user)
+        try:
+            timeslot = appointment.time_slot
+            appointment.delete()
+            timeslot.is_reserved = False
+            timeslot.save()
+        except Exception as e:
+            print(e)
 
         messages.success(request, "Appointment cancelled successfully.")
 
-        return redirect(
-            "appointment"
-        )
+        return redirect("my_appointment")
 
 
 class AppointmentDetail(DetailView):

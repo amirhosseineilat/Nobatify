@@ -1,0 +1,32 @@
+{% extends "dashboard/base_admin.html" %}
+
+{% block title %}داشبورد مدیریت | Nobatify{% endblock %}
+{% block page_title %}داشبورد{% endblock %}
+
+{% block content %}
+<div class="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+    <div class="rounded-2xl border border-[#1D4533]/10 bg-white p-6 shadow-sm">
+        <p class="text-sm text-[#5E3122]/60">تعداد کل پزشکان</p>
+        <p class="mt-2 text-3xl font-bold text-[#1D4533]">{{ doctors_count|default:0 }}</p>
+    </div>
+    <div class="rounded-2xl border border-[#1D4533]/10 bg-white p-6 shadow-sm">
+        <p class="text-sm text-[#5E3122]/60">کل تایم‌اسلات‌ها</p>
+        <p class="mt-2 text-3xl font-bold text-[#1D4533]">{{ slots_count|default:0 }}</p>
+    </div>
+    <div class="rounded-2xl border border-[#1D4533]/10 bg-white p-6 shadow-sm">
+        <p class="text-sm text-[#5E3122]/60">نوبت‌های رزرو شده</p>
+        <p class="mt-2 text-3xl font-bold text-[#1D4533]">{{ appointments_count|default:0 }}</p>
+    </div>
+    <div class="rounded-2xl border border-[#1D4533]/10 bg-white p-6 shadow-sm">
+        <p class="text-sm text-[#5E3122]/60">کاربران فعال</p>
+        <p class="mt-2 text-3xl font-bold text-[#1D4533]">{{ users_count|default:0 }}</p>
+    </div>
+</div>
+
+<div class="mt-8 rounded-2xl border border-[#1D4533]/10 bg-white p-6 shadow-sm">
+    <h2 class="text-lg font-bold text-[#1D4533]">خوش آمدید، {{ request.user.username }} 👋</h2>
+    <p class="mt-2 text-sm leading-7 text-[#5E3122]/80">
+        به پنل مدیریت Nobatify خوش آمدید. از طریق منوی کناری می‌توانید وضعیت پزشکان، شیفت‌ها و نوبت‌ها را مدیریت کنید.
+    </p>
+</div>
+{% endblock %}

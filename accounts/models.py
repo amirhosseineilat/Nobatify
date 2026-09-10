@@ -1,13 +1,19 @@
 from datetime import timedelta
 from django.utils.timezone import now
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
-
+class CustomUser(AbstractUser):
+    email = models.EmailField(unique=True)
+    is_admin = models.BooleanField(default=False, verbose_name="Admin Status",null=True, blank=True, help_text="Designates whether the user has admin privileges.")
+    
+    def __str__(self):
+        return self.username
+    
 
 class Wallet(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="wallet")
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name="wallet")
     balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
     def __str__(self):
@@ -15,7 +21,7 @@ class Wallet(models.Model):
 
 
 class Otp(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="otps")
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="otps")
     code = models.CharField(max_length=6)
     created_at = models.DateTimeField(auto_now_add=True)
     is_used = models.BooleanField(default=False)
@@ -37,3 +43,16 @@ class Otp(models.Model):
 
     def __str__(self):
         return f"OTP for {self.user.username} - {'Used' if self.is_used else 'Unused'}"
+
+
+class Card(models.Model):
+    card_number = models.CharField(max_length=16)
+    cvv2 = models.CharField(max_length=4)
+    month = models.CharField(max_length=2)
+    day = models.CharField(max_length=2)
+
+    wallet = models.ForeignKey(
+        Wallet,
+        on_delete=models.CASCADE,
+        related_name="card"
+    )

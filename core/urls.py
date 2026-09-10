@@ -20,10 +20,11 @@ from django.urls import path, include
 from accounts.views import Home
 
 urlpatterns = [
-    path("google/", include("allauth.socialaccount.providers.google.urls")),
     path("admin/", admin.site.urls),
-    path("account/", include("accounts.urls")),
+    path("accounts/", include("accounts.urls")),
     path("appointments/", include("appointments.urls")),
     path("doctors/", include("doctors.urls")),
+    path("dashboard/", include("admindashboard.urls")),
+    path("payment/", include("payment.urls")),
     path("", Home.as_view(), name="home"),
 ]

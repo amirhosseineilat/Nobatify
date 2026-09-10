@@ -13,25 +13,19 @@
             <div class="p-7 md:p-10">
                 <div class="grid gap-4 sm:grid-cols-2">
                     <div class="detail-box"><span>تاریخ</span><strong>{{ appointment.date }}</strong></div>
-                    <div class="detail-box"><span>ساعت</span><strong>{{ appointment.time }}</strong></div>
+                    <div class="detail-box"><span>ساعت</span><strong>{{ appointment.start_time }}- {{ appointment.end_time }}</strong></div>
                     <div class="detail-box"><span>وضعیت</span><strong>{% if appointment.user %}رزرو شده{% else %}آزاد{% endif %}</strong></div>
                     <div class="detail-box"><span>ثبت شده در</span><strong>{{ appointment.created_at|date:"Y/m/d H:i" }}</strong></div>
                 </div>
 
-                {% if user.is_authenticated and not appointment.user %}
-                    <form method="post" action="{% url 'appointment_book' %}" class="mt-7">
+                {% if appointment.patient == user %}
+                    <form method="post" action="{% url 'appointment_cancel' appointment.pk %}" class="mt-7">
                         {% csrf_token %}
-                        <input type="hidden" name="pk" value="{{ appointment.pk }}">
-                        <button class="btn btn-primary btn-lg w-full justify-center">رزرو این نوبت <span>✓</span></button>
-                    </form>
-                {% elif appointment.user == user %}
-                    <form method="post" action="{% url 'appointment_cancel' %}" class="mt-7">
-                        {% csrf_token %}
-                        <input type="hidden" name="pk" value="{{ appointment.pk }}">
+                        
                         <button class="btn btn-danger btn-lg w-full justify-center">لغو نوبت <span>×</span></button>
                     </form>
                 {% elif not user.is_authenticated %}
-                    <a href="/account/login/" class="btn btn-primary btn-lg mt-7 w-full justify-center">برای رزرو وارد شو <span>→</span></a>
+                    <a href="{% url 'login' %}" class="btn btn-primary btn-lg mt-7 w-full justify-center">برای رزرو وارد شو <span>→</span></a>
                 {% else %}
                     <div class="mt-7 rounded-2xl bg-[#F7EAE0] p-4 text-center text-sm font-bold text-[#5E3122]">این نوبت قبلاً رزرو شده است.</div>
                 {% endif %}

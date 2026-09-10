@@ -1,0 +1,1571 @@
+{% extends "dashboard/base_admin.html" %}
+{% load static %}
+
+{% block title %}افزودن نوبت | Nobatify{% endblock %}
+
+
+{% block extra_head %}
+
+<!-- =========================================================
+     PERSIAN DATEPICKER
+========================================================= -->
+
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css"
+>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/persian-date@1.1.0/dist/persian-date.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
+
+
+<style>
+
+/* =========================================================
+   PAGE LAYOUT
+========================================================= */
+
+.timeslot-page {
+    width: 100%;
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+
+.timeslot-container {
+    width: 100%;
+    max-width: 920px;
+    margin: 0 auto;
+    padding-top: 0 !important;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.timeslot-card {
+    background: #ffffff;
+    border: 1px solid #eef0ef;
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.045);
+}
+
+
+/* =========================================================
+   FIELD
+========================================================= */
+
+.field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.field-label {
+    font-size: 13px;
+    line-height: 1.4;
+    font-weight: 700;
+    color: #374151;
+}
+
+
+/* =========================================================
+   INPUT
+========================================================= */
+
+.slot-input {
+    width: 100%;
+    height: 46px;
+
+    border: 1px solid #dfe4e1;
+    border-radius: 11px;
+
+    padding: 0 13px;
+
+    background: #ffffff;
+    color: #1f2937;
+
+    font-family: inherit;
+    font-size: 13px;
+
+    outline: none;
+
+    transition:
+        border-color .18s ease,
+        box-shadow .18s ease,
+        background .18s ease;
+}
+
+.slot-input:hover {
+    border-color: #c9d1cc;
+}
+
+.slot-input:focus {
+    border-color: #1D4533;
+
+    box-shadow:
+        0 0 0 3px rgba(29, 69, 51, 0.08);
+}
+
+.slot-input::placeholder {
+    color: #9ca3af;
+}
+
+
+/* Date */
+
+#jalali-date-display {
+    cursor: pointer;
+    background: #ffffff;
+}
+
+
+/* =========================================================
+   ERRORS
+========================================================= */
+
+.field-error {
+    color: #dc2626;
+    font-size: 12px;
+    margin-top: 1px;
+}
+
+.form-error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+
+    padding: 10px 13px;
+
+    border-radius: 10px;
+
+    margin-bottom: 16px;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   PERSIAN DATEPICKER
+========================================================= */
+
+.datepicker-plot-area {
+    font-family: inherit !important;
+    direction: rtl !important;
+    z-index: 99999 !important;
+    border-radius: 14px !important;
+}
+
+
+/* =========================================================
+   TIME PICKER
+========================================================= */
+
+.time-picker-wrapper {
+    position: relative;
+}
+
+
+/* Main popup */
+
+.time-picker {
+    position: absolute;
+
+    top: calc(100% + 7px);
+    right: 0;
+
+    width: 285px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 15px;
+
+    padding: 11px;
+
+    box-shadow:
+        0 16px 40px rgba(0, 0, 0, 0.13);
+
+    z-index: 9999;
+
+    display: none;
+}
+
+.time-picker.active {
+    display: block;
+
+    animation: timePickerIn .15s ease;
+}
+
+
+@keyframes timePickerIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+
+/* =========================================================
+   TIME HEADER
+========================================================= */
+
+.time-picker-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 1px 2px 8px;
+
+    margin-bottom: 8px;
+
+    border-bottom: 1px solid #f1f3f5;
+}
+
+.time-picker-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #374151;
+}
+
+.time-picker-close {
+    width: 25px;
+    height: 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+
+    background: #f3f4f6;
+    color: #6b7280;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    font-size: 17px;
+    line-height: 1;
+
+    transition: .15s ease;
+}
+
+.time-picker-close:hover {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+
+/* =========================================================
+   TIME COLUMNS
+========================================================= */
+
+.time-picker-columns {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+}
+
+.time-column {
+    min-width: 0;
+}
+
+.time-column-label {
+    font-size: 10px;
+    font-weight: 600;
+
+    color: #9ca3af;
+
+    text-align: center;
+
+    margin-bottom: 5px;
+}
+
+
+/* =========================================================
+   TIME OPTIONS
+========================================================= */
+
+.time-options {
+    display: grid;
+
+    grid-template-columns:
+        repeat(6, 1fr);
+
+    gap: 4px;
+}
+
+.time-option {
+    border: none;
+
+    background: #f7f9f8;
+
+    color: #374151;
+
+    border-radius: 6px;
+
+    min-height: 28px;
+
+    padding: 4px 2px;
+
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+        background .15s ease,
+        color .15s ease,
+        transform .1s ease;
+}
+
+.time-option:hover {
+    background: #e8eee9;
+    color: #1D4533;
+}
+
+.time-option:active {
+    transform: scale(.94);
+}
+
+.time-option.selected {
+    background: #1D4533;
+    color: #ffffff;
+
+    font-weight: 700;
+
+    box-shadow:
+        0 2px 5px rgba(29, 69, 51, .18);
+}
+
+
+/* =========================================================
+   TIME FOOTER
+========================================================= */
+
+.time-picker-footer {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-top: 10px;
+
+    padding-top: 9px;
+
+    border-top: 1px solid #f1f3f5;
+}
+
+.selected-time {
+    font-size: 15px;
+    font-weight: 800;
+
+    color: #1D4533;
+
+    direction: ltr;
+}
+
+.time-confirm {
+    border: none;
+
+    background: #1D4533;
+    color: #ffffff;
+
+    padding: 6px 13px;
+
+    border-radius: 7px;
+
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background .15s ease,
+        transform .1s ease;
+}
+
+.time-confirm:hover {
+    background: #163a2b;
+}
+
+.time-confirm:active {
+    transform: scale(.96);
+}
+
+
+/* =========================================================
+   HIDDEN INPUT
+========================================================= */
+
+.hidden-time-input {
+    display: none !important;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .timeslot-card {
+        padding: 16px;
+        border-radius: 15px;
+    }
+
+    .time-picker {
+        width: 100%;
+        min-width: 0;
+    }
+
+}
+
+</style>
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<section class="timeslot-page">
+
+    <div class="timeslot-container">
+
+
+        <!-- =================================================
+             HEADER
+        ================================================= -->
+
+        <div class="mb-4">
+
+            <span class="eyebrow">
+                زمان‌بندی
+            </span>
+
+            <h1 class="page-title">
+                افزودن نوبت جدید
+            </h1>
+
+            <p class="mt-1 text-sm text-gray-500">
+                برای پزشک موردنظر یک بازه زمانی جدید ایجاد کنید.
+            </p>
+
+        </div>
+
+
+
+        <!-- =================================================
+             FORM CARD
+        ================================================= -->
+
+        <div class="timeslot-card">
+
+            <form method="post">
+
+                {% csrf_token %}
+
+
+                <!-- FORM ERRORS -->
+
+                {% if form.non_field_errors %}
+
+                    <div class="form-error">
+
+                        {% for error in form.non_field_errors %}
+
+                            <div>
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+
+
+                <!-- =================================================
+                     FIELDS
+                ================================================= -->
+
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+
+
+                    <!-- =================================================
+                         DOCTOR
+                    ================================================= -->
+
+                    <div class="field-group md:col-span-2">
+
+                        <label
+                            for="{{ form.doctor.id_for_label }}"
+                            class="field-label"
+                        >
+                            پزشک
+                        </label>
+
+                        {{ form.doctor }}
+
+                        {% for error in form.doctor.errors %}
+
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         DATE
+                    ================================================= -->
+
+                    <div class="field-group">
+
+                        <label
+                            for="jalali-date-display"
+                            class="field-label"
+                        >
+                            تاریخ
+                        </label>
+
+
+                        <!-- Visible Jalali -->
+
+                        <input
+                            type="text"
+
+                            id="jalali-date-display"
+
+                            class="slot-input picker-input"
+
+                            placeholder="مثلاً ۱۴۰۵/۰۶/۱۴"
+
+                            autocomplete="off"
+
+                            readonly
+                        >
+
+
+                        <!-- Real Django Date -->
+
+                        <input
+                            type="hidden"
+
+                            name="{{ form.date.name }}"
+
+                            id="{{ form.date.id_for_label }}"
+
+                            value="{{ form.date.value|default:'' }}"
+                        >
+
+
+                        {% for error in form.date.errors %}
+
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         PRICE
+                    ================================================= -->
+
+                    <div class="field-group">
+
+                        <label
+                            for="{{ form.price.id_for_label }}"
+                            class="field-label"
+                        >
+                            قیمت نوبت
+                        </label>
+
+                        {{ form.price }}
+
+                        {% for error in form.price.errors %}
+
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         START TIME
+                    ================================================= -->
+
+                    <div class="field-group">
+
+                        <label class="field-label">
+                            ساعت شروع
+                        </label>
+
+
+                        <div class="time-picker-wrapper">
+
+
+                            <!-- Visible -->
+
+                            <input
+                                type="text"
+
+                                id="start-time-display"
+
+                                class="slot-input"
+
+                                placeholder="مثلاً ۰۹:۳۰"
+
+                                autocomplete="off"
+
+                                readonly
+                            >
+
+
+                            <!-- Django -->
+
+                            <input
+                                type="hidden"
+
+                                name="{{ form.start_time.name }}"
+
+                                id="{{ form.start_time.id_for_label }}"
+
+                                class="hidden-time-input"
+
+                                value="{{ form.start_time.value|default:'' }}"
+                            >
+
+
+                            <!-- Picker -->
+
+                            <div
+                                id="start-time-picker"
+
+                                class="time-picker"
+                            >
+
+                                <div class="time-picker-header">
+
+                                    <span class="time-picker-title">
+                                        انتخاب ساعت شروع
+                                    </span>
+
+                                    <button
+                                        type="button"
+                                        class="time-picker-close"
+                                    >
+                                        ×
+                                    </button>
+
+                                </div>
+
+
+                                <div class="time-picker-columns">
+
+
+                                    <!-- HOURS -->
+
+                                    <div class="time-column">
+
+                                        <div class="time-column-label">
+                                            ساعت
+                                        </div>
+
+                                        <div
+                                            class="time-options hours"
+                                        ></div>
+
+                                    </div>
+
+
+                                    <!-- MINUTES -->
+
+                                    <div class="time-column">
+
+                                        <div class="time-column-label">
+                                            دقیقه
+                                        </div>
+
+                                        <div
+                                            class="time-options minutes"
+                                        ></div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="time-picker-footer">
+
+                                    <span
+                                        id="start-selected-time"
+                                        class="selected-time"
+                                    >
+                                        --:--
+                                    </span>
+
+                                    <button
+                                        type="button"
+                                        class="time-confirm"
+                                    >
+                                        تأیید
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        {% for error in form.start_time.errors %}
+
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         END TIME
+                    ================================================= -->
+
+                    <div class="field-group">
+
+                        <label class="field-label">
+                            ساعت پایان
+                        </label>
+
+
+                        <div class="time-picker-wrapper">
+
+
+                            <!-- Visible -->
+
+                            <input
+                                type="text"
+
+                                id="end-time-display"
+
+                                class="slot-input"
+
+                                placeholder="مثلاً ۱۰:۳۰"
+
+                                autocomplete="off"
+
+                                readonly
+                            >
+
+
+                            <!-- Django -->
+
+                            <input
+                                type="hidden"
+
+                                name="{{ form.end_time.name }}"
+
+                                id="{{ form.end_time.id_for_label }}"
+
+                                class="hidden-time-input"
+
+                                value="{{ form.end_time.value|default:'' }}"
+                            >
+
+
+                            <!-- Picker -->
+
+                            <div
+                                id="end-time-picker"
+
+                                class="time-picker"
+                            >
+
+                                <div class="time-picker-header">
+
+                                    <span class="time-picker-title">
+                                        انتخاب ساعت پایان
+                                    </span>
+
+                                    <button
+                                        type="button"
+                                        class="time-picker-close"
+                                    >
+                                        ×
+                                    </button>
+
+                                </div>
+
+
+                                <div class="time-picker-columns">
+
+
+                                    <!-- HOURS -->
+
+                                    <div class="time-column">
+
+                                        <div class="time-column-label">
+                                            ساعت
+                                        </div>
+
+                                        <div
+                                            class="time-options hours"
+                                        ></div>
+
+                                    </div>
+
+
+                                    <!-- MINUTES -->
+
+                                    <div class="time-column">
+
+                                        <div class="time-column-label">
+                                            دقیقه
+                                        </div>
+
+                                        <div
+                                            class="time-options minutes"
+                                        ></div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="time-picker-footer">
+
+                                    <span
+                                        id="end-selected-time"
+                                        class="selected-time"
+                                    >
+                                        --:--
+                                    </span>
+
+                                    <button
+                                        type="button"
+                                        class="time-confirm"
+                                    >
+                                        تأیید
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        {% for error in form.end_time.errors %}
+
+                            <div class="field-error">
+                                {{ error }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     BUTTONS
+                ================================================= -->
+
+                <div
+                    class="mt-5 flex flex-col gap-3 sm:flex-row"
+                >
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary flex-1 justify-center"
+                    >
+                        افزودن نوبت
+                    </button>
+
+
+                    <a
+                        href="{% url 'admin_timeslots' %}"
+                        class="btn btn-secondary flex-1 justify-center"
+                    >
+                        انصراف
+                    </a>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+
+    /* =====================================================
+       DATE PICKER
+    ===================================================== */
+
+    const dateDisplay =
+        document.getElementById(
+            "jalali-date-display"
+        );
+
+
+    const djangoDateInput =
+        document.getElementById(
+            "{{ form.date.id_for_label }}"
+        );
+
+
+    if (
+        typeof window.jQuery !== "undefined" &&
+        typeof jQuery.fn.pDatepicker !== "undefined"
+    ) {
+
+
+        $(dateDisplay).pDatepicker({
+
+            format: "YYYY/MM/DD",
+
+            autoClose: true,
+
+            initialValue: false,
+
+            observer: true,
+
+            calendar: {
+                persian: {
+                    locale: "fa"
+                }
+            },
+
+
+            onSelect: function (unix) {
+
+                if (!unix) {
+                    return;
+                }
+
+
+                const selectedDate =
+                    new persianDate(unix);
+
+
+                /* Jalali */
+
+                const jalaliDate =
+                    selectedDate.format(
+                        "YYYY/MM/DD"
+                    );
+
+
+                /* Gregorian */
+
+                const gregorianDate =
+                    selectedDate
+                        .toCalendar("gregorian")
+                        .format("YYYY-MM-DD");
+
+
+                dateDisplay.value =
+                    jalaliDate;
+
+
+                djangoDateInput.value =
+                    gregorianDate;
+
+
+                console.log(
+                    "Jalali:",
+                    jalaliDate
+                );
+
+
+                console.log(
+                    "Gregorian:",
+                    gregorianDate
+                );
+
+            }
+
+        });
+
+
+    } else {
+
+        console.error(
+            "Persian Datepicker لود نشده!"
+        );
+
+    }
+
+
+
+    /* =====================================================
+       TIME PICKER
+    ===================================================== */
+
+    function createTimePicker(config) {
+
+
+        const displayInput =
+            document.getElementById(
+                config.displayId
+            );
+
+
+        const hiddenInput =
+            document.getElementById(
+                config.hiddenId
+            );
+
+
+        const picker =
+            document.getElementById(
+                config.pickerId
+            );
+
+
+        const selectedTime =
+            document.getElementById(
+                config.selectedId
+            );
+
+
+        if (
+            !displayInput ||
+            !hiddenInput ||
+            !picker
+        ) {
+
+            console.error(
+                "Time picker elements not found",
+                config
+            );
+
+            return;
+
+        }
+
+
+        const hoursContainer =
+            picker.querySelector(
+                ".hours"
+            );
+
+
+        const minutesContainer =
+            picker.querySelector(
+                ".minutes"
+            );
+
+
+        let selectedHour = null;
+
+        let selectedMinute = null;
+
+
+
+        /* =================================================
+           HOURS
+        ================================================= */
+
+        for (
+            let hour = 0;
+            hour <= 23;
+            hour++
+        ) {
+
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.type = "button";
+
+            button.className =
+                "time-option";
+
+
+            const value =
+                String(hour)
+                    .padStart(2, "0");
+
+
+            button.textContent =
+                value;
+
+
+            button.dataset.value =
+                value;
+
+
+            button.addEventListener(
+                "click",
+                function () {
+
+
+                    selectedHour =
+                        this.dataset.value;
+
+
+                    hoursContainer
+                        .querySelectorAll(
+                            ".time-option"
+                        )
+                        .forEach(
+                            function (item) {
+
+                                item.classList.remove(
+                                    "selected"
+                                );
+
+                            }
+                        );
+
+
+                    this.classList.add(
+                        "selected"
+                    );
+
+
+                    updateSelectedTime();
+
+                }
+            );
+
+
+            hoursContainer.appendChild(
+                button
+            );
+
+        }
+
+
+
+        /* =================================================
+           MINUTES
+        ================================================= */
+
+        for (
+            let minute = 0;
+            minute < 60;
+            minute += 5
+        ) {
+
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.type = "button";
+
+            button.className =
+                "time-option";
+
+
+            const value =
+                String(minute)
+                    .padStart(2, "0");
+
+
+            button.textContent =
+                value;
+
+
+            button.dataset.value =
+                value;
+
+
+            button.addEventListener(
+                "click",
+                function () {
+
+
+                    selectedMinute =
+                        this.dataset.value;
+
+
+                    minutesContainer
+                        .querySelectorAll(
+                            ".time-option"
+                        )
+                        .forEach(
+                            function (item) {
+
+                                item.classList.remove(
+                                    "selected"
+                                );
+
+                            }
+                        );
+
+
+                    this.classList.add(
+                        "selected"
+                    );
+
+
+                    updateSelectedTime();
+
+                }
+            );
+
+
+            minutesContainer.appendChild(
+                button
+            );
+
+        }
+
+
+
+        /* =================================================
+           UPDATE
+        ================================================= */
+
+        function updateSelectedTime() {
+
+
+            if (
+                selectedHour === null ||
+                selectedMinute === null
+            ) {
+
+                selectedTime.textContent =
+                    "--:--";
+
+                return;
+
+            }
+
+
+            selectedTime.textContent =
+                selectedHour +
+                ":" +
+                selectedMinute;
+
+        }
+
+
+
+        /* =================================================
+           OPEN
+        ================================================= */
+
+        displayInput.addEventListener(
+            "click",
+            function (event) {
+
+
+                event.stopPropagation();
+
+
+                document
+                    .querySelectorAll(
+                        ".time-picker.active"
+                    )
+                    .forEach(
+                        function (item) {
+
+                            if (
+                                item !== picker
+                            ) {
+
+                                item.classList.remove(
+                                    "active"
+                                );
+
+                            }
+
+                        }
+                    );
+
+
+                picker.classList.toggle(
+                    "active"
+                );
+
+            }
+        );
+
+
+
+        /* =================================================
+           CLOSE
+        ================================================= */
+
+        const closeButton =
+            picker.querySelector(
+                ".time-picker-close"
+            );
+
+
+        closeButton.addEventListener(
+            "click",
+            function () {
+
+                picker.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+
+
+        /* =================================================
+           CONFIRM
+        ================================================= */
+
+        const confirmButton =
+            picker.querySelector(
+                ".time-confirm"
+            );
+
+
+        confirmButton.addEventListener(
+            "click",
+            function () {
+
+
+                if (
+                    selectedHour === null ||
+                    selectedMinute === null
+                ) {
+
+                    return;
+
+                }
+
+
+                const time =
+                    selectedHour +
+                    ":" +
+                    selectedMinute;
+
+
+                displayInput.value =
+                    time;
+
+
+                hiddenInput.value =
+                    time;
+
+
+                picker.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+
+
+        /* =================================================
+           EXISTING VALUE
+        ================================================= */
+
+        if (hiddenInput.value) {
+
+
+            const parts =
+                hiddenInput.value.split(":");
+
+
+            if (parts.length >= 2) {
+
+
+                selectedHour =
+                    parts[0];
+
+
+                selectedMinute =
+                    parts[1];
+
+
+                displayInput.value =
+                    selectedHour +
+                    ":" +
+                    selectedMinute;
+
+
+                const hourButton =
+                    hoursContainer.querySelector(
+                        `[data-value="${selectedHour}"]`
+                    );
+
+
+                const minuteButton =
+                    minutesContainer.querySelector(
+                        `[data-value="${selectedMinute}"]`
+                    );
+
+
+                if (hourButton) {
+
+                    hourButton.classList.add(
+                        "selected"
+                    );
+
+                }
+
+
+                if (minuteButton) {
+
+                    minuteButton.classList.add(
+                        "selected"
+                    );
+
+                }
+
+
+                updateSelectedTime();
+
+            }
+
+        }
+
+    }
+
+
+
+    /* =====================================================
+       START TIME
+    ===================================================== */
+
+    createTimePicker({
+
+        displayId:
+            "start-time-display",
+
+        hiddenId:
+            "{{ form.start_time.id_for_label }}",
+
+        pickerId:
+            "start-time-picker",
+
+        selectedId:
+            "start-selected-time"
+
+    });
+
+
+
+    /* =====================================================
+       END TIME
+    ===================================================== */
+
+    createTimePicker({
+
+        displayId:
+            "end-time-display",
+
+        hiddenId:
+            "{{ form.end_time.id_for_label }}",
+
+        pickerId:
+            "end-time-picker",
+
+        selectedId:
+            "end-selected-time"
+
+    });
+
+
+
+    /* =====================================================
+       CLOSE ON OUTSIDE CLICK
+    ===================================================== */
+
+    document.addEventListener(
+        "click",
+        function (event) {
+
+
+            if (
+                !event.target.closest(
+                    ".time-picker-wrapper"
+                )
+            ) {
+
+
+                document
+                    .querySelectorAll(
+                        ".time-picker.active"
+                    )
+                    .forEach(
+                        function (picker) {
+
+                            picker.classList.remove(
+                                "active"
+                            );
+
+                        }
+                    );
+
+            }
+
+        }
+    );
+
+
+});
+
+</script>
+
+{% endblock %}

@@ -32,7 +32,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+AUTH_USER_MODEL = "accounts.CustomUser"
 # Application definition
 
 INSTALLED_APPS = [
@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     "accounts",
     "appointments",
     "doctors",
+    "admindashboard",
+    "payment",
     # third party apps
     "allauth",
     "allauth.account",
@@ -123,7 +125,7 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
-SIDE_ID = 1
+SITE_ID = 1
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
