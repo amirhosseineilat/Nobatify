@@ -30,7 +30,12 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["https://noobatify.ir", "https://www.noobatify.ir"]
+ALLOWED_HOSTS = [
+    "https://noobatify.ir",
+    "https://www.noobatify.ir",
+    "localhost",
+    "127.0.0.1",
+]
 
 AUTH_USER_MODEL = "accounts.CustomUser"
 # Application definition
@@ -194,4 +199,6 @@ CSRF_COOKIE_SECURE = True
 CSRF_TRUSTED_ORIGINS = [
     "https://noobatify.ir",
     "https://www.noobatify.ir",
+    "localhost",
+    "127.0.0.1",
 ]
