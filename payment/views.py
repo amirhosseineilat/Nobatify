@@ -21,7 +21,7 @@ class SendPaymentInfoView(LoginRequiredMixin, View):
         payment = SandBoxPayment(sand_box_urls)
 
         description = "this is for get appointment"
-        call_back_url = "http://127.0.0.1:8000/payment/verify/"
+        call_back_url = "http://noobatify.ir/payment/verify/"
         metadata = {"email": user.email}
         status, data = payment.send_information(
             os.getenv("MERCHAT_ID", ""), amount, description, call_back_url, metadata
