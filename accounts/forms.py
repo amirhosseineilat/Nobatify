@@ -67,10 +67,8 @@ class LoginForm(AuthenticationForm):
         fields = ["username", "password"]
 
 
-class ForgetForm(ModelForm):
-    class Meta:
-        model = User
-        fields = ["email"]
+class ForgetForm(Form):
+    email = forms.EmailField()
 
 
 class ValidateOTPForm(Form):

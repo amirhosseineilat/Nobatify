@@ -111,7 +111,6 @@ class ForgetPasswordView(FormView):
 
     def form_valid(self, form):
         email = form.cleaned_data.get("email")
-        print("email", email)
         if email:
             sender = Sender(EmailNotification())
             is_sendign = AccountService.request_password_reset(
