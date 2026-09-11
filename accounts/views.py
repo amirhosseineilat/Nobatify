@@ -194,3 +194,9 @@ class ChargeWalletView(View):
 
 class Home(TemplateView):
     template_name = "home.html"
+
+class ContactWithUs(TemplateView):
+    template_name = 'contact.html'
+
+class About(TemplateView):
+    template_name = 'about.html'
