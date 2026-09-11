@@ -7,6 +7,8 @@ from .forms import CommentForm, DoctorForm, SpecialityForm
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.db.models import Avg, Count, Prefetch
+from django.contrib import messages
+from django.shortcuts import redirect
 
 # Create your views here.
 
@@ -37,6 +39,8 @@ class BaseDetailDoctorView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        doctor = self.object
+        context["can_comment"] = doctor.has_patient(self.request.user)
         context["form"] = CommentForm()
         return context
 
@@ -87,16 +91,25 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
     form_class = CommentForm
     http_method_names = ["post"]
 
+    def dispatch(self, request, *args, **kwargs):
+        doctor = get_object_or_404(Doctor, pk=self.kwargs.get("doctor_id"))
+        
+        
+        if not doctor.has_patient(request.user):
+            messages.error(request, "تنها بیمارانی که با این پزشک نوبت داشته‌اند می‌توانند نظر ثبت کنند.")
+            return redirect("doctor_detail", pk=doctor.pk)
+            
+        return super().dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
         form.instance.user = self.request.user
         doctor_id = self.kwargs.get("doctor_id")
         form.instance.doctor = get_object_or_404(Doctor, pk=doctor_id)
+        messages.success(self.request, "نظر شما با موفقیت ثبت شد.")
         return super().form_valid(form)
 
     def get_success_url(self):
         return reverse("doctor_detail", kwargs={"pk": self.kwargs.get("doctor_id")})
-
-
 class BaseSearchDoctorView(BaseListDoctorView):
     context_object_name = "doctors"
 
