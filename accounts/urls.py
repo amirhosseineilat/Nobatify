@@ -11,5 +11,8 @@ urlpatterns = [
     path("profile/", Profile.as_view(), name="profile"),
     path("profile/wallet", Walletview.as_view(), name="wallet"),
     path("profile/wallet/charge", ChargeWalletView.as_view(), name="charge"),
+    path(
+        "contact_send_mail/", SendEmailContactView.as_view(), name="contact_send_mail"
+    ),
     path("", include("allauth.urls")),
 ]

@@ -35,6 +35,7 @@ from .models import CustomUser
 
 from django.views import View
 from decimal import Decimal
+from django.core.mail import send_mail
 
 User = get_user_model()
 # Create your views here.
@@ -195,8 +196,28 @@ class ChargeWalletView(View):
 class Home(TemplateView):
     template_name = "home.html"
 
+
 class ContactWithUs(TemplateView):
-    template_name = 'contact.html'
+    template_name = "contact.html"
+
 
 class About(TemplateView):
-    template_name = 'about.html'
+    template_name = "about.html"
+
+
+class SendEmailContactView(View):
+
+    def post(self, request):
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        subject = request.POST.get("subject")
+        message = request.POST.get("message")
+        if name and email and subject and message:
+            send_mail(
+                subject,
+                message,
+                from_email=email,
+                recipient_list=["alibalochi1910@gmail.com"],
+            )
+            messages.success(request, "ایمیل با موفقیت ارسال شد")
+            return redirect("home")
