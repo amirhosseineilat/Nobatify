@@ -72,7 +72,7 @@ class VerifyPaymentView(LoginRequiredMixin, View):
                     user_amount = user.wallet.balance
                     user.wallet.balance = user_amount + Decimal(amount)
                     user.wallet.save(update_fields=["balance"])
-                    messages.success(request, "پرداخت با موفق انجام شد")
+                    messages.success(request, "پرداخت با موفقیت انجام شد")
                     return redirect("wallet")
                 else:
                     messages.error(request, "پرداخت با خطا مواجه شد")

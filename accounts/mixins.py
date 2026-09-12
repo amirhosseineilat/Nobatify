@@ -16,6 +16,6 @@ class AdminRequiredMixin(UserPassesTestMixin):
 
         messages.error(
             self.request,
-            "You do not have permission to access this page."
+            "شما اجازه دسترسی به این صفحه را ندارید."
         )
         return redirect("home")
