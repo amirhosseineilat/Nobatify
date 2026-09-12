@@ -2,6 +2,8 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth import get_user_model
 from django_jalali.db import models as jmodels
+
+
 User = get_user_model()
 # Create your models here.
 
@@ -35,6 +37,11 @@ class Doctor(models.Model):
     @property
     def comment_count(self):
         return self.comments.count()
+    
+    def has_patient(self, user):
+        if not user or not user.is_authenticated:
+            return False
+        return self.appointments.filter(patient=user).exists()
 
 
 class Comment(models.Model):

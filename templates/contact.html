@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+
+{% block title %}تماس با ما | Nobatify{% endblock %}
+
+{% block content %}
+
+<section class="relative overflow-hidden pt-36 pb-20">
+
+    <!-- Decorative background -->
+    <div class="pointer-events-none absolute -left-40 top-32 h-96 w-96 rounded-full bg-[#F9D2BA]/40 blur-3xl"></div>
+    <div class="pointer-events-none absolute -right-40 bottom-10 h-96 w-96 rounded-full bg-[#F7EAE0] blur-3xl"></div>
+
+    <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+        <!-- Header -->
+        <div class="mx-auto max-w-3xl text-center">
+
+            <span class="inline-flex items-center rounded-full border border-[#1D4533]/10 bg-white/70 px-4 py-2 text-sm font-semibold text-[#1D4533] shadow-sm">
+                ارتباط با ما
+            </span>
+
+            <h1 class="mt-7 text-4xl font-black leading-tight text-[#1D4533] sm:text-5xl">
+                چطور می‌توانیم
+                <span class="text-[#5E3122]">کمکتان کنیم؟</span>
+            </h1>
+
+            <p class="mx-auto mt-5 max-w-2xl text-base leading-8 text-[#5E3122]/70">
+                سوالی دارید، مشکلی در رزرو نوبت پیش آمده یا می‌خواهید
+                درباره Nobatify بیشتر بدانید؟ با ما در ارتباط باشید.
+            </p>
+
+        </div>
+
+
+        <!-- Contact content -->
+        <div class="mt-16 grid gap-7 lg:grid-cols-5">
+
+            <!-- Contact info -->
+            <div class="lg:col-span-2">
+
+                <div class="h-full rounded-[32px] bg-[#1D4533] p-8 shadow-soft sm:p-10">
+
+                    <span class="text-sm font-semibold text-[#F9D2BA]">
+                        با ما در ارتباط باشید
+                    </span>
+
+                    <h2 class="mt-4 text-3xl font-black leading-tight text-[#F7EAE0]">
+                        همیشه خوشحالیم
+                        <br>
+                        صدای شما را بشنویم.
+                    </h2>
+
+                    <p class="mt-5 text-sm leading-8 text-[#F7EAE0]/60">
+                        اگر سوال یا پیشنهادی دارید، از طریق راه‌های ارتباطی
+                        زیر با ما در تماس باشید.
+                    </p>
+
+
+                    <div class="mt-10 space-y-4">
+
+                        <!-- Email -->
+                        <a
+                            href="mailto:support@nobatify.ir"
+                            class="group flex items-center gap-4 rounded-2xl bg-white/10 p-4 transition hover:bg-white/15"
+                        >
+                            <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#F9D2BA] text-[#1D4533]">
+                                @
+                            </span>
+
+                            <div>
+                                <p class="text-xs text-[#F7EAE0]/40">
+                                    ایمیل
+                                </p>
+
+                                <p class="mt-1 text-sm font-bold text-[#F7EAE0]">
+                                    support@nobatify.ir
+                                </p>
+                            </div>
+                        </a>
+
+
+                        <!-- Phone -->
+                        <a
+                            href="tel:+982100000000"
+                            class="group flex items-center gap-4 rounded-2xl bg-white/10 p-4 transition hover:bg-white/15"
+                        >
+                            <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#F7EAE0] text-[#1D4533]">
+                                ☎
+                            </span>
+
+                            <div>
+                                <p class="text-xs text-[#F7EAE0]/40">
+                                    تلفن
+                                </p>
+
+                                <p class="mt-1 text-sm font-bold text-[#F7EAE0]">
+                                    ۰۲۱-۰۰۰۰۰۰۰۰
+                                </p>
+                            </div>
+                        </a>
+
+
+                        <!-- Working hours -->
+                        <div class="flex items-center gap-4 rounded-2xl bg-white/10 p-4">
+
+                            <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#F9D2BA] text-[#1D4533]">
+                                ⏱
+                            </span>
+
+                            <div>
+                                <p class="text-xs text-[#F7EAE0]/40">
+                                    ساعات پاسخگویی
+                                </p>
+
+                                <p class="mt-1 text-sm font-bold text-[#F7EAE0]">
+                                    شنبه تا پنجشنبه، ۹ تا ۱۸
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Contact form -->
+            <div class="lg:col-span-3">
+
+                <div class="rounded-[32px] border border-white/70 bg-white/75 p-8 shadow-soft backdrop-blur-xl sm:p-10">
+
+                    <div class="mb-8">
+                        <span class="text-sm font-bold text-[#5E3122]/50">
+                            پیام شما
+                        </span>
+
+                        <h2 class="mt-2 text-2xl font-black text-[#1D4533]">
+                            پیام خود را برای ما ارسال کنید
+                        </h2>
+                    </div>
+
+
+                    <form method="post" action="{% url 'contact_send_mail' %}" class="space-y-5">
+
+                        {% csrf_token %}
+
+                        <!-- Name -->
+                        <div>
+                            <label
+                                for="name"
+                                class="mb-2 block text-sm font-bold text-[#1D4533]"
+                            >
+                                نام و نام خانوادگی
+                            </label>
+
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                placeholder="نام خود را وارد کنید"
+                                required
+                                class="w-full rounded-2xl border border-[#1D4533]/10 bg-[#fffaf7] px-5 py-4 text-sm outline-none transition placeholder:text-[#5E3122]/30 focus:border-[#1D4533]/30 focus:ring-4 focus:ring-[#F9D2BA]/40"
+                            >
+                        </div>
+
+
+                        <!-- Email -->
+                        <div>
+                            <label
+                                for="email"
+                                class="mb-2 block text-sm font-bold text-[#1D4533]"
+                            >
+                                ایمیل
+                            </label>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="example@email.com"
+                                required
+                                dir="ltr"
+                                class="w-full rounded-2xl border border-[#1D4533]/10 bg-[#fffaf7] px-5 py-4 text-sm outline-none transition placeholder:text-[#5E3122]/30 focus:border-[#1D4533]/30 focus:ring-4 focus:ring-[#F9D2BA]/40"
+                            >
+                        </div>
+
+
+                        <!-- Subject -->
+                        <div>
+                            <label
+                                for="subject"
+                                class="mb-2 block text-sm font-bold text-[#1D4533]"
+                            >
+                                موضوع
+                            </label>
+
+                            <input
+                                type="text"
+                                id="subject"
+                                name="subject"
+                                placeholder="موضوع پیام"
+                                required
+                                class="w-full rounded-2xl border border-[#1D4533]/10 bg-[#fffaf7] px-5 py-4 text-sm outline-none transition placeholder:text-[#5E3122]/30 focus:border-[#1D4533]/30 focus:ring-4 focus:ring-[#F9D2BA]/40"
+                            >
+                        </div>
+
+
+                        <!-- Message -->
+                        <div>
+                            <label
+                                for="message"
+                                class="mb-2 block text-sm font-bold text-[#1D4533]"
+                            >
+                                پیام
+                            </label>
+
+                            <textarea
+                                id="message"
+                                name="message"
+                                rows="6"
+                                placeholder="پیام خود را بنویسید..."
+                                required
+                                class="w-full resize-none rounded-2xl border border-[#1D4533]/10 bg-[#fffaf7] px-5 py-4 text-sm outline-none transition placeholder:text-[#5E3122]/30 focus:border-[#1D4533]/30 focus:ring-4 focus:ring-[#F9D2BA]/40"
+                            ></textarea>
+                        </div>
+
+
+                        <!-- Submit -->
+                        <button
+                            type="submit"
+                            class="group flex w-full items-center justify-center gap-2 rounded-2xl bg-[#1D4533] px-6 py-4 text-sm font-bold text-white shadow-lg shadow-[#1D4533]/10 transition duration-300 hover:-translate-y-0.5 hover:bg-[#153a2a]"
+                        >
+                            ارسال پیام
+                            <span class="transition-transform duration-300 group-hover:-translate-x-1">
+                                ←
+                            </span>
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

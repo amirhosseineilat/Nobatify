@@ -31,8 +31,7 @@ class TimeSlot(models.Model):
         ordering = ["date", "start_time"]
 
     def __str__(self):
-        return f"{self.doctor} - {self.date} ({self.start_time} - {self.end_time}) | {self.price}"
-
+        return f"TimeSlot for {self.doctor} on {self.date} from {self.start_time} to {self.end_time}"
 
 class Appointment(models.Model):
     doctor = models.ForeignKey(

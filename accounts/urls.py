@@ -1,8 +1,5 @@
-from django.urls import path,include
+from django.urls import path, include
 from .views import *
-
-
-
 
 urlpatterns = [
     path("login/", LogingView.as_view(), name="login"),
@@ -13,10 +10,9 @@ urlpatterns = [
     path("validate_otp/", ValidateOtpView.as_view(), name="validate_otp"),
     path("profile/", Profile.as_view(), name="profile"),
     path("profile/wallet", Walletview.as_view(), name="wallet"),
-    path("profile/wallet/mycards", CardListView.as_view(), name="mycards"),
-    path("profile/wallet/card", CreateCardView.as_view(), name="card"),
     path("profile/wallet/charge", ChargeWalletView.as_view(), name="charge"),
-    path("profile/wallet/edit/<int:pk>", EditCardView.as_view(), name="edit_card"),
-    path("profile/wallet/delete/<int:pk>", RemoveCardView.as_view(), name="delete_card"),
-    path("",include("allauth.urls"))
+    path(
+        "contact_send_mail/", SendEmailContactView.as_view(), name="contact_send_mail"
+    ),
+    path("", include("allauth.urls")),
 ]

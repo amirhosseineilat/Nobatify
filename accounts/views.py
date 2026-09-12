@@ -35,6 +35,7 @@ from .models import CustomUser
 
 from django.views import View
 from decimal import Decimal
+from django.core.mail import send_mail
 
 User = get_user_model()
 # Create your views here.
@@ -46,8 +47,9 @@ class LogingView(LoginView):
     success_url = reverse_lazy("home")
 
     def form_valid(self, form):
+        response = super().form_valid(form)
         messages.success(self.request, "ورود با موفقیت انجام شد")
-        return super().form_valid(form)
+        return response
 
 
 class LogingoutView(LogoutView):
@@ -110,7 +112,6 @@ class ForgetPasswordView(FormView):
 
     def form_valid(self, form):
         email = form.cleaned_data.get("email")
-        print("email", email)
         if email:
             sender = Sender(EmailNotification())
             is_sendign = AccountService.request_password_reset(
@@ -165,46 +166,6 @@ class Walletview(LoginRequiredMixin, DetailView):
             return wallet
 
 
-class CardListView(LoginRequiredMixin,ListView):
-    model = Card
-    template_name = "accounts/mycard.html"
-    context_object_name = "cards"
-
-
-class CreateCardView(LoginRequiredMixin,CreateView):
-    model = Card
-    template_name = "accounts/createcard.html"
-    form_class = CardForm
-    success_url = reverse_lazy("mycards")
-
-    def form_valid(self, form):
-        wallet, created = Wallet.objects.get_or_create(user=self.request.user)
-
-        form.instance.wallet = wallet
-
-        return super().form_valid(form)
-
-
-class RemoveCardView(LoginRequiredMixin,DeleteView):
-    model = Card
-    success_url = reverse_lazy("mycards")
-
-    def post(self, request, *args, **kwargs):
-        card = self.get_object()
-        card.delete()
-        return redirect(self.success_url)
-
-
-class EditCardView(LoginRequiredMixin,UpdateView):
-    model = Card
-    form_class = CardForm
-    template_name = "accounts/createcard.html"
-    success_url = reverse_lazy("mycards")
-
-    def get_queryset(self):
-        return Card.objects.filter(wallet__user=self.request.user)
-
-
 class ChargeWalletView(View):
 
     def get(self, request):
@@ -235,3 +196,28 @@ class ChargeWalletView(View):
 class Home(TemplateView):
     template_name = "home.html"
 
+
+class ContactWithUs(TemplateView):
+    template_name = "contact.html"
+
+
+class About(TemplateView):
+    template_name = "about.html"
+
+
+class SendEmailContactView(View):
+
+    def post(self, request):
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        subject = request.POST.get("subject")
+        message = request.POST.get("message")
+        if name and email and subject and message:
+            send_mail(
+                subject,
+                message,
+                from_email=email,
+                recipient_list=["alibalochi1910@gmail.com"],
+            )
+            messages.success(request, "ایمیل با موفقیت ارسال شد")
+            return redirect("home")

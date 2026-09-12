@@ -7,7 +7,10 @@
 <section class="page-shell">
     <div class="mx-auto max-w-7xl">
 
-        <!-- Header -->
+        <!-- =========================
+             Header
+        ========================== -->
+
         <div class="flex flex-col justify-between gap-5 md:flex-row md:items-end reveal-up">
 
             <div>
@@ -16,38 +19,29 @@
                     زمان‌بندی
                 </span>
 
-                <h1 class="page-title">
+                <h1 class="page-title mt-3">
 
                     {% if selected_doctor %}
-
                         نوبت‌های دکتر
                         {{ selected_doctor.first_name }}
                         {{ selected_doctor.last_name }}
-
                     {% else %}
-
                         نوبت‌های در دسترس
-
                     {% endif %}
 
                 </h1>
 
-                <p class="mt-3 text-sm leading-7 text-[#5E3122]/55">
+                <p class="mt-3 max-w-2xl text-sm leading-7 text-[#5E3122]/55">
 
                     {% if selected_doctor %}
-
                         زمان مناسب برای ویزیت این پزشک را انتخاب کن.
-
                     {% else %}
-
                         زمان مناسب را پیدا کن و برای رزرو وارد جزئیات شو.
-
                     {% endif %}
 
                 </p>
 
             </div>
-
 
             <a
                 href="{% url 'doctors' %}"
@@ -60,148 +54,453 @@
         </div>
 
 
-        <!-- =================================
-             Time Slots
-        ================================== -->
+        <!-- =========================
+             Summary
+        ========================== -->
 
-        <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div
+            class="
+                mt-10
+                flex flex-col gap-4
+                rounded-[24px]
+                border border-[#1D4533]/10
+                bg-white
+                p-5
+                shadow-[0_8px_30px_rgba(29,69,51,0.04)]
+                sm:flex-row
+                sm:items-center
+                sm:justify-between
+                reveal-up
+            "
+        >
+
+            <div class="flex items-center gap-3">
+
+                <div
+                    class="
+                        grid h-11 w-11 shrink-0 place-items-center
+                        rounded-2xl
+                        bg-[#F7EAE0]
+                        text-[#1D4533]
+                    "
+                >
+                    ◷
+                </div>
+
+                <div>
+                    <p class="text-sm font-black text-[#1D4533]">
+                        نوبت‌های موجود
+                    </p>
+
+                    <p class="mt-1 text-xs text-[#5E3122]/45">
+                        زمان مناسب خودت را انتخاب کن.
+                    </p>
+                </div>
+
+            </div>
+
+            <div
+                class="
+                    flex w-fit items-center gap-2
+                    rounded-full
+                    bg-[#F7EAE0]
+                    px-4 py-2
+                "
+            >
+
+                <span class="h-2 w-2 rounded-full bg-[#1D4533]"></span>
+
+                <span class="text-xs font-bold text-[#1D4533]">
+                    {{ timeslots|length }} نوبت
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             Time Slots
+        ========================== -->
+
+        <div class="mt-6 space-y-3">
 
             {% for timeslot in timeslots %}
 
                 <article
                     class="
-                        appointment-card
-                        reveal-up
-                        relative overflow-hidden
+                        group relative overflow-hidden
+                        rounded-[24px]
+                        border
+                        bg-white
+                        p-4 sm:p-5
+                        shadow-[0_5px_25px_rgba(29,69,51,0.035)]
                         transition-all duration-500
+                        reveal-up
 
                         {% if timeslot.is_reserved %}
-
                             border-[#5E3122]/10
-                            bg-[#faf5f1]
-                            opacity-[0.88]
-
+                            bg-[#faf7f4]
                         {% else %}
-
-                            hover:-translate-y-2
+                            border-[#1D4533]/10
+                            hover:-translate-y-0.5
                             hover:border-[#F9D2BA]
-
+                            hover:shadow-[0_14px_35px_rgba(29,69,51,0.08)]
                         {% endif %}
                     "
-                    data-delay="{{ forloop.counter0|add:'50' }}"
+                    data-delay="{{ forloop.counter0|add:'40' }}"
                 >
 
-                    <!-- Top Status -->
-                    <div class="flex items-start justify-between gap-4">
+                    <!-- =========================
+                         Desktop / Tablet Row
+                    ========================== -->
 
-                        <div class="min-w-0">
+                    <div class="flex flex-col gap-5 lg:flex-row lg:items-center">
 
-                            <!-- Status -->
-                            <div class="flex items-center gap-2">
+                        <!-- Doctor -->
 
-                                {% if timeslot.is_reserved %}
+                        <div
+                            class="
+                                flex min-w-0
+                                items-center gap-4
+                                lg:w-[27%]
+                            "
+                        >
 
-                                    <span
-                                        class="
-                                            h-2.5 w-2.5 rounded-full
-                                            bg-[#5E3122]/40
-                                        "
-                                    ></span>
-
-                                    <span class="text-xs font-bold text-[#5E3122]/50">
-                                        رزرو شده
-                                    </span>
-
-                                {% else %}
-
-                                    <span
-                                        class="
-                                            h-2.5 w-2.5 rounded-full
-                                            bg-[#1D4533]
-                                            shadow-[0_0_0_5px_rgba(29,69,51,.08)]
-                                        "
-                                    ></span>
-
-                                    <span class="text-xs font-bold text-[#1D4533]">
-                                        زمان آزاد
-                                    </span>
-
-                                {% endif %}
-
+                            <div
+                                class="
+                                    grid h-12 w-12 shrink-0
+                                    place-items-center
+                                    rounded-2xl
+                                    bg-[#F7EAE0]
+                                    text-sm font-black
+                                    text-[#1D4533]
+                                    transition-transform duration-500
+                                    group-hover:scale-105
+                                "
+                            >
+                                {{ timeslot.doctor.first_name|first }}
+                                {{ timeslot.doctor.last_name|first }}
                             </div>
 
+                            <div class="min-w-0">
 
-                            <!-- Doctor -->
-                            <h2 class="mt-4 text-xl font-black text-[#1D4533]">
+                                <div class="flex items-center gap-2">
 
-                                {{ timeslot.doctor.first_name }}
-                                {{ timeslot.doctor.last_name }}
+                                    <h2
+                                        class="
+                                            truncate
+                                            text-base
+                                            font-black
+                                            text-[#1D4533]
+                                        "
+                                    >
+                                        {{ timeslot.doctor.first_name }}
+                                        {{ timeslot.doctor.last_name }}
+                                    </h2>
 
-                            </h2>
+                                </div>
 
-                            <p class="mt-1 text-xs text-[#5E3122]/45">
-                                {{ timeslot.doctor.email }}
-                            </p>
+                                <p
+                                    class="
+                                        mt-1
+                                        truncate
+                                        text-xs
+                                        text-[#5E3122]/45
+                                    "
+                                >
+                                    {{ timeslot.doctor.email }}
+                                </p>
+
+                            </div>
 
                         </div>
 
 
-                        <!-- Status Badge -->
+                        <!-- Date -->
 
-                        {% if timeslot.is_reserved %}
+                        <div
+                            class="
+                                flex items-center gap-3
+                                lg:w-[17%]
+                            "
+                        >
 
-                            <span
+                            <div
                                 class="
-                                    shrink-0 rounded-full
-                                    border border-[#5E3122]/10
-                                    bg-[#5E3122]/5
-                                    px-3 py-1.5
-                                    text-xs font-bold
-                                    text-[#5E3122]/55
-                                "
-                            >
-                                رزرو شده
-                            </span>
-
-                        {% else %}
-
-                            <span
-                                class="
-                                    shrink-0 rounded-full
-                                    bg-[#F9D2BA]
-                                    px-3 py-1.5
-                                    text-xs font-bold
+                                    grid h-10 w-10 shrink-0
+                                    place-items-center
+                                    rounded-xl
+                                    bg-[#FBF8F5]
                                     text-[#1D4533]
                                 "
                             >
-                                آزاد
-                            </span>
+                                📅
+                            </div>
 
-                        {% endif %}
+                            <div>
+
+                                <p
+                                    class="
+                                        text-[10px]
+                                        font-bold
+                                        text-[#5E3122]/35
+                                    "
+                                >
+                                    تاریخ
+                                </p>
+
+                                <strong
+                                    class="
+                                        mt-1 block
+                                        text-sm
+                                        font-black
+                                        text-[#1D4533]
+                                    "
+                                >
+                                    {{ timeslot.date|date:"Y/m/d" }}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Time -->
+
+                        <div
+                            class="
+                                flex items-center gap-3
+                                lg:w-[17%]
+                            "
+                        >
+
+                            <div
+                                class="
+                                    grid h-10 w-10 shrink-0
+                                    place-items-center
+                                    rounded-xl
+                                    bg-[#FBF8F5]
+                                    text-[#1D4533]
+                                "
+                            >
+                                ◷
+                            </div>
+
+                            <div>
+
+                                <p
+                                    class="
+                                        text-[10px]
+                                        font-bold
+                                        text-[#5E3122]/35
+                                    "
+                                >
+                                    ساعت
+                                </p>
+
+                                <strong
+                                    class="
+                                        mt-1 block
+                                        whitespace-nowrap
+                                        text-sm
+                                        font-black
+                                        text-[#1D4533]
+                                    "
+                                >
+                                    {{ timeslot.start_time|time:"H:i" }}
+                                    -
+                                    {{ timeslot.end_time|time:"H:i" }}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Price -->
+
+                        <div
+                            class="
+                                lg:w-[16%]
+                                lg:border-r
+                                lg:border-[#1D4533]/[0.07]
+                                lg:pr-5
+                            "
+                        >
+
+                            <p
+                                class="
+                                    text-[10px]
+                                    font-bold
+                                    text-[#5E3122]/35
+                                "
+                            >
+                                هزینه ویزیت
+                            </p>
+
+                            <div class="mt-1 flex items-baseline gap-1">
+
+                                <span
+                                    class="
+                                        text-base
+                                        font-black
+                                        text-[#1D4533]
+                                    "
+                                >
+                                    {{ timeslot.price|default:"-" }}
+                                </span>
+
+                                {% if timeslot.price %}
+                                    <span
+                                        class="
+                                            text-[10px]
+                                            font-medium
+                                            text-[#5E3122]/45
+                                        "
+                                    >
+                                        تومان
+                                    </span>
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Action -->
+
+                        <div class="shrink-0 lg:w-[18%]">
+
+                            {% if timeslot.is_reserved %}
+
+                                <div
+                                    class="
+                                        flex min-h-[48px]
+                                        items-center
+                                        justify-center
+                                        gap-2
+                                        rounded-2xl
+                                        border
+                                        border-[#5E3122]/10
+                                        bg-[#F7EAE0]
+                                        px-4
+                                        text-xs
+                                        font-bold
+                                        text-[#5E3122]/55
+                                    "
+                                >
+
+                                    <span>
+                                        ✓
+                                    </span>
+
+                                    رزرو شده
+
+                                </div>
+
+                            {% elif not user.is_authenticated %}
+
+                                <a
+                                    href="{% url 'login' %}?next={{ request.path }}"
+                                    class="
+                                        btn
+                                        btn-primary
+                                        w-full
+                                        justify-center
+                                    "
+                                >
+
+                                    برای رزرو وارد شو
+
+                                    <span>
+                                        →
+                                    </span>
+
+                                </a>
+
+                            {% else %}
+
+                                <form
+                                    method="post"
+                                    action="{% url 'appointment_book' timeslot.pk %}"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <button
+                                        type="submit"
+                                        class="
+                                            btn
+                                            btn-primary
+                                            w-full
+                                            justify-center
+                                            transition-all
+                                            duration-300
+                                            hover:-translate-y-0.5
+                                        "
+                                    >
+
+                                        رزرو نوبت
+
+                                        <span>
+                                            ✓
+                                        </span>
+
+                                    </button>
+
+                                </form>
+
+                            {% endif %}
+
+                        </div>
 
                     </div>
 
 
-                    <!-- Date & Time -->
+                    <!-- =========================
+                         Mobile Details
+                    ========================== -->
 
-                    <div class="mt-7 grid grid-cols-2 gap-3">
+                    <div
+                        class="
+                            mt-5
+                            grid
+                            grid-cols-2
+                            gap-3
+                            border-t
+                            border-[#1D4533]/[0.07]
+                            pt-4
+                            lg:hidden
+                        "
+                    >
 
                         <div
                             class="
-                                mini-info
-                                transition-all duration-300
-
-                                {% if timeslot.is_reserved %}
-                                    opacity-60
-                                {% endif %}
+                                rounded-2xl
+                                bg-[#FBF8F5]
+                                px-4 py-3
                             "
                         >
 
-                            <span>
+                            <p
+                                class="
+                                    text-[10px]
+                                    font-bold
+                                    text-[#5E3122]/35
+                                "
+                            >
                                 تاریخ
-                            </span>
+                            </p>
 
-                            <strong>
+                            <strong
+                                class="
+                                    mt-1 block
+                                    text-xs
+                                    font-black
+                                    text-[#1D4533]
+                                "
+                            >
                                 {{ timeslot.date|date:"Y/m/d" }}
                             </strong>
 
@@ -210,20 +509,30 @@
 
                         <div
                             class="
-                                mini-info
-                                transition-all duration-300
-
-                                {% if timeslot.is_reserved %}
-                                    opacity-60
-                                {% endif %}
+                                rounded-2xl
+                                bg-[#FBF8F5]
+                                px-4 py-3
                             "
                         >
 
-                            <span>
+                            <p
+                                class="
+                                    text-[10px]
+                                    font-bold
+                                    text-[#5E3122]/35
+                                "
+                            >
                                 ساعت
-                            </span>
+                            </p>
 
-                            <strong>
+                            <strong
+                                class="
+                                    mt-1 block
+                                    text-xs
+                                    font-black
+                                    text-[#1D4533]
+                                "
+                            >
                                 {{ timeslot.start_time|time:"H:i" }}
                                 -
                                 {{ timeslot.end_time|time:"H:i" }}
@@ -234,96 +543,87 @@
                     </div>
 
 
-                    <!-- Action -->
+                    <!-- =========================
+                         Status
+                    ========================== -->
 
-                    <div class="mt-5">
+                    <div
+                        class="
+                            absolute
+                            left-4
+                            top-4
+                            lg:left-5
+                            lg:top-5
+                        "
+                    >
 
                         {% if timeslot.is_reserved %}
 
-                            <div
+                            <span
                                 class="
-                                    flex min-h-[54px]
-                                    items-center justify-center
-                                    gap-2
-                                    rounded-[18px]
-                                    border border-[#5E3122]/10
-                                    bg-[#F7EAE0]
-                                    text-sm font-bold
-                                    text-[#5E3122]/55
+                                    inline-flex
+                                    items-center
+                                    gap-1.5
+                                    rounded-full
+                                    border
+                                    border-[#5E3122]/10
+                                    bg-[#5E3122]/5
+                                    px-2.5 py-1
+                                    text-[10px]
+                                    font-bold
+                                    text-[#5E3122]/50
                                 "
                             >
 
-                                <span class="text-base">
-                                    ✓
-                                </span>
+                                <span class="h-1.5 w-1.5 rounded-full bg-[#5E3122]/40"></span>
 
-                                این نوبت رزرو شده است
+                                رزرو شده
 
-                            </div>
-
-
-                        {% elif not user.is_authenticated %}
-
-                            <a
-                                href="{% url 'login' %}?next={{ request.path }}"
-                                class="
-                                    btn btn-primary btn-lg
-                                    w-full justify-center
-                                "
-                            >
-
-                                برای رزرو وارد شو
-
-                                <span>
-                                    →
-                                </span>
-
-                            </a>
-
+                            </span>
 
                         {% else %}
 
-                            <form
-                                method="post"
-                                action="{% url 'appointment_book' timeslot.pk %}"
+                            <span
+                                class="
+                                    inline-flex
+                                    items-center
+                                    gap-1.5
+                                    rounded-full
+                                    bg-[#F9D2BA]
+                                    px-2.5 py-1
+                                    text-[10px]
+                                    font-bold
+                                    text-[#1D4533]
+                                "
                             >
 
-                                {% csrf_token %}
+                                <span class="h-1.5 w-1.5 rounded-full bg-[#1D4533]"></span>
 
-                                <button
-                                    type="submit"
-                                    class="
-                                        btn btn-primary btn-lg
-                                        w-full justify-center
-                                    "
-                                >
+                                آزاد
 
-                                    رزرو این نوبت
-
-                                    <span>
-                                        ✓
-                                    </span>
-
-                                </button>
-
-                            </form>
+                            </span>
 
                         {% endif %}
 
                     </div>
 
 
-                    <!-- Reserved Overlay -->
+                    <!-- Hover Accent -->
 
-                    {% if timeslot.is_reserved %}
+                    {% if not timeslot.is_reserved %}
 
                         <div
                             class="
                                 pointer-events-none
-                                absolute -bottom-16 -left-16
-                                h-32 w-32
-                                rounded-full
-                                bg-[#5E3122]/[0.025]
+                                absolute
+                                bottom-0
+                                right-0
+                                h-1
+                                w-0
+                                bg-[#F9D2BA]
+                                transition-all
+                                duration-500
+                                group-hover:w-full
                             "
                         ></div>
 
@@ -331,22 +631,46 @@
 
                 </article>
 
-
             {% empty %}
 
-                <!-- Empty -->
+                <!-- =========================
+                     Empty State
+                ========================== -->
 
-                <div class="empty-state sm:col-span-2 lg:col-span-3">
+                <div
+                    class="
+                        empty-state
+                        reveal-up
+                        rounded-[28px]
+                        border
+                        border-[#1D4533]/10
+                        bg-white
+                    "
+                >
 
                     <span class="text-4xl">
                         ◷
                     </span>
 
-                    <h2 class="mt-4 text-2xl font-black text-[#1D4533]">
+                    <h2
+                        class="
+                            mt-4
+                            text-2xl
+                            font-black
+                            text-[#1D4533]
+                        "
+                    >
                         هنوز نوبتی وجود ندارد
                     </h2>
 
-                    <p class="mt-2 text-sm text-[#5E3122]/55">
+                    <p
+                        class="
+                            mt-2
+                            text-sm
+                            leading-7
+                            text-[#5E3122]/55
+                        "
+                    >
 
                         {% if selected_doctor %}
 
@@ -385,13 +709,13 @@
         </div>
 
 
-        <!-- =================================
+        <!-- =========================
              Pagination
-        ================================== -->
+        ========================== -->
 
         {% if is_paginated %}
 
-            <div class="mt-12 flex flex-wrap items-center justify-center gap-2">
+            <div class="mt-10 flex flex-wrap items-center justify-center gap-2">
 
                 <!-- Previous -->
 
@@ -403,42 +727,28 @@
                             grid h-10 min-w-10
                             place-items-center
                             rounded-xl
-                            border border-[#1D4533]/10
+                            border
+                            border-[#1D4533]/10
                             bg-white
                             px-3
-                            text-sm font-black
+                            text-sm
+                            font-black
                             text-[#1D4533]
-                            transition
+                            transition-all
+                            duration-300
+                            hover:-translate-x-0.5
                             hover:bg-[#1D4533]
                             hover:text-white
                         "
                         aria-label="صفحه قبلی"
-                        title="صفحه قبلی"
                     >
                         →
                     </a>
 
-                {% else %}
-
-                    <span
-                        class="
-                            grid h-10 min-w-10
-                            place-items-center
-                            rounded-xl
-                            border border-[#1D4533]/5
-                            bg-white
-                            px-3
-                            text-sm font-black
-                            text-[#1D4533]/25
-                        "
-                    >
-                        →
-                    </span>
-
                 {% endif %}
 
 
-                <!-- Page Numbers -->
+                <!-- Pages -->
 
                 {% for num in page_obj.paginator.page_range %}
 
@@ -451,7 +761,8 @@
                                 rounded-xl
                                 bg-[#1D4533]
                                 px-3
-                                text-sm font-black
+                                text-sm
+                                font-black
                                 text-white
                                 shadow-[0_6px_16px_rgba(29,69,51,.18)]
                             "
@@ -467,12 +778,15 @@
                                 grid h-10 min-w-10
                                 place-items-center
                                 rounded-xl
-                                border border-[#1D4533]/10
+                                border
+                                border-[#1D4533]/10
                                 bg-white
                                 px-3
-                                text-sm font-black
+                                text-sm
+                                font-black
                                 text-[#1D4533]
-                                transition
+                                transition-all
+                                duration-300
                                 hover:-translate-y-0.5
                                 hover:bg-[#1D4533]
                                 hover:text-white
@@ -496,54 +810,42 @@
                             grid h-10 min-w-10
                             place-items-center
                             rounded-xl
-                            border border-[#1D4533]/10
+                            border
+                            border-[#1D4533]/10
                             bg-white
                             px-3
-                            text-sm font-black
+                            text-sm
+                            font-black
                             text-[#1D4533]
-                            transition
+                            transition-all
+                            duration-300
+                            hover:translate-x-0.5
                             hover:bg-[#1D4533]
                             hover:text-white
                         "
                         aria-label="صفحه بعدی"
-                        title="صفحه بعدی"
                     >
                         ←
                     </a>
-
-                {% else %}
-
-                    <span
-                        class="
-                            grid h-10 min-w-10
-                            place-items-center
-                            rounded-xl
-                            border border-[#1D4533]/5
-                            bg-white
-                            px-3
-                            text-sm font-black
-                            text-[#1D4533]/25
-                        "
-                    >
-                        ←
-                    </span>
 
                 {% endif %}
 
             </div>
 
 
-            <!-- Pagination Info -->
-
             <div class="mt-4 text-center">
 
-                <span class="text-xs font-bold text-[#5E3122]/40">
-
+                <span
+                    class="
+                        text-xs
+                        font-bold
+                        text-[#5E3122]/40
+                    "
+                >
                     صفحه
                     {{ page_obj.number }}
                     از
                     {{ page_obj.paginator.num_pages }}
-
                 </span>
 
             </div>
