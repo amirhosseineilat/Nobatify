@@ -53,9 +53,9 @@ class RegistrationForm(UserCreationForm):
         super().__init__(*args, **kwargs)
 
         self.fields["password1"].help_text = (
-            "رمز شما  نباید شبیه به نام کاربری یا ایمیل شما باشد ."
+            "حداقل ۸ کاراکتر باشد و شبیه نام کاربری یا ایمیل شما نباشد"
         )
-        self.fields["password2"].help_text = "رمز شما نباید کمتر از ۸ کاراکتر باشد "
+        self.fields["password2"].help_text = "رمز عبور را دوباره وارد کنید."
         self.fields["username"].help_text = (
             "الزامی است. حداکثر ۱۵۰ کاراکتر. فقط حروف، اعداد و این کاراکترها مجاز هستند: `@` `/` `.` `+` `-` `_`"
         )

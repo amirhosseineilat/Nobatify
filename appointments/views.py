@@ -115,9 +115,3 @@ class AppointmentCancelView(LoginRequiredMixin, View):
             messages.success(request, "رزرو شما با موفقیت کنسل شد")
 
         return redirect("my_appointment")
-
-
-class AppointmentDetail(DetailView):
-    model = Appointment
-    template_name = "appointments/appointment_book.html"
-    context_object_name = "appointment"
